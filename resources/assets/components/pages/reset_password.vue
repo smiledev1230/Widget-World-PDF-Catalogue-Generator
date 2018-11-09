@@ -3,10 +3,8 @@
         <div class="row">
             <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 login-content mt-5">
                 <div class="row">
-                    <div class="col-sm-12 mt-4">
-                        <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
-                        </h2>
+                    <div class="col-sm-12 mt-4 text-center">
+                        <img src="~img/WW-Logo.png" class="col-sm-6 col-md-4" alt="Logo">
                     </div>
                     <div class="col-sm-12 mt-4">
                         <h3 class="page-name text-center">Reset Password</h3>

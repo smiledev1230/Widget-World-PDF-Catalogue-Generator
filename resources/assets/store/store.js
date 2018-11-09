@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     state: {
         left_open: true,
         preloader: true,
-        site_name: "Vuejs-Admin",
+        site_name: "Widget World PDF Catalogue Generator",
         page_title: null,
         user: {
             name: "Ayesha",

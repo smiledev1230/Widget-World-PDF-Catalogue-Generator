@@ -4,7 +4,7 @@
             <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 login-content mt-5">
                 <div class="row">
                     <div class="col-sm-12 mt-3">
-                        <h2 class="text-center"><img src="~img/logo_black.png" alt="Logo"></h2>
+                        <h2 class="text-center"><img src="~img/WW-Logo.png" class="col-sm-6 col-md-4" alt="Logo"></h2>
                     </div>
                 </div>
                 <vue-form :state="formstate" @submit.prevent="onSubmit">

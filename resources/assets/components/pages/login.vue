@@ -2,20 +2,13 @@
     <div class="container-fluid img_backgrond">
         <div class="row">
             <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 login-content mt-5">
-                <div class="row">
-                    <div class="col-sm-12 mt-3">
-                        <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
-                        </h2>
+                <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <img src="~img/WW-Logo.png" class="col-sm-6 col-md-4" alt="Logo">
+                        </div>
                     </div>
                 </div>
-                 <div class="row mt-2">
-                     <div class="col-sm-12">
-                         <div class="text-center">
-                         <img src="~img/pages/login_user-01.png" class="rounded-circle">
-                         </div>
-                     </div>
-                 </div>
                 <vue-form :state="formstate" @submit.prevent="onSubmit">
                     <div class="row">
                         <div class="col-sm-12 mt-3 ">

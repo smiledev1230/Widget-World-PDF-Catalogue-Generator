@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>VueJs-Admin</title>
+    <title>Widget World PDF Catalogue Generator</title>
     <link rel="shortcut icon" href="src/assets/img/favicon.png" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

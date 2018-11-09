@@ -1,5 +1,5 @@
 {
-    "name": "vuejs-admin",
+    "name": "WigetWORLD",
     "version": "1.0.0",
     "description": "Vuejs based admin template",
     "main": "main.js",
@@ -39,7 +39,7 @@
         "radiobox.css": "^1.0.1",
         "screenfull": "^3.3.2",
         "v-chartist": "^0.1.5",
-        "vue": "^2.5.13",
+        "vue": "^2.5.17",
         "vue-analytics": "^5.7.1",
         "vue-awesome-swiper": "^3.0.6",
         "vue-clip": "^1.0.0",
