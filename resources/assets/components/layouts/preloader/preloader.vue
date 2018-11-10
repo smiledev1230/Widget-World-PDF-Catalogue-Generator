@@ -9,7 +9,7 @@
     top: 60px;
     border-radius: 20px;
     background-color: transparent;
-    border-width: 15px;
+    border-width: 12px;
     border-style: double;
     border-color: transparent #428bca;
     animation: cssload-anim 0.7s linear infinite;

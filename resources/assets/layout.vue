@@ -14,10 +14,6 @@
 </template>
 <script>
     /**
-     * These are the files that enable you to change layouts and other options
-     */
-
-    /**
      * import preloader
      * choose from preloader and bounce
      */
@@ -42,6 +38,7 @@
      * Main stylesheet for the layout
      */
     import 'assets/sass/custom.scss'
+
     import 'components/layouts/css/main.scss'
 
     /**
@@ -55,7 +52,8 @@
             preloader,
             vueadmin_header,
             main_content,
-            vueadmin_footer
+            vueadmin_footer,
+            anime
         },
         data() {
             return {

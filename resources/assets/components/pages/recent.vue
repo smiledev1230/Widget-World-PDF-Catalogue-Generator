@@ -1,11 +1,14 @@
 <template>
-    <div>
+    <div class="page-content">
+        <CatalgoueList></CatalgoueList>
     </div>
 </template>
 <script>
+    import CatalgoueList from "./CatalogueList";
     export default {
-        name: "new_catalogue",
+        name: "recent",
         components: {
+            CatalgoueList
         },
         data() {
             return {}
@@ -18,3 +21,6 @@
         }
     }
 </script>
+<style lang="scss" scoped>
+
+</style>
