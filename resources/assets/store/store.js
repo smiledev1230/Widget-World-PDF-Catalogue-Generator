@@ -16,6 +16,7 @@ const store = new Vuex.Store({
         preloader: true,
         site_name: "Widget World PDF Catalogue Generator",
         page_title: null,
+        page_text: null,
         user: {
             name: "Ayesha",
             picture: require("img/authors/prf4.jpg"),

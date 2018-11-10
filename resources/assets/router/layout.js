@@ -2,13 +2,21 @@ const layout = [{
     path: '/',
     component: resolve => require(['pages/index'], resolve),
     meta: {
-        title: "Dashboard",
+        title: "Welcome James",
+        bgColor: true,
     }
 }, {
-    path: '/index2',
-    component: resolve => require(['pages/index2'], resolve),
+    path: '/recent',
+    component: resolve => require(['pages/recent'], resolve),
     meta: {
-        title: "Dashboard2",
+        title: "Recent",
+    }
+}, {
+    path: '/new_catalogue',
+    component: resolve => require(['pages/new_catalogue'], resolve),
+    meta: {
+        title: "Create a New Catalogue",
+        isShowTitle: false,
     }
 }, {
     path: '/product_details',

@@ -1,6 +1,6 @@
 <template>
     <header class="header fixed-top">
-        <nav>
+        <nav v-bind:class="{ smallHeader: this.$route.meta.bgColor}">
             <div class="row">
                 <div class="col-sm-3">
                     <router-link to="/" class="logo">
@@ -11,13 +11,13 @@
                     <div class="row header-menu text-center">
                         <div class="col-sm-2"></div>
                         <div class="col-sm-4">
-                            <router-link to="/" class="menu-icon">
-                                <img src="~img/new-catelogue.png" alt="menu icon" />
-                                <p>NEW CATELOGUE</p>
+                            <router-link to="/new_catalogue" class="menu-icon">
+                                <img src="~img/new-catalogue.png" alt="menu icon" />
+                                <p>NEW CATALOGUE</p>
                             </router-link>
                         </div>
                         <div class="col-sm-4">
-                            <router-link to="/" class="menu-icon">
+                            <router-link to="/recent" class="menu-icon">
                                 <img src="~img/recent.png" alt="menu icon" />
                                 <p>RECENT</p>
                             </router-link>
@@ -59,7 +59,7 @@
                         <span slot="text">
                             <img src="~img/bell-icon.png" class="noti-icon" alt="Bell Icon">
                             <div class="notifications_badge_top">
-                                <span class="badge badge-danger">4
+                                <span class="badge badge-success">2
                                 </span>
                             </div>
                         </span>
@@ -186,15 +186,31 @@
         name: "vueadmin_header",
 
         methods: {
-            toggle_menu() {
-                this.$store.commit('left_menu', "toggle");
-            },
-            fullscreen() {
-                if (screenfull.enabled) {
-                    screenfull.toggle();
-                }
-            }
 
         }
     }
 </script>
+<style lang="scss" scoped>
+    .header nav.smallHeader {
+        height: var(--home-header-height);
+        .logo {
+            line-height: var(--home-header-height);
+            img {
+                height: 72px;
+            }
+        }
+        .header-menu {
+            .menu-icon {
+                img {
+                    max-height: 32px;
+                }
+                p {
+                    font-size: small;
+                }
+            }
+        }
+        .navbar-right > div {
+            height: var(--home-header-height);
+        }
+    }
+</style>

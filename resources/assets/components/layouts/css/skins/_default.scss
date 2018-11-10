@@ -1,8 +1,8 @@
 $left_menu_width:250px;
 $skin_color: #fff;
-$header_color:$skin_color;
+$header_color: #fff;
 $dropdown_tab_active:lighten($header_color, 10);
-$leftmenu_color: #fff ;
+$leftmenu_color: #fff;
 $logo_bgcolor:transparent;
 $submenu_color:#F8F7F6;
 $menu_active: #e6e6e6 ;
@@ -15,11 +15,15 @@ $header_colors:#3c4252;
 $nav_tabs_color:#000;
 $dropdown_background_color:#EEEEEE;
 $nav_tab_color:#000;
-$footer_color:#404040;
+$footer_color: #404040;
+$title_color: #404040;
 $footer_text_color:#fff;
 $toggle_color:#000;
 $zoom_color:#000;
 $right_side_user:#000;
 $horizontal_hover:#0a3c5f;
 $bell-color:#fff;
-$bell-active:#edede
+$bell-active:#edede;
+$green_color: #8bc53f;
+$content_bgColor: #f9f9f9;
+$border_color: #d7d9da;

@@ -1,10 +1,13 @@
 <template>
-    <aside class="right-aside">
+    <aside class="main-content">
         <!-- Content Header (Page header) -->
-        <section class="content-header ">
-            <h1>{{this.$store.state.page_title?this.$store.state.page_title:this.$route.meta.title}}</h1>
-        </section>
-        <!-- Main content -->
+        <template v-if="isShow()">
+            <section class="content-header">
+                <h1>{{this.$store.state.page_title?this.$store.state.page_title:this.$route.meta.title}}</h1>
+                <p>{{this.$store.state.page_text}}</p>
+            </section>
+            <!-- Main content -->
+        </template>
         <section class="content">
             <slot></slot>
         </section>
@@ -12,30 +15,32 @@
     </aside>
 </template>
 <script>
-export default {
-    name: "right-side",
-    methods: {
-
+    export default {
+        name: "main-content",
+        data() {
+            return {
+                isShowTitle: true,
+            };
+        },
+        methods: {
+            isShow() {
+                if (this.$route.meta.isShowTitle === false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        },
+        mounted() {},
     }
-}
 </script>
 <style lang="scss" scoped>
-.right-aside {
-    padding: 0 20px 10px 20px;
-    width: 100%;
-    max-width: 100%;
-    .content-header > h1 {
-        margin: 2px;
-        padding-left: 13px;
-        padding-top: 12px;
-        font-size: 20px;
-        line-height: 1.5;
-    }
+    @import "./css/customvariables";
     .content-header {
-        margin: -2px -20px 25px -20px;
-        height: 55px;
-        background: #f9fafb ;
-        box-shadow: 3px 1px 5px #ccc;
+        padding: 25px 40px 10px 55px;
+        background: $header_color;
+        h1 {
+            color: $green_color;
+        }
     }
-}
 </style>

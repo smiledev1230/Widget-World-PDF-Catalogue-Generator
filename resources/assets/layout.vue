@@ -2,9 +2,11 @@
     <div>
         <preloader v-show="this.$store.state.preloader"></preloader>
         <vueadmin_header></vueadmin_header>
-        <div class="wrapper row-offcanvas">
+        <div class="wrapper row-offcanvas" v-bind:class="{ greyBackground: this.$route.meta.bgColor}">
             <main_content>
-                <router-view></router-view>
+                <transition name="router-anim">
+                    <router-view/>
+                </transition>
             </main_content>
         </div>
         <vueadmin_footer></vueadmin_footer>
@@ -65,10 +67,24 @@
                 this.$store.commit('left_menu', 'close')
             }
         },
-
+        methods: {
+            isShow() {
+                if (this.$route.meta.isShowTitle === false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>
+    @import "./assets/sass/animate.3.5.1";
+    @import "./components/layouts/css/customvariables";
+    .wrapper.greyBackground {
+        background: $content_bgColor;
+        margin-top: 100px;
+    }
     .wrapper:before,
     .wrapper:after {
         display: table;
@@ -78,7 +94,6 @@
     .wrapper:after {
         clear: both;
     }
-
     .wrapper {
         display: table;
         overflow-x: hidden;
@@ -87,21 +102,31 @@
         table-layout: fixed
     }
 
-    .right-aside,
-    .left-aside {
-        padding: 0;
-        display: table-cell;
-        vertical-align: top;
+    .router-anim-enter-active {
+        animation: coming .6s;
+        animation-delay: .5s;
+        opacity: 0;
     }
-
-    .right-aside {
-        background-color: #ebf2f6 !important;
+    .router-anim-leave-active {
+        animation: going .6s;
     }
-
-    @media (max-width: 992px) {
-        .wrapper>.right-aside {
-            width: 100vw;
-            min-width: 100vw;
+    @keyframes going {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+    }
+    @keyframes coming {
+        from {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
         }
     }
 </style>

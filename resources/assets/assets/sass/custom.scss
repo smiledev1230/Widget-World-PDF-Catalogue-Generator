@@ -20,8 +20,12 @@ Created by: Jyostna Designs
 
 @import "~bootstrap/scss/functions";
 @import "bootstrap/variables";
-@import "~components/layouts/css/customvariables";
+@import "../../components/layouts/css/customvariables";
 
+:root {
+    --header-height: 80px;
+    --home-header-height: 100px;
+}
 /*****  1.RESET STYLES  *****/
 
 html {
@@ -39,7 +43,9 @@ select,
 textarea {
     font-family: $font-family-base;
 }
-
+body, #app, #app > div, #app div.wrapper {
+    min-height: calc(100vh - 220px);
+}
 body {
     background: none repeat scroll 0 0 #fff;
     overflow-x: hidden;
@@ -48,13 +54,6 @@ body {
     letter-spacing: 0.5px;
     width: 100%;
     margin: 0 auto;
-}
-
-body,
-#app,
-#app>div,
-#app div.wrapper {
-    min-height: calc(100vh - 102px);
 }
 
 ul {
