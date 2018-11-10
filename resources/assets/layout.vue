@@ -3,11 +3,11 @@
         <preloader v-show="this.$store.state.preloader"></preloader>
         <vueadmin_header></vueadmin_header>
         <div class="wrapper row-offcanvas">
-            <left_side v-show="this.$store.state.left_open"></left_side>
-            <right_side>
+            <main_content>
                 <router-view></router-view>
-            </right_side>
+            </main_content>
         </div>
+        <vueadmin_footer></vueadmin_footer>
     </div>
 </template>
 <script>
@@ -22,55 +22,25 @@
     import preloader from 'components/layouts/preloader/preloader'
 
     /**
-     * The right side content
+     * import from header or fixed-header or no-header
      */
-    import right_side from 'components/layouts/right-side'
+    import vueadmin_header from 'components/layouts/fixed-header'
 
     /**
-     * import left-side from default or horizontal-menu
-     * eg: import left_side from 'components/layouts/left-side/horizontal-menu/left-side'
+     * The main content
      */
-    import left_side from 'components/layouts/left-side/default/left-side'
+    import main_content from 'components/layouts/main-content'
 
     /**
      * import from header or fixed-header or no-header
      */
-    import vueadmin_header from 'components/layouts/header/fixed-header'
-
-    /**
-     * Styles
-     */
+    import vueadmin_footer from 'components/layouts/fixed-footer'
 
     /**
      * Main stylesheet for the layout
      */
     import 'assets/sass/custom.scss'
-
-    /**
-     * Style required for a boxed layout
-     */
-    // import 'components/layouts/css/boxed.scss'
-
-    /**
-     * Style required for a fixed-menu layout
-     */
-    import 'components/layouts/css/fixed-menu.scss'
-
-    /**
-     * Style required for a compact-menu layout
-     */
-    // import 'components/layouts/css/compact-menu.scss'
-
-    /**
-     * Style required for a centered-logo layout
-     */
-    // import 'components/layouts/css/centered-logo.scss'
-
-    /**
-     * Style required for a content-menu layout
-     */
-    // import 'components/layouts/css/content_menu.scss'
-
+    import 'components/layouts/css/main.scss'
 
     /**
      * import animejs for the menu transition effects
@@ -82,8 +52,8 @@
         components: {
             preloader,
             vueadmin_header,
-            left_side,
-            right_side
+            main_content,
+            vueadmin_footer
         },
         data() {
             return {
