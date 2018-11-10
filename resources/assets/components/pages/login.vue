@@ -5,7 +5,7 @@
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="text-center">
-                            <img src="~img/WW-Logo.png" class="col-sm-6 col-md-4" alt="Logo">
+                            <img src="~img/logo-icon.png" class="col-sm-6 col-md-4" alt="Logo">
                         </div>
                     </div>
                 </div>

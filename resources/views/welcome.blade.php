@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Widget World PDF Catalogue Generator</title>
-    <link rel="shortcut icon" href="src/assets/img/favicon.png" />
+    <link rel="shortcut icon" href="images/logo-icon.png" />
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -52,7 +52,10 @@
             -webkit-animation-delay: -1.0s;
             animation-delay: -1.0s;
         }
-
+        #app .img_backgrond {
+            height: 100vh;
+            display: inline-table;
+        }
         @-webkit-keyframes sk-rotate {
             100% {
                 -webkit-transform: rotate(360deg)

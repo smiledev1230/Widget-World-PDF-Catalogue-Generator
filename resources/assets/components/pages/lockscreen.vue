@@ -3,10 +3,8 @@
         <div class="row">
             <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 login-content mt-5">
                 <div class="row">
-                    <div class="col-lg-12 col-12 mt-4">
-                        <h2 class="text-center">
-                            <img src="~img/logo_black.png" alt="Logo">
-                        </h2>
+                    <div class="col-sm-12 mt-4 text-center">
+                        <img src="~img/logo-icon.png" class="col-sm-6 col-md-4" alt="Logo">
                     </div>
                     <div class="col-lg-12 col-12 mt-4">
                         <h3 class="page-name text-center">
@@ -18,7 +16,7 @@
                     <div class="col-sm-12">
                         <validate tag="div">
                             <input v-model="model.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4"
-                                maxlength="10" />
+                                   maxlength="10" />
                             <field-messages name="password" show="$invalid && $submitted" class="text-danger">
                                 <div slot="required">Password is required</div>
                                 <div slot="minlength">Password should be atleast 4 characters long</div>
