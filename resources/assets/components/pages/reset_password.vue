@@ -68,6 +68,7 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
+                    this.$store.state.login_status = true;
                     this.$router.push("/");
                 }
             }

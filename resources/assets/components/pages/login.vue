@@ -75,7 +75,7 @@ import VueForm from "vue-form";
 import options from "src/validations/validations.js";
 Vue.use(VueForm, options);
 export default {
-    name: "login2",
+    name: "login",
     data() {
         return {
             formstate: {},
@@ -91,6 +91,7 @@ export default {
             if (this.formstate.$invalid) {
                 return;
             } else {
+                this.$store.state.login_status = true;
                 this.$router.push("/");
             }
         }
