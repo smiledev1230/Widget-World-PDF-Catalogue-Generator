@@ -19,6 +19,12 @@ const layout = [{
         isShowTitle: false,
     }
 }, {
+    path: '/select_products',
+    component: resolve => require(['pages/select_products'], resolve),
+    meta: {
+        title: "Select Your Products"
+    }
+}, {
     path: '/product_details',
     component: resolve => require(['pages/e-commerce/product_details'], resolve),
     meta: {

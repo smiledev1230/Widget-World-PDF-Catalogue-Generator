@@ -1,4 +1,17 @@
 @import "./customvariables";
+
+.green-text-color {
+  color: $green_color;
+}
+.grey-text-color {
+  color: $grey_color;
+}
+.greenBgColor {
+  background: $green_color;
+}
+.greyBgColor {
+  background: $grey_color;
+}
 .header {
   z-index: 1030;
   background: $skin_color;
@@ -155,7 +168,10 @@
 .page-content {
   padding: 10px 40px 10px 55px;
 }
-
+.btn-secondary {
+  background-color: $grey_btn_color;
+  border-color: $grey_btn_color;
+}
 /* Footer Style */
 .footer {
   height: 120px;
