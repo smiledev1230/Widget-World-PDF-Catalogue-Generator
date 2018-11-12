@@ -9,7 +9,7 @@ const layout = [{
     path: '/recent',
     component: resolve => require(['pages/recent'], resolve),
     meta: {
-        title: "Recent",
+        title: "Recent Catalogues",
     }
 }, {
     path: '/new_catalogue',
