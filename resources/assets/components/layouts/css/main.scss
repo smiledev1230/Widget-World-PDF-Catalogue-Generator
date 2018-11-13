@@ -168,6 +168,12 @@
 .page-content {
   padding: 10px 40px 10px 55px;
 }
+.catalogue-content {
+  margin: 2vw 7vw;
+  .row {
+    margin: 0;
+  }
+}
 .btn-secondary {
   background-color: $grey_btn_color;
   border-color: $grey_btn_color;

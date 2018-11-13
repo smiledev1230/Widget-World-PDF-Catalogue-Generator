@@ -1,5 +1,5 @@
 <template>
-    <div class="new-content">
+    <div class="catalogue-content">
         <div class="row">
             <div class="col-md-8 pl-0 catalogue-left">
                 <section class="content-header">
@@ -124,10 +124,8 @@
 </script>
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
-    .new-content {
-        margin: 2vw 6vw;
+    .catalogue-content {
         .row {
-            margin: 0;
             .catalogue-left {
                 display: table-cell;
                 .dz-message {
