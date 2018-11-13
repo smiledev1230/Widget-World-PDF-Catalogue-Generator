@@ -60,7 +60,7 @@
         </div>
         <hr/>
         <div class="row d-block">
-            <router-link tag="a" to="/recent" class="btn btn-secondary text-white">CANCEL</router-link>
+            <router-link tag="a" to="/" exact class="btn btn-secondary text-white">CANCEL</router-link>
             <router-link tag="a" to="/select_products" class="btn greenBgColor pull-right text-white">NEXT</router-link>
         </div>
     </div>

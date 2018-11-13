@@ -1,8 +1,18 @@
 <template>
     <div class="catalogue-content">
+        <div class="select-products">
+            <b-tabs v-model="tabIndex" vertical>
+                <b-tab title="Suppliers">
+                    <tree-view/>
+                </b-tab>
+                <b-tab title="Categories">
+                    <tree-view/>
+                </b-tab>
+            </b-tabs>
+        </div>
         <hr/>
         <div class="row d-block">
-            <router-link tag="a" to="/" exact class="btn btn-secondary text-white">CANCEL</router-link>
+            <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary text-white">CANCEL</router-link>
             <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
             <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white">NEXT</router-link>
             <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
@@ -10,12 +20,16 @@
     </div>
 </template>
 <script>
+    import treeView from "../plugins/treeView/treeView";
     export default {
         name: "select_products",
         components: {
+            'tree-view': treeView,
         },
         data() {
-            return {}
+            return {
+                tabIndex: 0,
+            }
         },
         mounted: function () {
             this.$store.state.page_text = "Select the products to be displayed in your catalogue. You can choose a complete range from single or multiple Suppliers, single or multiple categories or indivudal products. On the next screen you can insert these products into your pages.";
@@ -23,15 +37,39 @@
         methods: {
             saveProducts() {
                 console.log("saveProducts");
-            }
+            },
         }
     }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
     @import "../layouts/css/customvariables";
     .catalogue-content {
-        .back-btn {
-            margin-left: 190px;
+        .select-products{
+            .tabs.row {
+                margin: 0 32px;
+                border: none;
+                .col-auto {
+                    padding: 0px;
+                    margin-top: 40px;
+                    border-top: 3px solid $border_color;
+                    .nav-tabs  {
+                        .nav-link {
+                            padding: 20px;
+                            border: 0;
+                            border-radius: unset;
+                        }
+                        .nav-link.active {
+                            background: $grey_bgColor;
+                        }
+                    }
+                }
+                .tab-content.col {
+                    height: 450px;
+                    max-height: 450px;
+                    padding: 0;
+                    width: calc(100% - 110px);
+                }
+            }
         }
     }
 </style>

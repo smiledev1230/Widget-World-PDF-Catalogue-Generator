@@ -31,8 +31,6 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .catalogue-content {
-        .back-btn {
-            margin-left: 190px;
-        }
+
     }
 </style>
