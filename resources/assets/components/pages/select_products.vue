@@ -3,19 +3,21 @@
         <div class="select-products">
             <b-tabs v-model="tabIndex" vertical>
                 <b-tab title="Suppliers">
-                    <tree-view/>
+                    <tree-view :showCheck="showCheck"/>
                 </b-tab>
                 <b-tab title="Categories">
-                    <tree-view/>
+                    <tree-view :showCheck="showCheck"/>
                 </b-tab>
             </b-tabs>
         </div>
-        <hr/>
-        <div class="row d-block">
-            <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary text-white">CANCEL</router-link>
-            <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
-            <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white">NEXT</router-link>
-            <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
+        <div class="content-bottom">
+            <hr/>
+            <div class="row d-block">
+                <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary text-white">CANCEL</router-link>
+                <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
+                <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white">NEXT</router-link>
+                <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
+            </div>
         </div>
     </div>
 </template>
@@ -29,6 +31,7 @@
         data() {
             return {
                 tabIndex: 0,
+                showCheck: true
             }
         },
         mounted: function () {

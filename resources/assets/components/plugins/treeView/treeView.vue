@@ -1,6 +1,7 @@
 <template>
     <div class="tree-view">
-        <ejs-treeview id='treeview' :fields="fields" showCheckBox='true'></ejs-treeview>
+        <ejs-treeview id='treeview' :fields="fields" v-if="showCheck" showCheckBox="true"></ejs-treeview>
+        <ejs-treeview id='treeview' :fields="fields" v-else></ejs-treeview>
     </div>
 </template>
 <script>
@@ -13,6 +14,7 @@
         components: {
 
         },
+        props: ['showCheck'],
         data() {
             var dataSource =  [
                 { id: 1, name: 'AIT'},

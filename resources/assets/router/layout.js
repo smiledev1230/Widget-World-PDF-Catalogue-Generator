@@ -39,6 +39,18 @@ const layout = [{
         title: "Catalogue Preview",
         catalogue: true
     }
+}, {
+    path: 'user_profile',
+    component: resolve => require(['pages/user_profile'], resolve),
+    meta: {
+        title: "User Profile",
+    }
+}, {
+    path: 'edit_user',
+    component: resolve => require(['pages/edit_user'], resolve),
+    meta: {
+        title: "Edit User",
+    }
 }]
 
 export default layout

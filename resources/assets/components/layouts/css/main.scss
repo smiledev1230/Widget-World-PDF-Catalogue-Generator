@@ -1,5 +1,5 @@
 @import "./customvariables";
-
+/**** COMMON STYLE ****/
 .green-text-color {
   color: $green_color;
 }
@@ -12,6 +12,11 @@
 .greyBgColor {
   background: $grey_color;
 }
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .header {
   z-index: 1030;
   background: $skin_color;
@@ -169,12 +174,20 @@
   padding: 10px 40px 10px 55px;
 }
 .catalogue-content {
+  position: relative;
+  min-height: 56vh;
+  padding-bottom: 80px;
   margin: 2vw 7vw;
   .row {
     margin: 0;
     .back-btn {
       margin-left: 190px;
     }
+  }
+  .content-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
   }
 }
 .btn-secondary {

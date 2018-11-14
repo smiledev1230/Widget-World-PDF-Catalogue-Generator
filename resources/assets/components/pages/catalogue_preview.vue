@@ -1,17 +1,24 @@
 <template>
     <div class="catalogue-content">
-        <hr/>
-        <div class="row d-block">
-            <router-link tag="a" to="/build_catalogue" exact class="btn btn-secondary text-white">BACK</router-link>
-            <a class="btn greenBgColor pull-right text-white" @click="sendPDF">SEND AS PDF</a>
-            <a class="btn btn-secondary pull-right text-white mr-3" @click="savePreview">SAVE FOR LATER</a>
+        <div class="content-body">
+            <productList/>
+        </div>
+        <div class="content-bottom">
+            <hr/>
+            <div class="row d-block">
+                <router-link tag="a" to="/build_catalogue" exact class="btn btn-secondary text-white">BACK</router-link>
+                <a class="btn greenBgColor pull-right text-white" @click="sendPDF">SEND AS PDF</a>
+                <a class="btn btn-secondary pull-right text-white mr-3" @click="savePreview">SAVE FOR LATER</a>
+            </div>
         </div>
     </div>
 </template>
 <script>
+    import productList from "./product_list";
     export default {
         name: "catalogue_preview",
         components: {
+            'productList': productList
         },
         data() {
             return {}
@@ -33,6 +40,11 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .catalogue-content {
-
+        .content-body {
+            background: $row_even_color;
+            border: 2px solid $border_color;
+            min-height: 56vh;
+            padding: 15px 40px;
+        }
     }
 </style>

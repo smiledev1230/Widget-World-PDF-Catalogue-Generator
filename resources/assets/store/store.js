@@ -19,8 +19,11 @@ const store = new Vuex.Store({
         page_text: null,
         page_subText: null,
         login_status: false,
+        catalogue: {
+            name: null,
+        },
         user: {
-            name: "Ayesha",
+            name: "Fidero",
             picture: require("img/authors/prf4.jpg"),
             job: "Project Manager"
         },
