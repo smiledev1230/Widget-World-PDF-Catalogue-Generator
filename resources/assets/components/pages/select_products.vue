@@ -47,11 +47,9 @@
         .select-products{
             .tabs.row {
                 margin: 0 32px;
-                border: none;
+                border-top: 2px solid $border_color;
                 .col-auto {
-                    padding: 0px;
-                    margin-top: 40px;
-                    border-top: 3px solid $border_color;
+                    padding: 0;
                     .nav-tabs  {
                         .nav-link {
                             padding: 20px;
@@ -59,7 +57,7 @@
                             border-radius: unset;
                         }
                         .nav-link.active {
-                            background: $grey_bgColor;
+                            background: #ececec;
                         }
                     }
                 }

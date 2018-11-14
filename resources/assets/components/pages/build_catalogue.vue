@@ -1,5 +1,25 @@
 <template>
     <div class="catalogue-content">
+        <div class="visual-options">
+            <div class="row d-block">
+                <label class="mb-0">Visual Options</label>
+                <i @click="showCollapse = !showCollapse"
+                   aria-controls="vOptions"
+                   :aria-expanded="showCollapse ? 'true' : 'false'"
+                   class="collapse-btn pull-right fa" :class="showCollapse ? 'fa-angle-down' : 'fa-angle-up'">
+                </i>
+            </div>
+            <b-collapse id="vOptions" v-model="showCollapse" class="mt-2">
+                <div class="row">
+                    <div class="col-md-9">
+
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn greenBgColor pull-right text-white mr-3" @click="updateOptions">UPDATE</a>
+                    </div>
+                </div>
+            </b-collapse>
+        </div>
         <hr/>
         <div class="row d-block">
             <router-link tag="a" to="/" exact class="btn btn-secondary text-white">CANCEL</router-link>
@@ -15,7 +35,9 @@
         components: {
         },
         data() {
-            return {}
+            return {
+                showCollapse: false
+            }
         },
         mounted: function () {
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
@@ -24,6 +46,9 @@
         methods: {
             saveProducts() {
                 console.log("saveProducts");
+            },
+            updateOptions() {
+                console.log("updateOptions");
             }
         }
     }
@@ -31,6 +56,17 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .catalogue-content {
-
+        .visual-options {
+            background: $grey_bgColor;
+            padding: 10px 15px;
+            .collapse-btn {
+                padding: 0 10px;
+                background: no-repeat;
+                border: 0;
+                color: $angle_color;
+                font-size: 22px;
+                cursor: pointer;
+            }
+        }
     }
 </style>

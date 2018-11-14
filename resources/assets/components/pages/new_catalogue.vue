@@ -53,7 +53,7 @@
                     <img :src="getImgUrl(selectedImage)" class="preview-background"/>
                     <div class="preview-content">
                         <img :src="uploadFileUrl" v-if="uploadFileUrl" class="upload-image"/>
-                        <div class="preview-title text-white">{{catalogue_name}}</div>
+                        <div v-if="catalogue_name" class="preview-title text-white">{{catalogue_name}}</div>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@
         "laravel-mix": "^1.7.2"
     },
     "dependencies": {
+        "@syncfusion/ej2-vue-navigations": "^16.3.30",
         "animejs": "^2.2.0",
         "axios": "^0.17.1",
         "baguettebox.js": "^1.9.1",
@@ -56,7 +57,6 @@
         "vue-quill-editor": "^3.0.4",
         "vue-router": "^3.0.1",
         "vue-slider-component": "^2.4.7",
-        "vue-table-with-tree-grid": "^0.2.4",
         "vue-tables-2": "^1.1.0",
         "vue2-animate": "^1.0.4",
         "vue2-dropzone": "^3.0.3",

@@ -1,208 +1,70 @@
 <template>
     <div class="tree-view">
-        <zk-table
-                ref="table"
-                sum-text="sum"
-                index-text="#"
-                :data="data"
-                :columns="columns"
-                :stripe="props.stripe"
-                :border="props.border"
-                :show-header="props.showHeader"
-                :show-summary="props.showSummary"
-                :show-row-hover="props.showRowHover"
-                :show-index="props.showIndex"
-                :tree-type="props.treeType"
-                :is-fold="props.isFold"
-                :expand-type="props.expandType"
-                :selection-type="props.selectionType">
-        </zk-table>
+        <ejs-treeview id='treeview' :fields="fields" showCheckBox='true'></ejs-treeview>
     </div>
 </template>
 <script>
-    import ZkTable from 'vue-table-with-tree-grid';
+    import Vue from 'vue';
+    import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
+    Vue.use(TreeViewPlugin);
 
     export default {
         name: 'treeView',
         components: {
-            'zk-table': ZkTable,
+
         },
         data() {
+            var dataSource =  [
+                { id: 1, name: 'AIT'},
+                { id: 2, name: 'Accredited'},
+                { id: 3, name: 'Allseps'},
+                { id: 4, name: 'Arnotts'},
+                { id: 5, name: 'Bayer'},
+                { id: 6, name: 'Bounce'},
+                { id: 7, name: 'Bundaberg'},
+                { id: 8, name: 'CTC'},
+                { id: 9, name: 'Cadbury', hasChild: true },
+                { id: 10, pid: 9, name: 'Bars'},
+                { id: 11, pid: 9, name: 'Biscuits', hasChild: true },
+                { id: 12, pid: 11, name: 'Biscuits - Chocolate', hasChild: true },
+                { id: 13, pid: 12, name: 'Belvita Choc Breakfast Biscuits 300g'},
+                { id: 14, pid: 12, name: 'Cadbury Cookies Choc Centre 300g'},
+                { id: 15, pid: 12, name: 'Oreo Cadbury Coated 6pk 204g'},
+                { id: 16, pid: 12, name: 'Oreo Cookie Chocolate 137g'},
+                { id: 17, pid: 12, name: 'Oreo Cookie Grab \\\'n\\\' Go 264.6g'},
+                { id: 18, pid: 12, name: 'Oreo Cookie Original 137g'},
+                { id: 19, pid: 9, name: 'Biscuits - Other'},
+            ];
             return {
-                props: {
-                    stripe: false,
-                    border: false,
-                    showHeader: true,
-                    showSummary: false,
-                    showRowHover: true,
-                    showIndex: false,
-                    treeType: true,
-                    isFold: true,
-                    expandType: false,
-                    selectionType: true,
-                },
-                data: [
-                    {
-                        name: 'Jack',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Accredited',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Allseps',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Arnotts',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Bayer',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Bounce',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Bundaberg',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'CTC',
-                        stateLabel: 'Add All',
-                    },
-                    {
-                        name: 'Cadbury',
-                        stateLabel: 'Add All',
-                        children: [
-                            {
-                                name: 'Bars',
-                                stateLabel: 'Add All',
-                            },
-                            {
-                                name: 'Biscuits',
-                                stateLabel: 'Add All',
-                                children: [
-                                    {
-                                        name: 'Biscuits - All',
-                                        stateLabel: 'Add All',
-                                    },
-                                    {
-                                        name: 'Biscuits - Chocolate',
-                                        stateLabel: 'Add All',
-                                        children: [
-                                            {
-                                                name: 'Belvita Choc Breakfast Biscuits 300g',
-                                                stateLabel: 'Add All',
-                                            },
-                                            {
-                                                name: 'Cadbury Cookies Choc Centre 300g',
-                                                stateLabel: 'Add All',
-                                            },
-                                            {
-                                                name: 'Oreo Cadbury Coated 6pk 204g',
-                                                stateLabel: 'Add All',
-                                            },
-                                            {
-                                                name: 'Oreo Cookie Chocolate 137g',
-                                                stateLabel: 'Add All',
-                                            },
-                                            {
-                                                name: 'Oreo Cookie Grab \'n\' Go 264.6g',
-                                                stateLabel: 'Add All',
-                                            },
-                                            {
-                                                name: 'Oreo Cookie Original 137g',
-                                                stateLabel: 'Add All',
-                                            },
-                                        ]
-                                    },
-                                    {
-                                        name: 'Biscuits - Other',
-                                        stateLabel: 'Add All',
-                                    },
-                                ]
-                            },
-                            {
-                                name: 'Bulk',
-                                stateLabel: 'Add All',
-                            },
-                        ]
-                    },
-                ],
-                columns: [
-                    {
-                        label: '',
-                        prop: 'name',
-                        minWidth: '200px',
-                    },
-                    {
-                        label: 'Select All',
-                        prop: 'stateLabel',
-                        width: '120px'
-                    },
-                ],
+                fields: { dataSource: dataSource, id: 'id', parentID: 'pid', text: 'name', hasChildren: 'hasChild' },
+                checkedNodes: ['2','6']
             }
         },
         computed: {
-            propList() {
-                return Object.keys(this.props).map(item => ({
-                    name: item,
-                }));
-            },
+
         },
         methods: {
+            nodeChecked: function(args) {
+                var treeObj = document.getElementById('treeview').ej2_instances[0];
+                alert("The checked node's id: " + treeObj.checkedNodes); // To alert the checked node's id.
+            }
         },
     };
 </script>
 <style lang="scss">
     @import "../../layouts/css/customvariables";
-    .tree-view .zk-table {
-        border: none;
-        .zk-table__header-row {
-            background: none;
-            .zk-checkbox-wrapper {
-                position: absolute;
-                right: 25px;
-                margin-top: -13px;
-            }
-            .zk-table__header-cell {
-                text-align: right;
-                padding-right: 50px;
-                .zk-table__cell-inner {
-                    padding: 0;
-                }
-            }
-        }
-        .zk-table__body-wrapper {
-            height: 408px !important;
+    @import "../../../assets/css/ej2-base-material.css";
+    @import "../../../assets/css/ej2-vue-navigations-material.css";
+    @import "../../../assets/css/ej2-buttons-material.css";
+    .tree-view {
+        .e-treeview {
+            height: 408px;
             max-height: 420px;
+            border: 1px solid $border_color;
             overflow-y: scroll;
-            border: solid $border_color;
-            border-width: 2px 1px 1px 1px;
-            .zk-table__body-row {
-                height: 32px;
-                background-color: #fafafa;
-                .zk-table__cell-inner {
-                    padding: 0;
-                    .zk-checkbox-wrapper {
-                    /*    position: absolute;
-                        right: 25px;
-                        margin-top: -13px;  */
-                        margin-left: 20px;
-                    }
-                }
-                .zk-table__body-cell:last-child {
-                    text-align: right;
-                    padding-right: 32px;
-                }
-            }
-            .zk-table__body-row:nth-child(odd) {
-                background-color: #f1f1f1;
-            }
+        }
+        .e-treeview > .e-list-parent.e-ul {
+            padding-left: 0;
         }
     }
 </style>
