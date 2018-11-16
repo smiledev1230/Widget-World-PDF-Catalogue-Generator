@@ -195,6 +195,15 @@
   border-color: $grey_btn_color;
 }
 
+.modal-title {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+  margin-bottom: -10px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
 /* Footer Style */
 .footer {
   height: 120px;

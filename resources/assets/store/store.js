@@ -21,6 +21,11 @@ const store = new Vuex.Store({
         login_status: false,
         catalogue: {
             name: null,
+            pageColumns: 3,
+            productType: true,
+            logosOptions: true,
+            titleOptions: [],
+            barcodeOptions: true,
         },
         user: {
             name: "Fidero",

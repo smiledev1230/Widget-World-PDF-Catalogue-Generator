@@ -1,7 +1,7 @@
 <template>
     <div class="catalogue-content">
         <div class="content-body">
-            <productList/>
+            <productList :productData="productData"/>
         </div>
         <div class="content-bottom">
             <hr/>
@@ -15,13 +15,16 @@
 </template>
 <script>
     import productList from "./product_list";
+    import { productData } from '../../assets/js/global_variable';
     export default {
         name: "catalogue_preview",
         components: {
             'productList': productList
         },
         data() {
-            return {}
+            return {
+                productData: productData,
+            }
         },
         mounted: function () {
             this.$store.state.page_text = "Preview how your catalogue is going to look and send it as a PDF.";
@@ -45,6 +48,12 @@
             border: 2px solid $border_color;
             min-height: 56vh;
             padding: 15px 40px;
+            .product-list {
+                min-height: 45vw;
+                .product-body {
+                    min-height: calc(45vw - 50px);
+                }
+            }
         }
     }
 </style>

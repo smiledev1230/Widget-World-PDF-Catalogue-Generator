@@ -26,3 +26,200 @@ export const coverImages = [
     "What_s New 2.jpg",
     "What_s New.jpg"
 ]
+export const productData = [
+    {
+        id: 1,
+        images: '9310072000954.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001586.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001746.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001777.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001784.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001920.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072002095.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072003726.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072008653.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072008653.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072003917.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072008653.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072008653.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072004051.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072020259.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072008653.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072020259.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072029962.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072020259.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072004051.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072020259.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072029979.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072004051.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072001692.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072013855.jpg',
+        product_is_new: 0,
+    },
+    {
+        id: 1,
+        images: '9310072004051.jpg',
+        product_is_new: 0,
+    },
+]

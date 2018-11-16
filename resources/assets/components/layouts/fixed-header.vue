@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-sm-3">
                     <router-link to="/" class="logo">
-                        <img src="~img/WW-Logo.png" alt="logo" />
+                        <img src="../../assets/img/WW-Logo.png" alt="logo" />
                     </router-link>
                 </div>
                 <div class="col-sm-6">
@@ -12,13 +12,13 @@
                         <div class="col-sm-2"></div>
                         <div class="col-sm-4">
                             <router-link to="/new_catalogue" class="menu-icon">
-                                <img src="~img/new-catalogue.png" alt="menu icon" />
+                                <img src="../../assets/img/new-catalogue.png" alt="menu icon" />
                                 <p>NEW CATALOGUE</p>
                             </router-link>
                         </div>
                         <div class="col-sm-4">
                             <router-link to="/recent" class="menu-icon">
-                                <img src="~img/recent.png" alt="menu icon" />
+                                <img src="../../assets/img/recent.png" alt="menu icon" />
                                 <p>RECENT</p>
                             </router-link>
                         </div>
@@ -31,7 +31,7 @@
                         <!-- User Account: style can be found in dropdown-->
                         <b-dropdown class="user user-menu bell_bg user_btn" right link>
                         <span slot="text">
-                            <img src="~img/drop-down.png" class="rounded-circle" alt="Logo Icon">
+                            <img src="../../assets/img/drop-down.png" class="rounded-circle" alt="Logo Icon">
                             <i class="fa fa-sort-desc" aria-hidden="true"></i>
                         </span>
                             <b-dropdown-item exact class="dropdown_content">
@@ -57,7 +57,7 @@
                         </b-dropdown>
                         <b-dropdown class="notifications-menu bell_bg" right link>
                         <span slot="text">
-                            <img src="~img/bell-icon.png" class="noti-icon" alt="Bell Icon">
+                            <img src="../../assets/img/bell-icon.png" class="noti-icon" alt="Bell Icon">
                             <div class="notifications_badge_top">
                                 <span class="badge badge-success">2
                                 </span>
@@ -69,7 +69,7 @@
                                         <b-dropdown-item exact>
                                             <div class="row">
                                                 <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar1.jpg">
+                                                    <img class="rounded-circle" src="../../assets/img/authors/avatar1.jpg">
                                                 </div>
                                                 <div class="col-9 mt-2">
                                                     <p> &nbsp;Lorem ipsum dolor sit amet, elit.
@@ -82,7 +82,7 @@
                                         <b-dropdown-item exact>
                                             <div class="row">
                                                 <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar5.jpg">
+                                                    <img class="rounded-circle" src="../../assets/img/authors/avatar5.jpg">
                                                 </div>
                                                 <div class="col-9 mt-2">
                                                     <p> &nbsp;Lorem ipsum dolor sit amet, elit.
@@ -95,7 +95,7 @@
                                         <b-dropdown-item exact>
                                             <div class="row">
                                                 <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar3.jpg">
+                                                    <img class="rounded-circle" src="../../assets/img/authors/avatar3.jpg">
                                                 </div>
                                                 <div class="col-9 mt-2">
                                                     <p> &nbsp;Lorem ipsum dolor sit amet, elit.
@@ -108,7 +108,7 @@
                                         <b-dropdown-item exact class="mt-2 notifications_data">
                                             <div class="row">
                                                 <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar3.jpg">
+                                                    <img class="rounded-circle" src="../../assets/img/authors/avatar3.jpg">
                                                 </div>
                                                 <div class="col-9 mt-2">
                                                     <p> &nbsp;Lorem ipsum dolor sit amet, elit.

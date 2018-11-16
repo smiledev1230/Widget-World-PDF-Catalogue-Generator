@@ -3,7 +3,7 @@
         <nav>
             <div class="row">
                 <router-link to="/" class="footer-logo">
-                    <img src="~img/footer-logo.png" alt="footer logo" />
+                    <img src="../../assets/img/footer-logo.png" alt="footer logo" />
                     <span>Impulse Marketing</span>
                 </router-link>
             </div>

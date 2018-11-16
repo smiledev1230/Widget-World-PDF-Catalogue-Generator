@@ -1,5 +1,5 @@
 <template>
-    <div class="catalogue-content">
+    <div class="catalogue-content mt-2">
         <div class="visual-options">
             <div class="row d-block">
                 <label class="mb-0">Visual Options</label>
@@ -20,47 +20,20 @@
                                         <div class="pb-2">Page Columns:</div>
                                         <div class="pb-2">Display Brand Logos:</div>
                                     </div>
-                                    <div class="col-md-7 nopadding">
-                                        <div class="pb-1 pt-1">
-                                            <input type="checkbox" class="checkbox-inout ml-3"> Suppliers
-                                            <input type="checkbox" class="checkbox-inout ml-3"> Categories
-                                        </div>
-                                        <div class="pb-1 pt-1">
-                                            <input type="checkbox" class="checkbox-inout ml-3"> 2
-                                            <input type="checkbox" class="checkbox-inout ml-3"> 3
-                                        </div>
-                                        <div class="pb-1 pt-1">
-                                            <input type="checkbox" class="checkbox-inout ml-3"> Yes
-                                            <input type="checkbox" class="checkbox-inout ml-3"> No
-                                        </div>
+                                    <div class="col-md-7 pr-0">
+                                        <b-form-group>
+                                            <b-form-radio-group v-model="$store.state.catalogue.productType" :options="typeOptions" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.pageColumns" :options="columnOptions" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.logosOptions" :options="logosOptions" />
+                                        </b-form-group>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 nopadding">
-                                <div class="pb-2">Product Display Options:</div>
-                                <div class="pb-1 pt-1">
-                                    <div class="row ml-3">
-                                        <div class="col-4 nopadding">
-                                            <input type="checkbox" class="checkbox-inout"> Title
-                                        </div>
-                                        <div class="col-4 nopadding">
-                                            <input type="checkbox" class="checkbox-inout"> RRP
-                                        </div>
-                                        <div class="col-4 nopadding">
-                                            <input type="checkbox" class="checkbox-inout"> Units Per Outer
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pb-1 pt-1">
-                                    <div class="row ml-3">
-                                        <div class="col-4 nopadding">
-                                            <input type="checkbox" class="checkbox-inout"> Barcode #
-                                        </div>
-                                        <div class="col-4 nopadding">
-                                            <input type="checkbox" class="checkbox-inout"> Barcode Image
-                                        </div>
-                                    </div>
-                                </div>
+                                <b-form-group label="Product Display Options:" class="mb-0 pl-3">
+                                    <b-form-checkbox-group plain v-model="$store.state.catalogue.titleOptions" :options="titleOptions" class="pl-3" />
+                                    <b-form-radio-group v-model="$store.state.catalogue.barcodeOptions" :options="barcodeOptions" class="pl-3" />
+                                </b-form-group>
                             </div>
                         </div>
                     </div>
@@ -77,7 +50,7 @@
             </div>
             <div class="col-9 pr-0">
                 <div class="content-right">
-                    <productList />
+                    <productList :productData="productData"/>
                 </div>
             </div>
         </div>
@@ -95,6 +68,7 @@
 <script>
     import treeView from "../plugins/treeView/treeView";
     import productList from "./product_list";
+    import { productData } from '../../assets/js/global_variable';
 
     export default {
         name: "build_catalogue",
@@ -106,22 +80,45 @@
             return {
                 showCollapse: false,
                 showCheck: false,
+                productData: productData,
+                typeOptions: [
+                    { text: 'Suppliers', value: true },
+                    { text: 'Categories', value: false },
+                ],
+                columnOptions: [
+                    { text: '2', value: '2' },
+                    { text: '3', value: '3' },
+                ],
+                logosOptions: [
+                    { text: 'Yes', value: true },
+                    { text: 'No', value: false },
+                ],
+                titleOptions: [
+                    {text: 'Title', value: 'title'},
+                    {text: 'RRP', value: 'rrp'},
+                    {text: 'Units Per Outer', value: 'units'},
+                ],
+                barcodeOptions: [
+                    {text: 'Barcode #', value: true},
+                    {text: 'Barcode Image', value: false},
+                ]
             }
         },
         mounted: function () {
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
+            console.log("store.state", this.$store.state);
         },
         methods: {
             saveProducts() {
                 console.log("saveProducts");
             },
             updateOptions() {
-                console.log("updateOptions");
+                console.log("updateOptions", this.$store.state.catalogue);
             },
             updateCatalogue() {
                 console.log("updateOptions");
-            }
+            },
         }
     }
 </script>
