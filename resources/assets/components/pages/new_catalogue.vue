@@ -80,7 +80,7 @@
             return {
                 imageList : coverImages,
                 selectedImage: 0,
-                catalogue_name: '',
+                catalogue_name: this.$store.state.catalogue.name,
                 instance: "",
                 options: {
                     url: 'https://httpbin.org/post',

@@ -3,23 +3,37 @@
 .green-text-color {
   color: $green_color;
 }
+
 .grey-text-color {
   color: $grey_color;
 }
+
 .greenBgColor {
-  background: $green_color;
+  background: $green_color !important;
 }
+
 .greyBgColor {
   background: $grey_color;
 }
+
 .nopadding {
   padding: 0 !important;
   margin: 0 !important;
 }
 
+.btn.greenBgColor {
+  border-color: #7fbd2e !important;
+}
+
+.btn.greenBgColor:active {
+  border-color: #7fbd2e !important;
+  box-shadow: 0 0 0 0.1rem rgb(139, 197, 63) !important;
+}
+
 .header {
   z-index: 1030;
   background: $skin_color;
+  padding-right: 0px !important;
   nav {
     height: var(--header-height);
     margin: 0px 40px;
@@ -60,10 +74,10 @@
         outline: none;
       }
       div.dropdown {
-        >a {
+        > a {
           color: $zoom_color;
         }
-        .dropdown-menu>button {
+        .dropdown-menu > button {
           padding: 10px 15px;
         }
         &.notifications-menu {
@@ -72,18 +86,18 @@
             width: auto;
           }
         }
-        >a>i {
+        > a > i {
           font-size: 23px;
         }
-        >a {
+        > a {
           display: block;
           padding: 12px;
         }
-        &:hover>a {
+        &:hover > a {
           background-color: #ededed;
           color: #000;
         }
-        >a.padding-user {
+        > a.padding-user {
           padding-top: 8px;
           padding-bottom: 6px;
         }
@@ -100,11 +114,12 @@
           &:active {
             color: $toggle_color !important;
           }
-        } //.btn-secondary:active
+        }
+        //.btn-secondary:active
         &.show button {
           background-color: $bell-active !important
         }
-        &.user_btn  .dropdown-toggle{
+        &.user_btn .dropdown-toggle {
           padding: 2px;
         }
       }
@@ -144,10 +159,11 @@
   margin-top: 10px;
 }
 
-.user.user-menu>button img {
+.user.user-menu > button img {
   width: 35px;
   height: 35px;
 }
+
 /**** END HEADER RIGHT SIDE DROPDOWNS ****/
 
 .notifications_badge_top {
@@ -173,6 +189,7 @@
 .page-content {
   padding: 10px 40px 10px 55px;
 }
+
 .catalogue-content {
   position: relative;
   min-height: 56vh;
@@ -190,6 +207,7 @@
     bottom: 0;
   }
 }
+
 .btn-secondary {
   background-color: $grey_btn_color;
   border-color: $grey_btn_color;
@@ -202,6 +220,26 @@
   margin-bottom: -10px;
   font-size: 24px;
   font-weight: 700;
+}
+
+/* Modal Style */
+.modal-open {
+  padding-right: 0px !important;
+  .catalogue-modal .modal-content {
+    .modal-header {
+      border-bottom: unset;
+      padding-bottom: 0;
+      .close {
+        font-size: 32px;
+        cursor: pointer;
+      }
+    }
+    .modal-body {
+      p {
+        padding: 0 15px;
+      }
+    }
+  }
 }
 
 /* Footer Style */
@@ -246,10 +284,11 @@
   .dropdown.open .dropdown-menu {
     position: absolute;
   }
-  .navbar-right>li>a {
+  .navbar-right > li > a {
     padding: 10px 12px;
   }
 }
+
 /* Fix menu positions on xs screens to appear correctly and fully */
 
 @media (max-width: 560px) {

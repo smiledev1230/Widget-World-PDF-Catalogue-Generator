@@ -9,19 +9,26 @@
                              v-bind:key="colInd"
                              :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
-                                <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus" aria-hidden="true"></i></div>
-                                <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
+                                <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus"
+                                                                                                    aria-hidden="true"></i>
+                                </div>
+                                <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block"/>
                             </div>
-                            <div class="product-image product-logo" v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
-                                <img :src="getLogoUrl()" />
+                            <div class="product-image product-logo"
+                                 v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
+                                <img :src="getLogoUrl()"/>
                             </div>
-                            <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)" >
-                                <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)" :class="{active: checkNewState(rowInd, colInd, 0)}">NEW</div>
-                                <div class="plus-btn" @click="addNewBlock(rowInd, colInd, 0)"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                            <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)">
+                                <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)"
+                                     :class="{active: checkNewState(rowInd, colInd, 0)}">NEW
+                                </div>
+                                <div class="plus-btn" @click="addNewBlock(rowInd, colInd, 0)"><i class="fa fa-plus"
+                                                                                                 aria-hidden="true"></i>
+                                </div>
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                        v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0" >
+                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0">
                                         {{getProductTitle(rowInd, colInd, 0)}}
                                     </div>
                                     <div>
@@ -33,14 +40,16 @@
                                             <div v-if="!$store.state.catalogue.barcodeOptions">
                                                 {{getBarcodeNumber(rowInd, colInd, 0)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="redLabelColor">
+                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                                 class="redLabelColor">
                                                 RRP ${{getRRP(rowInd, colInd, 0)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
                                             <img v-if="$store.state.catalogue.barcodeOptions"
-                                                 :src="getBarcodeImage(rowInd, colInd, 0)" />
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="product-rrp">
+                                                 :src="getBarcodeImage(rowInd, colInd, 0)"/>
+                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                                 class="product-rrp">
                                                 RRP<br/>${{getRRP(rowInd, colInd, 0)}}
                                             </div>
                                         </div>
@@ -63,16 +72,21 @@
                              v-bind:key="rightCol"
                              :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
-                                <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i class="fa fa-minus" aria-hidden="true"></i></div>
-                                <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block" />
+                                <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i
+                                        class="fa fa-minus" aria-hidden="true"></i></div>
+                                <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block"/>
                             </div>
-                            <div class="product-image" v-else-if="getImgUrl(rightRow, rightCol, 1)" >
-                                <div class="ribbon" @click="updateNewState(rightRow, rightCol, 1)" :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW</div>
-                                <div class="plus-btn" @click="addNewBlock(rightRow, rightCol, 1)"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                            <div class="product-image" v-else-if="getImgUrl(rightRow, rightCol, 1)">
+                                <div class="ribbon" @click="updateNewState(rightRow, rightCol, 1)"
+                                     :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW
+                                </div>
+                                <div class="plus-btn" @click="addNewBlock(rightRow, rightCol, 1)"><i class="fa fa-plus"
+                                                                                                     aria-hidden="true"></i>
+                                </div>
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0" >
+                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0">
                                         {{getProductTitle(rightRow, rightCol, 1)}}
                                     </div>
                                     <div>
@@ -84,14 +98,16 @@
                                             <div v-if="!$store.state.catalogue.barcodeOptions">
                                                 {{getBarcodeNumber(rightRow, rightCol, 1)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="redLabelColor">
+                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                                 class="redLabelColor">
                                                 RRP ${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
                                             <img v-if="$store.state.catalogue.barcodeOptions"
-                                                 :src="getBarcodeImage(rightRow, rightCol, 1)" />
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="product-rrp">
+                                                 :src="getBarcodeImage(rightRow, rightCol, 1)"/>
+                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                                 class="product-rrp">
                                                 RRP<br/>${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
                                         </div>
@@ -121,11 +137,13 @@
                 Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </label>
         </div>
-        <b-modal id="blockModal" title="Add Block" ref="blockModal" v-model="showModal">
+        <b-modal id="blockModal" title="Add Block" ref="blockModal" v-model="showModal" class="catalogue-modal">
             <quill-editor :options="quilleditorOption" v-model="blockEditor" class="edi"></quill-editor>
             <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="btn-secondary pl-3 pr-3" variant="primary" @click="showModal=false">CANCEL</b-btn>
-                <b-btn size="sm" class="float-right greenBgColor pl-3 pr-3" variant="primary" @click="addBlock()">ADD</b-btn>
+                <b-btn size="sm" class="btn-secondary pl-3 pr-3" variant="primary" @click="showModal=false">CANCEL
+                </b-btn>
+                <b-btn size="sm" class="float-right greenBgColor pl-3 pr-3" variant="primary" @click="addBlock()">ADD
+                </b-btn>
             </div>
         </b-modal>
     </div>
@@ -133,6 +151,7 @@
 <script>
     import Vue from 'vue';
     import VueQuillEditor from 'vue-quill-editor';
+
     Vue.use(VueQuillEditor);
     import 'codemirror/keymap/sublime';
     import 'codemirror/mode/javascript/javascript.js'
@@ -144,8 +163,7 @@
 
     export default {
         name: "product_list",
-        components: {
-        },
+        components: {},
         props: ['totalPages'],
         data() {
             return {
@@ -153,9 +171,7 @@
                 showModal: false,
                 blockEditor: null,
                 editorIndex: 1,
-                quilleditorOption: {
-
-                },
+                quilleditorOption: {},
             }
         },
         mounted: function () {
@@ -215,7 +231,7 @@
                 }
             },
             addBlock() {
-                this.showModal=false;
+                this.showModal = false;
                 var newBlock = {
                     id: new Date().getTime(),
                     name: this.blockEditor,
@@ -255,7 +271,7 @@
             },
             getCols(n) {
                 let cols = [];
-                for (let i=1; i<=n;i++) {
+                for (let i = 1; i <= n; i++) {
                     cols.push(i);
                 }
                 return cols;
@@ -265,6 +281,7 @@
 </script>
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
+
     .product-list {
         min-height: 735px;
         position: relative;
@@ -406,6 +423,7 @@
             color: $red_label_color;
         }
     }
+
     .twoPages {
         min-height: 825px;
         .product-body {
