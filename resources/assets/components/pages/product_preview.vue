@@ -9,15 +9,13 @@
                              v-bind:key="colInd"
                              :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
-                                <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus" aria-hidden="true"></i></div>
                                 <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
                             </div>
                             <div class="product-image product-logo" v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
                                 <img :src="getLogoUrl()" />
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)" >
-                                <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)" :class="{active: checkNewState(rowInd, colInd, 0)}">NEW</div>
-                                <div class="plus-btn" @click="addNewBlock(rowInd, colInd, 0)"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                                <div class="ribbon" v-if="checkNewState(rowInd, colInd, 0)" :class="{active: checkNewState(rowInd, colInd, 0)}">NEW</div>
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
                                     <div class="product-title"
@@ -63,12 +61,10 @@
                              v-bind:key="rightCol"
                              :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
-                                <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i class="fa fa-minus" aria-hidden="true"></i></div>
                                 <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block" />
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rightRow, rightCol, 1)" >
-                                <div class="ribbon" @click="updateNewState(rightRow, rightCol, 1)" :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW</div>
-                                <div class="plus-btn" @click="addNewBlock(rightRow, rightCol, 1)"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                                <div class="ribbon" v-if="checkNewState(rightRow, rightCol, 1)" :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW</div>
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
                                     <div class="product-title"
@@ -121,44 +117,21 @@
                 Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </label>
         </div>
-        <b-modal id="blockModal" title="Add Block" ref="blockModal" v-model="showModal">
-            <quill-editor :options="quilleditorOption" v-model="blockEditor" class="edi"></quill-editor>
-            <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="btn-secondary pl-3 pr-3" variant="primary" @click="showModal=false">CANCEL</b-btn>
-                <b-btn size="sm" class="float-right greenBgColor pl-3 pr-3" variant="primary" @click="addBlock()">ADD</b-btn>
-            </div>
-        </b-modal>
     </div>
 </template>
 <script>
-    import Vue from 'vue';
-    import VueQuillEditor from 'vue-quill-editor';
-    Vue.use(VueQuillEditor);
-    import 'codemirror/keymap/sublime';
-    import 'codemirror/mode/javascript/javascript.js'
-
-    // require styles
-    import 'quill/dist/quill.core.css'
-    import 'quill/dist/quill.snow.css'
-    import 'quill/dist/quill.bubble.css'
-
     export default {
-        name: "product_list",
+        name: "product_preview",
         components: {
         },
-        props: ['totalPages'],
         data() {
             return {
                 selectedPage: 1,
-                showModal: false,
-                blockEditor: null,
-                editorIndex: 1,
-                quilleditorOption: {
-
-                },
+                totalPages: 1,
             }
         },
         mounted: function () {
+            this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.pageColumns + 0.5);
         },
         methods: {
             prevPage() {
@@ -188,18 +161,8 @@
                     return;
                 }
             },
-            updateNewState(rowInd, colInd, backPage) {
-                let index = this.getIndex(rowInd, colInd, backPage);
-                this.$store.state.productData[index]['product_is_new'] = !this.$store.state.productData[index]['product_is_new'];
-            },
             checkNewState(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'product_is_new')
-            },
-            addNewBlock(rowInd, colInd, backPage) {
-                this.showModal = true;
-                this.blockEditor = null;
-                this.editorIndex = this.getIndex(rowInd, colInd, backPage);
-                this.$refs.blockModal.show();
             },
             getIndex(rowInd, colInd, backPage) {
                 let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.pageColumns;
@@ -225,10 +188,6 @@
             },
             checkNewBlock(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'type');
-            },
-            removeNewBlock(rowInd, colInd, backPage) {
-                let index = this.getIndex(rowInd, colInd, backPage);
-                this.$store.state.productData.splice(index, 1);
             },
             getProductTitle(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'name');
@@ -266,10 +225,10 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .product-list {
-        min-height: 735px;
+        min-height: 830px !important;
         position: relative;
         .product-body {
-            min-height: 690px;
+            min-height: 785px;
             background: $white_color;
             border: 2px solid $border_color;
             .page-separator {
@@ -287,7 +246,7 @@
                 .product-image {
                     position: relative;
                     height: calc(100% - 10px);
-                    min-height: 200px;
+                    min-height: 232px;
                     margin: 5px;
                     border: 1px solid $border_color;
                     overflow: hidden;
@@ -314,13 +273,6 @@
                     .ribbon.active {
                         background-color: $red_label_color;
                     }
-                    .plus-btn {
-                        position: absolute;
-                        padding-left: 5px;
-                        font-size: 18px;
-                        color: #e6e6e6;
-                        cursor: pointer;
-                    }
                     .new-block {
                         height: 100%;
                         display: flex;
@@ -335,18 +287,18 @@
                             min-height: 36px;
                             text-align: center;
                             padding: 0px 5px;
-                            font-size: 12px;
+                            font-size: 13px;
                             font-weight: bold;
                             position: absolute;
-                            bottom: 35px;
+                            bottom: 42px;
                             width: 100%;
                         }
                         .product-detail {
                             max-width: 60%;
-                            min-height: 14px;
-                            padding-left: 5px;
-                            font-size: 10px;
-                            line-height: 14px;
+                            min-height: 18px;
+                            padding-left: 8px;
+                            font-size: 12px;
+                            line-height: 18px;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -354,12 +306,12 @@
                         .barcode-image {
                             position: absolute;
                             bottom: 5px;
-                            right: 2px;
+                            right: 8px;
                             max-width: 40%;
                         }
                         .product-rrp {
-                            font-size: 11px;
-                            line-height: 12px;
+                            font-size: 12px;
+                            line-height: 16px;
                             color: $red_label_color;
                         }
                     }
@@ -407,9 +359,17 @@
         }
     }
     .twoPages {
-        min-height: 825px;
+        min-height: 1065px !important;
         .product-body {
-            min-height: 780px;
+            min-height: 1020px;
+            .product-box {
+                .product-detail {
+                    line-height: 24px;
+                }
+                .product-rrp {
+                    line-height: 20px;
+                }
+            }
         }
     }
 </style>

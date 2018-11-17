@@ -37,7 +37,8 @@ const layout = [{
     component: resolve => require(['pages/catalogue_preview'], resolve),
     meta: {
         title: "Catalogue Preview",
-        catalogue: true
+        catalogue: true,
+        props: true
     }
 }, {
     path: 'user_profile',

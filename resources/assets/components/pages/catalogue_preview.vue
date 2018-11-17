@@ -1,7 +1,7 @@
 <template>
     <div class="catalogue-content">
         <div class="content-body">
-            <productList :productData="productData"/>
+            <product-preview :productData="$store.state.productData"/>
         </div>
         <div class="content-bottom">
             <hr/>
@@ -14,17 +14,15 @@
     </div>
 </template>
 <script>
-    import productList from "./product_list";
-    import { productData } from '../../assets/js/global_variable';
+    import productPreview from "./product_preview";
+
     export default {
         name: "catalogue_preview",
         components: {
-            'productList': productList
+            'product-preview': productPreview
         },
         data() {
-            return {
-                productData: productData,
-            }
+            return {}
         },
         mounted: function () {
             this.$store.state.page_text = "Preview how your catalogue is going to look and send it as a PDF.";

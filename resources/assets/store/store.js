@@ -24,9 +24,10 @@ const store = new Vuex.Store({
             pageColumns: 3,
             productType: true,
             logosOptions: true,
-            titleOptions: [],
-            barcodeOptions: true,
+            titleOptions: ['title', 'rrp', 'units'],
+            barcodeOptions: false,
         },
+        productData: [],
         user: {
             name: "Fidero",
             picture: require("img/authors/prf4.jpg"),

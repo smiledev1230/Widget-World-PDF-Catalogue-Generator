@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-md-6 nopadding">
                                 <div class="row">
-                                    <div class="col-md-5 text-right pr-2">
+                                    <div class="col-md-5 text-right pr-2 options-label">
                                         <div class="pb-2">Display Products by:</div>
                                         <div class="pb-2">Page Columns:</div>
                                         <div class="pb-2">Display Brand Logos:</div>
@@ -23,8 +23,8 @@
                                     <div class="col-md-7 pr-0">
                                         <b-form-group>
                                             <b-form-radio-group v-model="$store.state.catalogue.productType" :options="typeOptions" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.pageColumns" :options="columnOptions" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.logosOptions" :options="logosOptions" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.pageColumns" :options="columnOptions" @change="updatePage" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.logosOptions" :options="logosOptions" @change="updateProduct"/>
                                         </b-form-group>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
             </div>
             <div class="col-9 pr-0">
                 <div class="content-right">
-                    <productList :productData="productData"/>
+                    <productList :totalPages="totalPages"/>
                 </div>
             </div>
         </div>
@@ -74,13 +74,15 @@
         name: "build_catalogue",
         components: {
             'treeView': treeView,
-            'productList': productList
+            'productList': productList,
         },
         data() {
+            let total_pages = Math.round(productData.length/3/this.$store.state.catalogue.pageColumns + 0.5);
+            this.$store.state.productData = productData;
             return {
                 showCollapse: false,
                 showCheck: false,
-                productData: productData,
+                totalPages: total_pages,
                 typeOptions: [
                     { text: 'Suppliers', value: true },
                     { text: 'Categories', value: false },
@@ -99,14 +101,15 @@
                     {text: 'Units Per Outer', value: 'units'},
                 ],
                 barcodeOptions: [
-                    {text: 'Barcode #', value: true},
-                    {text: 'Barcode Image', value: false},
+                    {text: 'Barcode #', value: false},
+                    {text: 'Barcode Image', value: true},
                 ]
             }
         },
         mounted: function () {
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
+            if (this.$store.state.catalogue.logosOptions && this.$store.state.productData[0]['type'] != 'logo') this.updateProduct(true);
             console.log("store.state", this.$store.state);
         },
         methods: {
@@ -119,6 +122,23 @@
             updateCatalogue() {
                 console.log("updateOptions");
             },
+            updateProduct(e) {
+                console.log("updateProduct", e);
+                if (e) {
+                    let newBlock = {
+                        id: new Date().getTime(),
+                        name: null,
+                        image: 'Arnotts-Logo.jpg',
+                        type: 'logo'
+                    }
+                    this.$store.state.productData.splice(0, 0, newBlock);
+                } else {
+                    this.$store.state.productData.splice(0,1);
+                }
+            },
+            updatePage(e) {
+                this.totalPages = Math.round(this.$store.state.productData.length/3/e + 0.5);
+            }
         }
     }
 </script>
@@ -140,6 +160,9 @@
                 position: absolute;
                 right: 18px;
                 bottom: 8px;
+            }
+            .options-label {
+                font-size: 13.5px;
             }
         }
         .content-main {
