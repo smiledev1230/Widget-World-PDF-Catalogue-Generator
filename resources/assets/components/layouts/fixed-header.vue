@@ -35,19 +35,9 @@
                             <i class="fa fa-sort-desc" aria-hidden="true"></i>
                         </span>
                             <b-dropdown-item exact class="dropdown_content">
-                                <router-link to="/user_profile" exact class="drpodowtext">
-                                    <i class="fa fa-user-o"></i> Profile
-                                </router-link>
-                            </b-dropdown-item>
-                            <b-dropdown-item exact class="dropdown_content">
-                                <router-link to="/edit_user" exact class="drpodowtext">
-                                    <i class="fa fa-cog"></i> Settings
-                                </router-link>
-                            </b-dropdown-item>
-                            <b-dropdown-item exact class="dropdown_content">
-                                <router-link to="/lockscreen" exact class="drpodowtext">
-                                    <i class="fa fa-lock"></i> Lock
-                                </router-link>
+                                <a v-b-modal.accountModal class="drpodowtext">
+                                    <i class="fa fa-user-o"></i> Account
+                                </a>
                             </b-dropdown-item>
                             <b-dropdown-item exact class="dropdown_content">
                                 <router-link to="/login" exact class="drpodowtext">
@@ -178,15 +168,98 @@
                 </div>
             </div>
         </nav>
+        <b-modal id="accountModal" title="Account Details" ref="accountModal" v-model="accountModal" class="catalogue-modal">
+            <div class="merchantModalContent">
+                <vue-form class="form-horizontal form-validation" :state="formstate">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <validate tag="div">
+                                <label for="username">Name:</label>
+                                <input :class="{noEdit: !accountEdit}" v-model="userModel.username" name="username" type="text" required autofocus placeholder="User Name" class="form-control" :readonly="accountEdit ? false : true" />
+                                <field-messages name="username" show="$invalid" class="text-danger">
+                                    <div slot="required">Username is a required field</div>
+                                </field-messages>
+                            </validate>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <validate tag="div">
+                                <label for="email">Email Address:</label>
+                                <input :class="{noEdit: !accountEdit}" v-model="userModel.email" name="email" type="email" required placeholder="E-mail" class="form-control" :readonly="accountEdit ? false : true" />
+                                <field-messages name="email" show="$invalid" class="text-danger">
+                                    <div slot="required">Email is a required field</div>
+                                    <div slot="email">Email is not valid</div>
+                                </field-messages>
+                            </validate>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <validate tag="div">
+                                <label for="password">Password:</label>
+                                <input :class="{noEdit: !accountEdit}" v-model="userModel.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4" maxlength="10" :readonly="accountEdit ? false : true" />
+                                <field-messages name="password" show="$invalid" class="text-danger">
+                                    <div slot="required">Password is required</div>
+                                    <div slot="minlength">Password should be atleast 4 characters long</div>
+                                    <div slot="maxlength">Password should be atmost 10 characters long</div>
+                                </field-messages>
+                            </validate>
+                        </div>
+                    </div>
+                    <div class="pencil-btn" v-model="accountEdit" @click="updateEditState"><i class="fa fa-pencil"></i></div>
+                </vue-form>
+            </div>
+            <div slot="modal-footer" class="w-100">
+                <b-btn class="pl-3 pr-3" @click="accountModal=false">CANCEL</b-btn>
+                <b-btn class="float-right greenBgColor pl-3 pr-3" @click="updateAccount">UPDATE</b-btn>
+            </div>
+        </b-modal>
     </header>
 </template>
 <script>
-    import screenfull from "screenfull"
+    import Vue from 'vue';
+    import VueForm from "vue-form";
+    import options from "src/validations/validations.js";
+    Vue.use(VueForm, options);
+
     export default {
         name: "vueadmin_header",
-
+        data() {
+            return {
+                formstate: {},
+                accountModal: false,
+                accountEdit: false,
+                userModel: {
+                    username: "Addision",
+                    email: "add@gmail.com",
+                    password: "12345",
+                },
+            }
+        },
         methods: {
-
+            onSubmit: function() {
+                if (this.formstate.$invalid) {
+                    return;
+                } else {
+                    this.$router.push("/");
+                }
+            },
+            updateAccount() {
+                if (this.formstate.$invalid) {
+                    return;
+                } else {
+                    this.$router.push("/");
+                }
+                this.accountModal=false;
+            },
+            updateEditState() {
+                if (this.formstate.$invalid) {
+                    return;
+                } else {
+                    this.accountEdit = !this.accountEdit;
+                }
+            }
         }
     }
 </script>
@@ -211,6 +284,44 @@
         }
         .navbar-right > div {
             height: var(--home-header-height);
+        }
+    }
+</style>
+<style lang="scss">
+    #accountModal {
+        .modal-body {
+            min-height: 166px;
+            margin: 15px 15px 0;
+            padding: 15px 0;
+            background: #ececec;
+            .merchantModalContent {
+                label {
+                    width: 125px;
+                    text-align: right;
+                }
+                .form-control {
+                    display: inline-block;
+                    width: calc(100% - 160px);
+                }
+                .noEdit {
+                    border: unset;
+                    background-color: #ececec;
+                }
+                .form-control:disabled, .form-control[readonly] {
+                    box-shadow: unset;
+                }
+                .pencil-btn {
+                    padding: 0 5px;
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    font-size: 18px;
+                    cursor: pointer;
+                }
+            }
+        }
+        .modal-footer {
+            border-top: unset;
         }
     }
 </style>
