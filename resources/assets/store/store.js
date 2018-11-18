@@ -29,9 +29,10 @@ const store = new Vuex.Store({
         },
         productData: [],
         user: {
-            name: "Fidero",
-            picture: require("img/authors/prf4.jpg"),
-            job: "Project Manager"
+            name: "Addision",
+            email: "add@gmail.com",
+            password: "123456",
+            token: null
         },
         cal_events: [{
             id: 0,

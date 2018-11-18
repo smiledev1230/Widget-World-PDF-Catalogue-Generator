@@ -78,7 +78,7 @@
                         <div class="form-group">
                             <validate tag="div">
                                 <label for="username">Name:</label>
-                                <input :class="{noEdit: !accountEdit}" v-model="userModel.username" name="username" type="text" required autofocus placeholder="User Name" class="form-control" :readonly="accountEdit ? false : true" />
+                                <input :class="{noEdit: !accountEdit}" v-model="userModel.name" name="username" type="text" required autofocus placeholder="User Name" class="form-control" :readonly="accountEdit ? false : true" />
                                 <field-messages name="username" show="$invalid" class="text-danger">
                                     <div slot="required">Username is a required field</div>
                                 </field-messages>
@@ -168,11 +168,7 @@
                 notifyModal: false,
                 accountEdit: false,
                 selectedNotify: {},
-                userModel: {
-                    username: "Addision",
-                    email: "add@gmail.com",
-                    password: "12345",
-                },
+                userModel: this.$store.state.user,
                 notifications: [
                     {
                         title: 'New Product Launched',
@@ -209,18 +205,18 @@
             }
         },
         methods: {
-            onSubmit: function() {
-                if (this.formstate.$invalid) {
-                    return;
-                } else {
-                    this.$router.push("/");
-                }
-            },
             updateAccount() {
                 if (this.formstate.$invalid) {
                     return;
                 } else {
-                    this.$router.push("/");
+                    var app = this;
+                    axios.post("api/update/", app.userModel).then(response => {
+                        if (response.data && response.data.user) {
+                            app.$store.state.user = app.userModel;
+                        } else {
+                            app.userModel = app.$store.state.user;
+                        }
+                    });
                 }
                 this.accountModal=false;
             },

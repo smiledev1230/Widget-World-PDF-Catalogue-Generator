@@ -228,7 +228,7 @@
         min-height: 830px !important;
         position: relative;
         .product-body {
-            min-height: 785px;
+            min-height: 785px !important;
             background: $white_color;
             border: 2px solid $border_color;
             .page-separator {
