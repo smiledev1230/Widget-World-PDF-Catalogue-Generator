@@ -106,7 +106,6 @@
         button.btn-secondary {
           background-color: $bell-color;
           border: none;
-          border-radius: 0;
           box-shadow: none !important;
           &:hover {
             background-color: #ededed !important
@@ -114,10 +113,6 @@
           &:active {
             color: $toggle_color !important;
           }
-        }
-        //.btn-secondary:active
-        &.show button {
-          background-color: $bell-active !important
         }
         &.user_btn .dropdown-toggle {
           padding: 2px;

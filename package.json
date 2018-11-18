@@ -54,6 +54,7 @@
         "vue-images-loaded": "^1.1.2",
         "vue-js-toggle-button": "^1.2.2",
         "vue-multiselect": "2.0.8",
+        "vue-plyr": "^5.0.4",
         "vue-quill-editor": "^3.0.4",
         "vue-router": "^3.0.1",
         "vue-slider-component": "^2.4.7",

@@ -54,114 +54,17 @@
                             </div>
                         </span>
                             <b-dropdown-item class="dropdownheader socio-tabs1" exact>
-                                <b-tabs>
-                                    <b-tab title="Notifications" class="tabs_cont" active>
-                                        <b-dropdown-item exact>
-                                            <div class="row">
-                                                <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar1.jpg">
-                                                </div>
-                                                <div class="col-9 mt-2">
-                                                    <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                        <br>
-                                                        <small class="ml-1 text-info">Today </small>
-                                                    </p>
-                                                </div>
+                                <div v-for="(note, index) in notifications" :key="index">
+                                    <b-dropdown-item exact v-if="note.state != 0">
+                                        <div :class="note.state == 1 ? 'view-notification' : 'close-notification'">
+                                            <span>{{note.title}}</span>
+                                            <div class="float-right">
+                                                <b-btn v-if="note.state == 1" class="greenBgColor pl-3 pr-3 view-btn" @click="viewNotify(index)">VIEW</b-btn>
+                                                <i v-else class="fa fa-times" aria-hidden="true" @click="notifications[index]['state']=0"></i>
                                             </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact>
-                                            <div class="row">
-                                                <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar5.jpg">
-                                                </div>
-                                                <div class="col-9 mt-2">
-                                                    <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                        <br>
-                                                        <small class="ml-1 text-muted">week ago</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact>
-                                            <div class="row">
-                                                <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar3.jpg">
-                                                </div>
-                                                <div class="col-9 mt-2">
-                                                    <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                        <br>
-                                                        <small class="ml-1 text-muted">month ago</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="mt-2 notifications_data">
-                                            <div class="row">
-                                                <div class="col-2 mt-2 ml-2">
-                                                    <img class="rounded-circle" src="~img/authors/avatar3.jpg">
-                                                </div>
-                                                <div class="col-9 mt-2">
-                                                    <p> &nbsp;Lorem ipsum dolor sit amet, elit.
-                                                        <br>
-                                                        <small class="ml-1 text-muted">2 months ago</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item class="dropdown-footer " exact>
-                                            <div>
-                                                <strong>View all</strong>
-                                            </div>
-                                        </b-dropdown-item>
-                                    </b-tab>
-                                    <b-tab title="Events" class="event_date">
-                                        <b-dropdown-item exact class="notifications_data">
-                                            <div class="noti_item">
-                                                <div class="row">
-                                                    <div class="col-2   ml-3">
-                                                        <i class="fa fa-calendar text-info noti_msg"></i>
-                                                    </div>
-                                                    <div class="col-9 mt-1">
-                                                        <span>New Lorem Event from john.</span>
-                                                        <br>
-                                                        <span class="text-muted">Apr 29th 2017</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="notifications_data">
-                                            <div class="row">
-                                                <div class="col-2 ml-3">
-                                                    <i class="fa fa-calendar text-info noti_msg"></i>
-                                                </div>
-                                                <div class="col-9 mt-1">
-                                                    <span>New Lorem Event from john.</span>
-                                                    <br>
-                                                    <span class="text-muted">Apr 29th 2017</span>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item exact class="notifications_data">
-                                            <div class="row">
-                                                <div class="col-2 ml-3 mb-2">
-                                                    <i class="fa fa-calendar text-info noti_msg"></i>
-                                                </div>
-                                                <div class="col-9 mt-1">
-                                                    <span>New Lorem Event from john.</span>
-                                                    <br>
-                                                    <span class="text-muted">Apr 29th 2017</span>
-                                                </div>
-                                            </div>
-                                        </b-dropdown-item>
-                                        <b-dropdown-item class="dropdown-footer">
-                                            <div>
-                                                <strong>View all</strong>
-                                            </div>
-                                        </b-dropdown-item>
-                                    </b-tab>
-                                    <b-tab title="Updates" disabled>
-                                    </b-tab>
-                                </b-tabs>
+                                        </div>
+                                    </b-dropdown-item>
+                                </div>
                             </b-dropdown-item>
                         </b-dropdown>
                     </div>
@@ -215,13 +118,46 @@
                 <b-btn class="float-right greenBgColor pl-3 pr-3" @click="updateAccount">UPDATE</b-btn>
             </div>
         </b-modal>
+        <b-modal id="notifyModal" title="" ref="notifyModal" v-model="notifyModal" class="catalogue-modal">
+            <div class="merchantModalContent text-center mt-3">
+                <div v-if="selectedNotify.type=='text'" class="text-notify">
+                    <img src="~img/notify-bell.png"/>
+                    <p class="notify-title">{{selectedNotify.title}}</p>
+                    <p>{{selectedNotify.description}}</p>
+                </div>
+                <div v-else-if="selectedNotify.type=='image'" class="row image-notify">
+                    <div class="col-6 image">
+                        <img :src="selectedNotify.url" class="w-100" />
+                    </div>
+                    <div class="col-6 pt-3 text-left">
+                        <img src="~img/notify-bell.png"/>
+                        <p class="notify-title">{{selectedNotify.title}}</p>
+                        <p>{{selectedNotify.description}}</p>
+                    </div>
+                </div>
+                <div v-else class="video-notify text-center">
+                    <vue-plyr :emit="['controls', 'volume']">
+                        <video :src="selectedNotify.url">
+                            <source :src="selectedNotify.url" type="video/mp4" size="720">
+                        </video>
+                    </vue-plyr>
+                    <p class="notify-title">{{selectedNotify.title}}</p>
+                    <p>{{selectedNotify.description}}</p>
+                </div>
+            </div>
+            <div slot="modal-footer" class="w-100">
+                <div class="text-center" @click="notifyModal=false">DISMISS</div>
+            </div>
+        </b-modal>
     </header>
 </template>
 <script>
     import Vue from 'vue';
     import VueForm from "vue-form";
+    import VuePlyr from 'vue-plyr';
     import options from "src/validations/validations.js";
     Vue.use(VueForm, options);
+    Vue.use(VuePlyr);
 
     export default {
         name: "vueadmin_header",
@@ -229,12 +165,47 @@
             return {
                 formstate: {},
                 accountModal: false,
+                notifyModal: false,
                 accountEdit: false,
+                selectedNotify: {},
                 userModel: {
                     username: "Addision",
                     email: "add@gmail.com",
                     password: "12345",
                 },
+                notifications: [
+                    {
+                        title: 'New Product Launched',
+                        type: 'text',
+                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
+                        state: 1,
+                    },
+                    {
+                        title: 'New Product Video',
+                        type: 'video',
+                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
+                        url: 'http://vjs.zencdn.net/v/oceans.mp4',
+                        state: 1,
+                    },
+                    {
+                        title: 'New Product Image',
+                        type: 'image',
+                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
+                        url: 'https://www.slrmag.co.uk/wp-content/uploads/2018/03/What-a-treat-from-Maltesers.jpg',
+                        state: 1,
+                    },
+                    {
+                        title: 'New Product Image',
+                        type: 'image',
+                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
+                        state: -1,
+                    },
+                    {
+                        title: 'Product Discontinued',
+                        type: 'text',
+                        state: -1,
+                    },
+                ]
             }
         },
         methods: {
@@ -259,35 +230,71 @@
                 } else {
                     this.accountEdit = !this.accountEdit;
                 }
+            },
+            viewNotify(index) {
+                this.selectedNotify = this.notifications[index];
+                this.notifyModal = false;
+                this.$refs.notifyModal.show();
             }
         }
     }
 </script>
-<style lang="scss" scoped>
-    .header nav.smallHeader {
-        height: var(--home-header-height);
-        .logo {
-            line-height: var(--home-header-height);
-            img {
-                height: 72px;
-            }
-        }
-        .header-menu {
-            .menu-icon {
-                img {
-                    max-height: 32px;
-                }
-                p {
-                    font-size: small;
-                }
-            }
-        }
-        .navbar-right > div {
+<style lang="scss">
+    @import "./css/customvariables";
+    .header {
+        nav.smallHeader {
             height: var(--home-header-height);
+            .logo {
+                line-height: var(--home-header-height);
+                img {
+                    height: 72px;
+                }
+            }
+            .header-menu {
+                .menu-icon {
+                    img {
+                        max-height: 32px;
+                    }
+                    p {
+                        font-size: small;
+                    }
+                }
+            }
+            .navbar-right > div {
+                height: var(--home-header-height);
+            }
+        }
+        .notifications-menu.bell_bg {
+            .dropdown-menu {
+                background-color: $white_color;
+                max-height: 280px;
+                overflow-y: auto;
+                .view-notification {
+                    padding: 12px 20px;
+                    margin-bottom: 2px;
+                    background-color: #f4f9ec;
+                    color: $green_color;
+                    .view-btn {
+                        margin-top: -5px;
+                    }
+                }
+                .close-notification {
+                    padding: 12px 20px;
+                    margin-bottom: 2px;
+                    background-color: $grey_bgColor;
+                    color: $grey_btn_color;
+                    .fa-times {
+                        font-size: 20px;
+                        margin-right: 18px;
+                        cursor: pointer;
+                    }
+                }
+                .dropdown-item {
+                    cursor: initial;
+                }
+            }
         }
     }
-</style>
-<style lang="scss">
     #accountModal {
         .modal-body {
             min-height: 166px;
@@ -322,6 +329,40 @@
         }
         .modal-footer {
             border-top: unset;
+        }
+    }
+    #notifyModal {
+        .modal-header {
+            display: none;
+        }
+        .merchantModalContent {
+            img {
+                width: 24px;
+            }
+            .notify-title {
+                margin: 10px 0 5px;
+                font-size: 16px;
+                color: $green_color;
+            }
+            .image-notify {
+                .col-6 {
+                    p {
+                        padding-left: 0;
+                    }
+                }
+                .image {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+            }
+        }
+        .modal-footer {
+            background-color: #c6c6c6;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            color: $white_color;
+            cursor: pointer;
         }
     }
 </style>

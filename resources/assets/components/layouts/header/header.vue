@@ -329,40 +329,5 @@
 </style>
 <style type="text/css" lang="scss">
     @import "../css/customvariables";
-    // .wrapper {
-    //     margin-top: 50px;
-    //     @media screen and (max-width: 560px) {
-    //         margin-top: 100px;
-    //     }
-    // }
 
-    .sidebar-toggle {
-        margin-left: 10px;
-    }
-
-    .bell_bg {
-        button.btn-secondary {
-            background-color: $bell-color;
-            border: none;
-            border-radius: 0;
-            box-shadow: none !important;
-            &:hover {
-                background-color: #ededed !important
-            }
-            &:active {
-                color: $toggle_color !important;
-            }
-        } //.btn-secondary:active
-        &.show button {
-            background-color: $bell-active !important
-        }
-        &.user_btn .dropdown-toggle{
-            padding:7px 9px;
-        }
-    }
-
-    .tabs_cont,
-    .event_date {
-        background-color: #fff !important;
-    }
 </style>
