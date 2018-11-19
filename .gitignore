@@ -16,3 +16,4 @@ yarn-error.log
 .env
 mix-manifest.json
 hot
+server.env

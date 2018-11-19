@@ -48,8 +48,8 @@
                         <b-dropdown class="notifications-menu bell_bg" right link>
                         <span slot="text">
                             <img src="~img/bell-icon.png" class="noti-icon" alt="Bell Icon">
-                            <div class="notifications_badge_top">
-                                <span class="badge badge-success">2
+                            <div class="notifications_badge_top" v-if="notifications">
+                                <span class="badge badge-success">{{notifications.length}}
                                 </span>
                             </div>
                         </span>
@@ -60,7 +60,7 @@
                                             <span>{{note.title}}</span>
                                             <div class="float-right">
                                                 <b-btn v-if="note.state == 1" class="greenBgColor pl-3 pr-3 view-btn" @click="viewNotify(index)">VIEW</b-btn>
-                                                <i v-else class="fa fa-times" aria-hidden="true" @click="notifications[index]['state']=0"></i>
+                                                <i v-else class="fa fa-times" aria-hidden="true" @click="removeNotify(index)"></i>
                                             </div>
                                         </div>
                                     </b-dropdown-item>
@@ -231,6 +231,10 @@
                 this.selectedNotify = this.notifications[index];
                 this.notifyModal = false;
                 this.$refs.notifyModal.show();
+            },
+            removeNotify(index) {
+                this.notifications[index]['state']=0;
+                this.notifications.splice(index, 1);
             }
         }
     }
