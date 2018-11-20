@@ -210,7 +210,7 @@
                     return;
                 } else {
                     var app = this;
-                    axios.post("api/update/", app.userModel).then(response => {
+                    axios.post("/api/update", app.userModel).then(response => {
                         if (response.data && response.data.user) {
                             app.$store.state.user = app.userModel;
                         } else {
