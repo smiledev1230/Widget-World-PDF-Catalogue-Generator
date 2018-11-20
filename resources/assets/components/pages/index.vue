@@ -27,7 +27,7 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .home-content {
-        padding: 25px 55px 10px 60px;
+        padding: 25px 55px 60px 60px;
         border-top: 2px solid $border_color;
         h1 {
             color: $title_color;

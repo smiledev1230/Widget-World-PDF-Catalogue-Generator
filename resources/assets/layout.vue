@@ -73,7 +73,7 @@
     @import "./components/layouts/css/customvariables";
     .wrapper.greyBackground {
         background: $content_bgColor;
-        margin-top: 100px;
+        margin-top: 125px;
     }
     .wrapper:before,
     .wrapper:after {

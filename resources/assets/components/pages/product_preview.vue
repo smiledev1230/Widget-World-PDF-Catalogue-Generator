@@ -246,7 +246,7 @@
                 .product-image {
                     position: relative;
                     height: calc(100% - 10px);
-                    min-height: 232px;
+                    min-height: 220px;
                     margin: 5px;
                     border: 1px solid $border_color;
                     overflow: hidden;

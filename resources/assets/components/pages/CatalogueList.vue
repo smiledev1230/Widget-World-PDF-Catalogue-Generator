@@ -6,7 +6,7 @@
                     <span class="catalogue-title">{{catalogue.title}} - </span>
                     <span class="catalogue-label" :class="labelColor[catalogue.state]">{{catalogueLabel[catalogue.state]}}</span>
                     <div v-if="catalogue.state == 0" class="pull-right">
-                        <router-link tag="a" to="/new_catalogue" class="btn text-white yellowColor"
+                        <router-link tag="a" to="/new_catalogue" class="btn text-white yellowColor continue-btn"
                                      @click.native="continueCatalogue(index)">CONTINUE
                         </router-link>
                     </div>
@@ -27,7 +27,7 @@
                 </div>
             </li>
         </ul>
-        <b-modal id="editModal" title="Add Block" ref="editModal" v-model="editModal" class="catalogue-modal">
+        <b-modal id="editModal" title="Duplicate and Edit" ref="editModal" v-model="editModal" class="catalogue-modal">
             <p>Duplicate catalogue <b>{{old_catalogue.title}}</b> and edit to create a new catalogue.</p>
             <vue-form class="form-horizontal form-validation" :state="editState" @submit.prevent="onSubmit">
                 <div class="col-lg-12">
@@ -181,9 +181,7 @@
 </script>
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
-
     .catalogue-list {
-        margin: 0 20px 0 0;
         .task_block {
             border: 1px solid $border_color;
             padding: 10px 15px;
@@ -242,11 +240,17 @@
                 color: $grey_color;
             }
         }
+        .pull-right.btn-group .fa:hover {
+            color: $black_color;
+        }
         .pull-right.btn-group .fa.fa-file-pdf-o {
             font-size: 19px;
         }
         .pull-right.btn-group .fa.fa-edit {
             font-size: 21px;
+        }
+        .pull-right .continue-btn:hover {
+            background: $green_color;
         }
         hr {
             border-width: 2px;
@@ -268,11 +272,26 @@
 </style>
 <style lang="scss">
     #pdfModal {
-        .modal-footer {
-            display: none;
-        }
-        .merchantModalContent {
-            margin: 10px 20px;
+        .modal-dialog {
+            margin: 20px auto;
+            .modal-footer {
+                display: none;
+            }
+            .merchantModalContent {
+                margin: 0 20px;
+            }
+            .modal-title {
+                padding-top: 0;
+            }
+            .modal-body {
+                padding-bottom: 0;
+            }
+            .product-list {
+                min-height: 85vh !important;
+                .product-body {
+                    min-height: 80vh !important;
+                }
+            }
         }
         @media (min-width: 576px) {
             .modal-dialog {

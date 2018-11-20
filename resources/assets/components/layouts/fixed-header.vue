@@ -9,20 +9,20 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="row header-menu text-center">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3" />
+                        <div class="col-sm-3 nopadding">
                             <router-link to="/new_catalogue" class="menu-icon">
                                 <img src="~img/new-catalogue.png" alt="menu icon" />
                                 <p>NEW CATALOGUE</p>
                             </router-link>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3 nopadding">
                             <router-link to="/recent" class="menu-icon">
                                 <img src="~img/recent.png" alt="menu icon" />
                                 <p>RECENT</p>
                             </router-link>
                         </div>
-                        <div class="col-sm-2"></div>
+                        <div class="col-sm-3" />
                     </div>
                 </div>
                 <div class="col-sm-3 navbar-right">
@@ -48,8 +48,8 @@
                         <b-dropdown class="notifications-menu bell_bg" right link>
                         <span slot="text">
                             <img src="~img/bell-icon.png" class="noti-icon" alt="Bell Icon">
-                            <div class="notifications_badge_top" v-if="notifications">
-                                <span class="badge badge-success">{{notifications.length}}
+                            <div class="notifications_badge_top" v-if="notifications && notifications.length > 0">
+                                <span class="badge greenBgColor">{{notifications.length}}
                                 </span>
                             </div>
                         </span>
@@ -228,6 +228,7 @@
                 }
             },
             viewNotify(index) {
+                this.notifications[index]['state'] = -1;
                 this.selectedNotify = this.notifications[index];
                 this.notifyModal = false;
                 this.$refs.notifyModal.show();
@@ -252,6 +253,7 @@
             }
             .header-menu {
                 .menu-icon {
+                    margin-top: 18px;
                     img {
                         max-height: 32px;
                     }
