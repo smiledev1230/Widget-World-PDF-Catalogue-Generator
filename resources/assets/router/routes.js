@@ -11,24 +11,6 @@ const routes = [{
             title: "Login",
         }
     }, {
-        path: '/register',
-        component: resolve => require(['pages/register'], resolve),
-        meta: {
-            title: "register",
-        }
-    }, {
-        path: '/forgotpassword',
-        component: resolve => require(['pages/forgotpassword'], resolve),
-        meta: {
-            title: "Forgot Password",
-        }
-    }, {
-        path: '/reset_password',
-        component: resolve => require(['pages/reset_password'], resolve),
-        meta: {
-            title: "Reset Password",
-        }
-    }, {
         path: '/500',
         component: resolve => require(['pages/500'], resolve),
         meta: {

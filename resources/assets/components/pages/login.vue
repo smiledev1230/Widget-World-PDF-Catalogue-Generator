@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid img_backgrond">
         <div class="row">
-            <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 login-content mt-5">
+            <div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-3 col-xs-10 offset-xs-1 mt-5">
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="text-center">
@@ -55,18 +55,6 @@
                         <div class="col-lg-6 col-md-6 text-right">
                             <div class="form-group">
                                 <input type="submit" value="Sign In" class="btn btn-success"/>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="col-sm-12 text-center">
-                            <div class="form-group">
-                                <p>
-                                    <router-link tag="a" to="/forgotpassword" class="">Forgot Your Password ?
-                                    </router-link>
-                                </p>
-                                <router-link tag="a" to="/register" class="btn btn-primary btn-block ">New User? Sign Up
-                                    Now
-                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -125,14 +113,6 @@
     }
 </script>
 <style scoped>
-    .login-content {
-        margin-top: 7%;
-        margin-bottom: 7%;
-        box-shadow: 0 0 20px #ccc;
-        background-size: 100% 100%;
-        border-radius: 7px;
-    }
-
     .img_backgrond {
         background-image: url("~img/pages/Login-03-01.png");
         background-size: cover;

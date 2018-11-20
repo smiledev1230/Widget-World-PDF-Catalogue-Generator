@@ -1,6 +1,5 @@
 <template>
     <div>
-        <preloader v-show="this.$store.state.preloader"></preloader>
         <vueadmin_header></vueadmin_header>
         <div class="wrapper row-offcanvas" v-bind:class="{ greyBackground: this.$route.meta.bgColor}">
             <main_content>
@@ -13,12 +12,6 @@
     </div>
 </template>
 <script>
-    /**
-     * import preloader
-     * choose from preloader and bounce
-     */
-    import preloader from 'components/layouts/preloader/preloader'
-
     /**
      * import from header or fixed-header or no-header
      */
@@ -49,7 +42,6 @@
     export default {
         name: 'layout',
         components: {
-            preloader,
             vueadmin_header,
             main_content,
             vueadmin_footer,
