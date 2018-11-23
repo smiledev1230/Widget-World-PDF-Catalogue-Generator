@@ -3,10 +3,10 @@
         <div class="select-products">
             <b-tabs v-model="tabIndex" vertical>
                 <b-tab title="Suppliers">
-                    <tree-view :showCheck="showCheck"/>
+                    <tree-view :showCheck="showCheck" :treeData="suppliers" />
                 </b-tab>
                 <b-tab title="Categories">
-                    <tree-view :showCheck="showCheck"/>
+                    <tree-view :showCheck="showCheck" :treeData="categories" />
                 </b-tab>
             </b-tabs>
         </div>
@@ -31,11 +31,30 @@
         data() {
             return {
                 tabIndex: 0,
-                showCheck: true
+                showCheck: true,
+                suppliers: [],
+                categories: []
             }
         },
         mounted: function () {
             this.$store.state.page_text = "Select the products to be displayed in your catalogue. You can choose a complete range from single or multiple Suppliers, single or multiple categories or indivudal products. On the next screen you can insert these products into your pages.";
+            let app = this;
+            axios
+                .get("/api/getSupplier")
+                .then(response => {
+                    app.suppliers = [];
+                    if (response && response.data) {
+                        app.suppliers = response.data;
+                    }
+                });
+            axios
+                .get("/api/getCategory")
+                .then(response => {
+                    app.categories = [];
+                    if (response && response.data) {
+                        app.categories = response.data;
+                    }
+                });
         },
         methods: {
             saveProducts() {

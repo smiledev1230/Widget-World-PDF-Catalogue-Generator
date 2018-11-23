@@ -22,17 +22,17 @@
                                     </div>
                                     <div class="col-md-7 pr-0">
                                         <b-form-group>
-                                            <b-form-radio-group v-model="$store.state.catalogue.productType" :options="typeOptions" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.pageColumns" :options="columnOptions" @change="updatePage" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.logosOptions" :options="logosOptions" @change="updateProduct"/>
+                                            <b-form-radio-group v-model="$store.state.catalogue.display_type" :options="display_type" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.page_columns" :options="page_columns" @change="updatePage" />
+                                            <b-form-radio-group v-model="$store.state.catalogue.logos_options" :options="logos_options" @change="updateProduct"/>
                                         </b-form-group>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 nopadding">
                                 <b-form-group label="Product Display Options:" class="mb-0 pl-3">
-                                    <b-form-checkbox-group plain v-model="$store.state.catalogue.titleOptions" :options="titleOptions" class="pl-3" />
-                                    <b-form-radio-group v-model="$store.state.catalogue.barcodeOptions" :options="barcodeOptions" class="pl-3" />
+                                    <b-form-checkbox-group plain v-model="$store.state.catalogue.display_options" :options="display_options" class="pl-3" />
+                                    <b-form-radio-group v-model="$store.state.catalogue.barcode_options" :options="barcode_options" class="pl-3" />
                                 </b-form-group>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="content-main row mt-4">
             <div class="col-3 nopadding">
-                <treeView :showCheck="showCheck"/>
+                <tree-view :showCheck="showCheck" :treeData="categories" />
                 <a class="btn greenBgColor pull-right text-white mt-3" @click="updateCatalogue">UPDATE</a>
             </div>
             <div class="col-9 pr-0">
@@ -73,34 +73,35 @@
     export default {
         name: "build_catalogue",
         components: {
-            'treeView': treeView,
+            'tree-view': treeView,
             'productList': productList,
         },
         data() {
-            let total_pages = Math.round(productData.length/3/this.$store.state.catalogue.pageColumns + 0.5);
+            let total_pages = Math.round(productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             this.$store.state.productData = productData;
             return {
                 showCollapse: false,
                 showCheck: false,
                 totalPages: total_pages,
-                typeOptions: [
+                categories: [],
+                display_type: [
                     { text: 'Suppliers', value: true },
                     { text: 'Categories', value: false },
                 ],
-                columnOptions: [
+                page_columns: [
                     { text: '2', value: '2' },
                     { text: '3', value: '3' },
                 ],
-                logosOptions: [
+                logos_options: [
                     { text: 'Yes', value: true },
                     { text: 'No', value: false },
                 ],
-                titleOptions: [
+                display_options: [
                     {text: 'Title', value: 'title'},
                     {text: 'RRP', value: 'rrp'},
                     {text: 'Units Per Outer', value: 'units'},
                 ],
-                barcodeOptions: [
+                barcode_options: [
                     {text: 'Barcode #', value: false},
                     {text: 'Barcode Image', value: true},
                 ]
@@ -109,8 +110,17 @@
         mounted: function () {
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
-            if (this.$store.state.catalogue.logosOptions && this.$store.state.productData[0]['type'] != 'logo') this.updateProduct(true);
+            // if (this.$store.state.catalogue.logosOptions && this.$store.state.productData[0]['type'] != 'logo') this.updateProduct(true);
             console.log("store.state", this.$store.state);
+            let app = this;
+            axios
+                .get("/api/getCategory")
+                .then(response => {
+                    app.cats = [];
+                    if (response && response.data) {
+                        app.categories = response.data;
+                    }
+                });
         },
         methods: {
             saveProducts() {

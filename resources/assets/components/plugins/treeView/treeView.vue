@@ -1,7 +1,7 @@
 <template>
     <div class="tree-view">
-        <ejs-treeview id='treeview' :fields="fields" v-if="showCheck" showCheckBox="true"></ejs-treeview>
-        <ejs-treeview id='treeview' :fields="fields" v-else></ejs-treeview>
+        <ejs-treeview id='treeview' :fields="setFields" v-if="showCheck && treeData" showCheckBox="true"></ejs-treeview>
+        <ejs-treeview id='treeview' :fields="setFields" v-else></ejs-treeview>
     </div>
 </template>
 <script>
@@ -14,36 +14,34 @@
         components: {
 
         },
-        props: ['showCheck'],
+        props: {
+            showCheck: Boolean,
+            treeData: {
+                default() {
+                    return []
+                }
+            },
+        },
         data() {
-            var dataSource =  [
-                { id: 1, name: 'AIT'},
-                { id: 2, name: 'Accredited'},
-                { id: 3, name: 'Allseps'},
-                { id: 4, name: 'Arnotts'},
-                { id: 5, name: 'Bayer'},
-                { id: 6, name: 'Bounce'},
-                { id: 7, name: 'Bundaberg'},
-                { id: 8, name: 'CTC'},
-                { id: 9, name: 'Cadbury', hasChild: true },
-                { id: 10, pid: 9, name: 'Bars'},
-                { id: 11, pid: 9, name: 'Biscuits', hasChild: true },
-                { id: 12, pid: 11, name: 'Biscuits - Chocolate', hasChild: true },
-                { id: 13, pid: 12, name: 'Belvita Choc Breakfast Biscuits 300g'},
-                { id: 14, pid: 12, name: 'Cadbury Cookies Choc Centre 300g'},
-                { id: 15, pid: 12, name: 'Oreo Cadbury Coated 6pk 204g'},
-                { id: 16, pid: 12, name: 'Oreo Cookie Chocolate 137g'},
-                { id: 17, pid: 12, name: 'Oreo Cookie Grab \\\'n\\\' Go 264.6g'},
-                { id: 18, pid: 12, name: 'Oreo Cookie Original 137g'},
-                { id: 19, pid: 9, name: 'Biscuits - Other'},
-            ];
             return {
-                fields: { dataSource: dataSource, id: 'id', parentID: 'pid', text: 'name', hasChildren: 'hasChild' },
-                checkedNodes: ['2','6']
+                checkedNodes: [
+                    '2',
+                    '6'],
             }
         },
-        computed: {
+        mounted() {
 
+        },
+        computed: {
+            setFields() {
+                return {
+                    dataSource: this.treeData,
+                    id: 'id',
+                    parentID: 'pid',
+                    text: 'name',
+                    hasChildren: 'hasChild'
+                }
+            }
         },
         methods: {
             nodeChecked: function(args) {

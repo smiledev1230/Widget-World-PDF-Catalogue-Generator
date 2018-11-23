@@ -1,13 +1,13 @@
 <template>
-    <div class="product-list" :class="{twoPages : $store.state.catalogue.pageColumns == 2}">
+    <div class="product-list" :class="{twoPages : $store.state.catalogue.page_columns == 2}">
         <div class="row product-body">
             <div class="col-6 nopadding page-separator">
                 <div class="page-body">
                     <div v-for="rowInd in 3" class="row" v-bind:key="rowInd">
                         <div class="nopadding"
-                             v-for="colInd in getCols($store.state.catalogue.pageColumns)"
+                             v-for="colInd in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="colInd"
-                             :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
+                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
                                 <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus"
                                                                                                     aria-hidden="true"></i>
@@ -28,27 +28,27 @@
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0">
+                                         v-if="$store.state.catalogue.display_options.indexOf('title')>= 0">
                                         {{getProductTitle(rowInd, colInd, 0)}}
                                     </div>
                                     <div>
                                         <div class="product-detail"
-                                             v-if="$store.state.catalogue.titleOptions.indexOf('units')>= 0">
+                                             v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rowInd, colInd, 0)}} units per outer
                                         </div>
                                         <div class="product-detail pb-1">
-                                            <div v-if="!$store.state.catalogue.barcodeOptions">
+                                            <div v-if="!$store.state.catalogue.barcode_options">
                                                 {{getBarcodeNumber(rowInd, colInd, 0)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0"
                                                  class="redLabelColor">
                                                 RRP ${{getRRP(rowInd, colInd, 0)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
-                                            <img v-if="$store.state.catalogue.barcodeOptions"
+                                            <img v-if="$store.state.catalogue.barcode_options"
                                                  :src="getBarcodeImage(rowInd, colInd, 0)"/>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0"
                                                  class="product-rrp">
                                                 RRP<br/>${{getRRP(rowInd, colInd, 0)}}
                                             </div>
@@ -68,9 +68,9 @@
                 <div class="page-body">
                     <div v-for="rightRow in 3" class="row" v-bind:key="rightRow">
                         <div class="nopadding"
-                             v-for="rightCol in getCols($store.state.catalogue.pageColumns)"
+                             v-for="rightCol in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="rightCol"
-                             :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
+                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
                                 <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i
                                         class="fa fa-minus" aria-hidden="true"></i></div>
@@ -86,27 +86,27 @@
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0">
+                                         v-if="$store.state.catalogue.display_options.indexOf('title')>= 0">
                                         {{getProductTitle(rightRow, rightCol, 1)}}
                                     </div>
                                     <div>
                                         <div class="product-detail"
-                                             v-if="$store.state.catalogue.titleOptions.indexOf('units')>= 0">
+                                             v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rightRow, rightCol, 1)}} units per outer
                                         </div>
                                         <div class="product-detail pb-1">
-                                            <div v-if="!$store.state.catalogue.barcodeOptions">
+                                            <div v-if="!$store.state.catalogue.barcode_options">
                                                 {{getBarcodeNumber(rightRow, rightCol, 1)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0"
                                                  class="redLabelColor">
                                                 RRP ${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
-                                            <img v-if="$store.state.catalogue.barcodeOptions"
+                                            <img v-if="$store.state.catalogue.barcode_options"
                                                  :src="getBarcodeImage(rightRow, rightCol, 1)"/>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0"
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0"
                                                  class="product-rrp">
                                                 RRP<br/>${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
@@ -218,8 +218,8 @@
                 this.$refs.blockModal.show();
             },
             getIndex(rowInd, colInd, backPage) {
-                let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.pageColumns;
-                index += (rowInd - 1) * this.$store.state.catalogue.pageColumns + colInd - 1;
+                let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.page_columns;
+                index += (rowInd - 1) * this.$store.state.catalogue.page_columns + colInd - 1;
                 return index;
             },
             getProductInfo(rowInd, colInd, backPage, type, failure = '') {

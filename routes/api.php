@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 
 Route::post('login', 'UserController@login');
+Route::get('getSupplier', 'SupplierController@getSupplier');
+Route::get('getCategory', 'CategoryController@getCategory');
+
 Route::post('update', 'UserController@update');
 Route::post('register', 'UserController@register');
 Route::get('/products', 'ProductController@index');

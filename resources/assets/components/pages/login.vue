@@ -85,21 +85,23 @@
                 if (this.formstate.$invalid) {
                     return;
                 } else {
-                    var app = this;
+                    let app = this;
                     let email = app.model.email;
                     let password = app.model.password;
-                    axios.post("/api/login", {email, password}).then(response => {
-                        if (response.data && response.data.user) {
-                            app.$store.state.login_status = true;
-                            app.$store.state.user = {
-                                name: response.data.user.name,
-                                email: response.data.user.email,
-                                password: password,
-                                token: response.data.user.remember_token,
+                    axios
+                        .post("/api/login", {email, password})
+                        .then(response => {
+                            if (response.data && response.data.user) {
+                                app.$store.state.login_status = true;
+                                app.$store.state.user = {
+                                    name: response.data.user.name,
+                                    email: response.data.user.email,
+                                    password: password,
+                                    token: response.data.user.remember_token,
+                                }
+                                app.$router.push("/");
                             }
-                            app.$router.push("/");
-                        }
-                    });
+                        });
                 }
             }
         },
