@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list" :class="{twoPages : $store.state.catalogue.pageColumns == 2}">
+    <div class="product-list" :class="{twoPages : $store.state.catalogue.page_columns == 2}">
         <div class="row product-body">
             <div class="col-6 nopadding page-separator">
                 <div class="page-body">

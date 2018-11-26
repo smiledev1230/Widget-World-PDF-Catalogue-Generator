@@ -9,7 +9,7 @@
                 </b-tab>
                 <b-tab title="Categories" @click="selectCategory">
                     <div class="tree-view">
-                        <ejs-treeview id='categoryTree' :fields="setCatFields" showCheckBox="true" :nodeChecked='categoryChecked'></ejs-treeview>
+                        <ejs-treeview id='categoryTree' :fields="setCatFields" showCheckBox="true" :checkedNodes='checkedNodes' :nodeChecked='categoryChecked'></ejs-treeview>
                     </div>
                 </b-tab>
             </b-tabs>
@@ -19,7 +19,7 @@
             <div class="row d-block">
                 <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary text-white">CANCEL</router-link>
                 <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
-                <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white">NEXT</router-link>
+                <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white" @click="saveCategories">NEXT</router-link>
                 <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
             </div>
         </div>
@@ -41,6 +41,7 @@
                 categories: [],
                 categoryIds: [],
                 checkedCategories: [],
+                checkedNodes: []
             }
         },
         mounted: function () {
@@ -101,7 +102,16 @@
             categoryChecked: function() {
                 let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
                 let checkedNode = categoryObj.getAllCheckedNodes();
-                console.log("dddd ", checkedNode);
+                this.$store.state.categories = [];
+                for (let i=0; i<checkedNode.length;i++) {
+
+                }
+                // console.log("dddd ", this.checkedNodes);
+            },
+            saveCategories() {
+                let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
+                let checkedNode = categoryObj.getAllCheckedNodes();
+                console.log("dddd ", checkedNodes);
             }
         }
     }

@@ -18,7 +18,7 @@
                             <tr>
                                 <td>Catalogue Logo/Image:</td>
                                 <td>
-                                    <div class="select-label">{{uploadFileName}}</div>
+                                    <label for="file-upload" class="select-label">{{uploadFileName}}</label>
                                     <img src="~img/upload-icon.png" alt="upload icon" class="upload-icon" />
                                     <label for="file-upload" class="btn greyBgColor text-white">UPLOAD</label>
                                     <input id="file-upload" type="file" @change="onFileChange" />
@@ -106,15 +106,15 @@
                 return require('../../assets/img/covers/' + this.imageList[index]);
             },
             onFileChange(e) {
-                var files = e.target.files || e.dataTransfer.files;
+                let files = e.target.files || e.dataTransfer.files;
                 if (!files.length)
                     return;
                 this.createImage(files[0]);
             },
             createImage(file) {
                 this.uploadFileName = file.name;
-                var uploadFileUrl = new Image();
-                var reader = new FileReader();
+                let uploadFileUrl = new Image();
+                let reader = new FileReader();
                 var vm = this;
                 reader.onload = (e) => {
                     vm.uploadFileUrl = e.target.result;
@@ -174,6 +174,7 @@
                             background: $red_color;
                             padding: 8px 5px;
                             min-height: 35px;
+                            font-size: 16px;
                         }
                         .upload-image {
                             height: 65px;
@@ -210,6 +211,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            cursor: pointer;
         }
         .upload-icon {
             width: 20px;

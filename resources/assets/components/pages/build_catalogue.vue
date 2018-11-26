@@ -1,44 +1,36 @@
 <template>
     <div class="catalogue-content mt-2">
         <div class="visual-options">
-            <div class="row d-block">
+            <div class="row d-block" @click="showCollapse = !showCollapse">
                 <label class="mb-0">Visual Options</label>
-                <i @click="showCollapse = !showCollapse"
-                   aria-controls="vOptions"
+                <i aria-controls="vOptions"
                    :aria-expanded="showCollapse ? 'true' : 'false'"
                    class="collapse-btn pull-right fa" :class="showCollapse ? 'fa-angle-down' : 'fa-angle-up'">
                 </i>
             </div>
             <b-collapse id="vOptions" v-model="showCollapse" class="mt-2">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-6 nopadding">
                         <div class="row">
-                            <div class="col-md-6 nopadding">
-                                <div class="row">
-                                    <div class="col-md-5 text-right pr-2 options-label">
-                                        <div class="pb-2">Display Products by:</div>
-                                        <div class="pb-2">Page Columns:</div>
-                                        <div class="pb-2">Display Brand Logos:</div>
-                                    </div>
-                                    <div class="col-md-7 pr-0">
-                                        <b-form-group>
-                                            <b-form-radio-group v-model="$store.state.catalogue.display_type" :options="display_type" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.page_columns" :options="page_columns" @change="updatePage" />
-                                            <b-form-radio-group v-model="$store.state.catalogue.logos_options" :options="logos_options" @change="updateProduct"/>
-                                        </b-form-group>
-                                    </div>
-                                </div>
+                            <div class="col-md-5 text-right pr-2 options-label">
+                                <div class="pb-2">Display Products by:</div>
+                                <div class="pb-2">Page Columns:</div>
+                                <div class="pb-2">Display Brand Logos:</div>
                             </div>
-                            <div class="col-md-6 nopadding">
-                                <b-form-group label="Product Display Options:" class="mb-0 pl-3">
-                                    <b-form-checkbox-group plain v-model="$store.state.catalogue.display_options" :options="display_options" class="pl-3" />
-                                    <b-form-radio-group v-model="$store.state.catalogue.barcode_options" :options="barcode_options" class="pl-3" />
+                            <div class="col-md-7 pr-0">
+                                <b-form-group>
+                                    <b-form-radio-group v-model="$store.state.catalogue.display_type" :options="display_type" />
+                                    <b-form-radio-group v-model="$store.state.catalogue.page_columns" :options="page_columns" @change="updatePage" />
+                                    <b-form-radio-group v-model="$store.state.catalogue.logos_options" :options="logos_options" @change="updateProduct"/>
                                 </b-form-group>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <a class="btn greenBgColor pull-right text-white options-btn" @click="updateOptions">UPDATE</a>
+                    <div class="col-md-6 nopadding">
+                        <b-form-group label="Product Display Options:" class="mb-0 pl-3">
+                            <b-form-checkbox-group plain v-model="$store.state.catalogue.display_options" :options="display_options" class="pl-3" />
+                            <b-form-radio-group v-model="$store.state.catalogue.barcode_options" :options="barcode_options" class="pl-3" />
+                        </b-form-group>
                     </div>
                 </div>
             </b-collapse>
@@ -111,7 +103,7 @@
                 ],
                 barcode_options: [
                     {text: 'Barcode #', value: false},
-                    {text: 'Barcode Image', value: true},
+                    {text: 'Barcode Image', value: true, disabled: true},
                 ]
             }
         },
@@ -157,6 +149,12 @@
             },
             updatePage(e) {
                 this.totalPages = Math.round(this.$store.state.productData.length/3/e + 0.5);
+                if (e == 2) {
+                    this.barcode_options[1]['disabled'] = false;
+                } else {
+                    this.barcode_options[1]['disabled'] = true;
+                    this.$store.state.catalogue.barcode_options = false;
+                }
             }
         }
     }
@@ -181,6 +179,9 @@
         .visual-options {
             background: $grey_bgColor;
             padding: 10px 15px;
+            .row.d-block {
+                cursor: pointer;
+            }
             .collapse-btn {
                 padding: 0 10px;
                 background: no-repeat;
