@@ -45,7 +45,9 @@
         </div>
         <div class="content-main row mt-4">
             <div class="col-3 nopadding">
-                <tree-view :showCheck="showCheck" :treeData="categories" />
+                <div class="tree-view">
+                    <ejs-treeview id='treeview' :fields="fields" allowDragAndDrop='true'></ejs-treeview>
+                </div>
                 <a class="btn greenBgColor pull-right text-white mt-3" @click="updateCatalogue">UPDATE</a>
             </div>
             <div class="col-9 pr-0">
@@ -66,24 +68,30 @@
     </div>
 </template>
 <script>
-    import treeView from "../plugins/treeView/treeView";
+    import Vue from 'vue';
+    import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
+    Vue.use(TreeViewPlugin);
     import productList from "./product_list";
-    import { productData } from '../../assets/js/global_variable';
-
     export default {
         name: "build_catalogue",
         components: {
-            'tree-view': treeView,
             'productList': productList,
         },
         data() {
-            let total_pages = Math.round(productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
-            this.$store.state.productData = productData;
+            this.$store.state.productData = this.getProductData();
+            let total_pages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             return {
                 showCollapse: false,
                 showCheck: false,
                 totalPages: total_pages,
                 categories: [],
+                fields: {
+                    dataSource: this.$store.state.categories,
+                    id: 'id',
+                    parentID: 'pid',
+                    text: 'name',
+                    hasChildren: 'hasChild'
+                },
                 display_type: [
                     { text: 'Suppliers', value: true },
                     { text: 'Categories', value: false },
@@ -112,17 +120,18 @@
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
             // if (this.$store.state.catalogue.logosOptions && this.$store.state.productData[0]['type'] != 'logo') this.updateProduct(true);
             console.log("store.state", this.$store.state);
-            let app = this;
-            axios
-                .get("/api/getCategory")
-                .then(response => {
-                    app.cats = [];
-                    if (response && response.data) {
-                        app.categories = response.data;
-                    }
-                });
         },
         methods: {
+            getProductData() {
+                let productData = [];
+                let categoryData = this.$store.state.categories;
+                for (let i=0;i<categoryData.length;i++) {
+                    if (categoryData[i]['product']) {
+                        productData.push(categoryData[i]);
+                    }
+                }
+                return productData;
+            },
             saveProducts() {
                 console.log("saveProducts");
             },
@@ -154,6 +163,20 @@
 </script>
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
+    @import "../../assets/css/ej2-base-material.css";
+    @import "../../assets/css/ej2-vue-navigations-material.css";
+    @import "../../assets/css/ej2-buttons-material.css";
+    .tree-view {
+        .e-treeview {
+            height: 408px;
+            max-height: 420px;
+            border: 1px solid $border_color;
+            overflow-y: scroll;
+        }
+        .e-treeview > .e-list-parent.e-ul {
+            padding-left: 0;
+        }
+    }
     .catalogue-content {
         .visual-options {
             background: $grey_bgColor;

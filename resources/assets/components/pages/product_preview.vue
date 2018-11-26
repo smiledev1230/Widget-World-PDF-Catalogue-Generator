@@ -5,9 +5,9 @@
                 <div class="page-body">
                     <div v-for="rowInd in 3" class="row" v-bind:key="rowInd">
                         <div class="nopadding"
-                             v-for="colInd in getCols($store.state.catalogue.pageColumns)"
+                             v-for="colInd in getCols()"
                              v-bind:key="colInd"
-                             :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
+                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
                                 <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
                             </div>
@@ -19,26 +19,26 @@
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                        v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0" >
+                                        v-if="$store.state.catalogue.display_options.indexOf('title')>= 0" >
                                         {{getProductTitle(rowInd, colInd, 0)}}
                                     </div>
                                     <div>
                                         <div class="product-detail"
-                                             v-if="$store.state.catalogue.titleOptions.indexOf('units')>= 0">
+                                             v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rowInd, colInd, 0)}} units per outer
                                         </div>
                                         <div class="product-detail pb-1">
-                                            <div v-if="!$store.state.catalogue.barcodeOptions">
+                                            <div v-if="!$store.state.catalogue.barcode_options">
                                                 {{getBarcodeNumber(rowInd, colInd, 0)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="redLabelColor">
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0" class="redLabelColor">
                                                 RRP ${{getRRP(rowInd, colInd, 0)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
-                                            <img v-if="$store.state.catalogue.barcodeOptions"
+                                            <img v-if="$store.state.catalogue.barcode_options"
                                                  :src="getBarcodeImage(rowInd, colInd, 0)" />
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="product-rrp">
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0" class="product-rrp">
                                                 RRP<br/>${{getRRP(rowInd, colInd, 0)}}
                                             </div>
                                         </div>
@@ -57,9 +57,9 @@
                 <div class="page-body">
                     <div v-for="rightRow in 3" class="row" v-bind:key="rightRow">
                         <div class="nopadding"
-                             v-for="rightCol in getCols($store.state.catalogue.pageColumns)"
+                             v-for="rightCol in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="rightCol"
-                             :class="$store.state.catalogue.pageColumns == 2 ? 'col-6' : 'col-4'">
+                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
                                 <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block" />
                             </div>
@@ -68,26 +68,26 @@
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
                                     <div class="product-title"
-                                         v-if="$store.state.catalogue.titleOptions.indexOf('title')>= 0" >
+                                         v-if="$store.state.catalogue.display_options.indexOf('title')>= 0" >
                                         {{getProductTitle(rightRow, rightCol, 1)}}
                                     </div>
                                     <div>
                                         <div class="product-detail"
-                                             v-if="$store.state.catalogue.titleOptions.indexOf('units')>= 0">
+                                             v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rightRow, rightCol, 1)}} units per outer
                                         </div>
                                         <div class="product-detail pb-1">
-                                            <div v-if="!$store.state.catalogue.barcodeOptions">
+                                            <div v-if="!$store.state.catalogue.barcode_options">
                                                 {{getBarcodeNumber(rightRow, rightCol, 1)}}
                                             </div>
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="redLabelColor">
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0" class="redLabelColor">
                                                 RRP ${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
                                         </div>
                                         <div class="barcode-image">
-                                            <img v-if="$store.state.catalogue.barcodeOptions"
+                                            <img v-if="$store.state.catalogue.barcode_options"
                                                  :src="getBarcodeImage(rightRow, rightCol, 1)" />
-                                            <div v-else-if="$store.state.catalogue.titleOptions.indexOf('rrp')>= 0" class="product-rrp">
+                                            <div v-else-if="$store.state.catalogue.display_options.indexOf('rrp')>= 0" class="product-rrp">
                                                 RRP<br/>${{getRRP(rightRow, rightCol, 1)}}
                                             </div>
                                         </div>
@@ -125,13 +125,13 @@
         components: {
         },
         data() {
+            let totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             return {
                 selectedPage: 1,
-                totalPages: 1,
+                totalPages: totalPages,
             }
         },
         mounted: function () {
-            this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.pageColumns + 0.5);
         },
         methods: {
             prevPage() {
@@ -155,18 +155,17 @@
             },
             getImgUrl(rowInd, colInd, backPage) {
                 let imageUrl = this.getProductInfo(rowInd, colInd, backPage, 'images');
-                if (imageUrl) {
-                    return require('../../assets/img/products/' + imageUrl);
-                } else {
-                    return;
+                if (!imageUrl) {
+                    imageUrl = require('../../assets/img/products/9310072000954.jpg');
                 }
+                return imageUrl;
             },
             checkNewState(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'product_is_new')
             },
             getIndex(rowInd, colInd, backPage) {
-                let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.pageColumns;
-                index += (rowInd - 1) * this.$store.state.catalogue.pageColumns + colInd - 1;
+                let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.page_columns;
+                index += (rowInd - 1) * this.$store.state.catalogue.page_columns + colInd - 1;
                 return index;
             },
             getProductInfo(rowInd, colInd, backPage, type, failure = '') {
@@ -179,7 +178,7 @@
             },
             addBlock() {
                 this.showModal=false;
-                var newBlock = {
+                let newBlock = {
                     id: new Date().getTime(),
                     name: this.blockEditor,
                     type: 'block'
@@ -212,9 +211,9 @@
                     return;
                 }
             },
-            getCols(n) {
+            getCols() {
                 let cols = [];
-                for (let i=1; i<=n;i++) {
+                for (let i=1; i<=this.$store.state.catalogue.page_columns;i++) {
                     cols.push(i);
                 }
                 return cols;
@@ -253,7 +252,7 @@
                     z-index: 999;
                     img {
                         width: 100%;
-                        height: auto;
+                        max-height: 58%;
                     }
                     .ribbon {
                         text-align: center;

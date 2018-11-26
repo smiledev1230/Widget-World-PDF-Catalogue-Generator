@@ -1,6 +1,6 @@
 <template>
     <div class="tree-view">
-        <ejs-treeview id='treeview' :fields="setFields" v-if="showCheck && treeData" showCheckBox="true"></ejs-treeview>
+        <ejs-treeview id='treeview' :fields="setFields" v-if="showCheck" showCheckBox="true" :nodeChecked='nodeChecked'></ejs-treeview>
         <ejs-treeview id='treeview' :fields="setFields" v-else></ejs-treeview>
     </div>
 </template>
@@ -16,18 +16,14 @@
         },
         props: {
             showCheck: Boolean,
-            treeData: {
+            dataSource: {
                 default() {
                     return []
                 }
             },
         },
         data() {
-            return {
-                checkedNodes: [
-                    '2',
-                    '6'],
-            }
+            return { }
         },
         mounted() {
 
@@ -35,7 +31,7 @@
         computed: {
             setFields() {
                 return {
-                    dataSource: this.treeData,
+                    dataSource: this.dataSource,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
@@ -44,9 +40,9 @@
             }
         },
         methods: {
-            nodeChecked: function(args) {
-                var treeObj = document.getElementById('treeview').ej2_instances[0];
-                alert("The checked node's id: " + treeObj.checkedNodes); // To alert the checked node's id.
+            nodeChecked: function() {
+                let treeObj = document.getElementById('treeview').ej2_instances[0];
+                this.$store.state.suppliers = treeObj.checkedNodes;
             }
         },
     };

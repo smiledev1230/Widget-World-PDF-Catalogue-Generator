@@ -3,10 +3,14 @@
         <div class="select-products">
             <b-tabs v-model="tabIndex" vertical>
                 <b-tab title="Suppliers">
-                    <tree-view :showCheck="showCheck" :treeData="suppliers" />
+                    <div class="tree-view">
+                        <ejs-treeview id='supplierTree' :fields="setSupplierFields" showCheckBox="true" :nodeChecked='supplierChecked'></ejs-treeview>
+                    </div>
                 </b-tab>
-                <b-tab title="Categories">
-                    <tree-view :showCheck="showCheck" :treeData="categories" />
+                <b-tab title="Categories" @click="selectCategory">
+                    <div class="tree-view">
+                        <ejs-treeview id='categoryTree' :fields="setCatFields" showCheckBox="true" :nodeChecked='categoryChecked'></ejs-treeview>
+                    </div>
                 </b-tab>
             </b-tabs>
         </div>
@@ -22,18 +26,21 @@
     </div>
 </template>
 <script>
-    import treeView from "../plugins/treeView/treeView";
+    import Vue from 'vue';
+    import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
+    Vue.use(TreeViewPlugin);
     export default {
         name: "select_products",
         components: {
-            'tree-view': treeView,
         },
         data() {
             return {
                 tabIndex: 0,
                 showCheck: true,
                 suppliers: [],
-                categories: []
+                categories: [],
+                categoryIds: [],
+                checkedCategories: [],
             }
         },
         mounted: function () {
@@ -53,18 +60,68 @@
                     app.categories = [];
                     if (response && response.data) {
                         app.categories = response.data;
+                        app.$store.state.categories = app.categories;
+                        for (let i=0;i<app.categories.length;i++) {
+                            app.categoryIds.push(app.categories[i]['id']);
+                        }
                     }
                 });
+        },
+        computed: {
+            setSupplierFields() {
+                return {
+                    dataSource: this.suppliers,
+                    id: 'id',
+                    parentID: 'pid',
+                    text: 'name',
+                    hasChildren: 'hasChild'
+                }
+            },
+            setCatFields() {
+                return {
+                    dataSource: this.categories,
+                    id: 'id',
+                    parentID: 'pid',
+                    text: 'name',
+                    hasChildren: 'hasChild'
+                }
+            },
         },
         methods: {
             saveProducts() {
                 console.log("saveProducts");
             },
+            selectCategory() {
+                console.log("selectCategory");
+            },
+            supplierChecked: function() {
+                let supplierObj = document.getElementById('supplierTree').ej2_instances[0];
+                this.$store.state.suppliers = supplierObj.checkedNodes;
+            },
+            categoryChecked: function() {
+                let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
+                let checkedNode = categoryObj.getAllCheckedNodes();
+                console.log("dddd ", checkedNode);
+            }
         }
     }
 </script>
 <style lang="scss">
     @import "../layouts/css/customvariables";
+    @import "../../assets/css/ej2-base-material.css";
+    @import "../../assets/css/ej2-vue-navigations-material.css";
+    @import "../../assets/css/ej2-buttons-material.css";
+    .tree-view {
+        .e-treeview {
+            height: 408px;
+            max-height: 420px;
+            border: 1px solid $border_color;
+            overflow-y: scroll;
+        }
+        .e-treeview > .e-list-parent.e-ul {
+            padding-left: 0;
+        }
+    }
     .catalogue-content {
         .select-products{
             .tabs.row {

@@ -23,6 +23,8 @@ const store = new Vuex.Store({
             display_options: ['title', 'rrp', 'units'],
             barcode_options: false,
         },
+        suppliers: [],
+        categories: [],
         productData: [],
         user: {
             name: "Addision",

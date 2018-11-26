@@ -198,11 +198,10 @@
             },
             getImgUrl(rowInd, colInd, backPage) {
                 let imageUrl = this.getProductInfo(rowInd, colInd, backPage, 'images');
-                if (imageUrl) {
-                    return require('../../assets/img/products/' + imageUrl);
-                } else {
-                    return;
+                if (!imageUrl) {
+                    imageUrl = require('../../assets/img/products/9310072000954.jpg');
                 }
+                return imageUrl;
             },
             updateNewState(rowInd, colInd, backPage) {
                 let index = this.getIndex(rowInd, colInd, backPage);
@@ -232,7 +231,7 @@
             },
             addBlock() {
                 this.showModal = false;
-                var newBlock = {
+                let newBlock = {
                     id: new Date().getTime(),
                     name: this.blockEditor,
                     type: 'block'
@@ -311,7 +310,7 @@
                     z-index: 999;
                     img {
                         width: 100%;
-                        height: auto;
+                        max-height: 58%;
                     }
                     .ribbon {
                         text-align: center;

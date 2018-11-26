@@ -32,7 +32,7 @@ class CategoryController extends Controller
             ->toArray();
 
         $product_node = DB::table('product_category as pc')
-            ->select('p.id','p.name', 'pc.pcategory_id')
+            ->select('p.id','p.name', 'pc.pcategory_id', 'p.images', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit')
             ->join("products AS p", "p.id", "=", "pc.product_id")
             ->whereNotIn("pc.pcategory_id", $parent_ids)
             ->get();
@@ -40,9 +40,20 @@ class CategoryController extends Controller
         $product_list = $product_node->map(function ($row) {
             if (!in_array($row->id, $this->product_ids)) {
                 array_push($this->product_ids, $row->id);
+                $image_path = $row->images;
+                if ($image_path) {
+                    $image_path = json_decode($image_path);
+                    $image_path = $image_path[0];
+                }
                 $ppRow = array(
                     'id'=> $row->id,
-                    'name'=> $row->name
+                    'name'=> $row->name,
+                    'images'=> $image_path,
+                    'items_per_outer'=> $row->items_per_outer,
+                    'rrp'=> $row->rrp,
+                    'barcode_unit'=> $row->barcode_unit,
+                    'product_is_new'=> 0,
+                    'product'=> 1,
                 );
                 if ($row->pcategory_id) $ppRow['pid'] = $row->pcategory_id;
                 return $ppRow;
