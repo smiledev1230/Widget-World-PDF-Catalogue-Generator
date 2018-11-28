@@ -5,11 +5,12 @@ use Illuminate\Http\Request;
 Route::post('login', 'UserController@login');
 Route::get('getSupplier', 'SupplierController@getSupplier');
 Route::get('getCategory', 'CategoryController@getCategory');
+Route::get('getRecentCatalogue', 'CatalogueController@getRecentCatalogue');
 
 Route::post('update', 'UserController@update');
 Route::post('register', 'UserController@register');
-Route::get('/products', 'ProductController@index');
-Route::post('/upload-file', 'ProductController@uploadFile');
+Route::post('/uploadToS3', 'CatalogueController@uploadToS3');
+Route::post('/saveSelectProduct', 'CatalogueController@saveSelectProduct');
 Route::get('/products/{product}', 'ProductController@show');
 
 Route::group(['middleware' => 'auth:api'], function(){

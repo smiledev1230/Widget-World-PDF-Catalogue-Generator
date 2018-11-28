@@ -175,6 +175,30 @@
             }
         },
         mounted: function () {
+            let stateData = this.$store.state;
+            let productIds = [];
+            if (stateData.product_new.length > 0) {
+                for (let i=0;i<stateData.productData.length;i++) {
+                    if (stateData.product_new.indexOf(stateData.productData[i]['id'])>=0) {
+                        this.$store.state.productData[i]['product_is_new'] = true;
+                    }
+                    productIds.push(stateData.productData[i]['id']);
+                }
+            }
+            if (stateData.blocks.length > 0) {
+                let k=0;
+                for (let i=0;i<stateData.blocks.length;i++) {
+                    if (productIds.indexOf(stateData.blocks[i]['id'])>=0) {
+                        let newBlock = {
+                            id: new Date().getTime(),
+                            name: stateData.blocks[i]['name'],
+                            type: 'block'
+                        }
+                        this.$store.state.productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+k, 0, newBlock);
+                        k++;
+                    }
+                }
+            }
         },
         methods: {
             prevPage() {
@@ -197,15 +221,24 @@
                 this.selectedPage += 2;
             },
             getImgUrl(rowInd, colInd, backPage) {
-                let imageUrl = this.getProductInfo(rowInd, colInd, backPage, 'images');
-                if (!imageUrl) {
-                    imageUrl = require('../../assets/img/products/9310072000954.jpg');
+                let index = this.getIndex(rowInd, colInd, backPage);
+                if (this.$store.state.productData[index] && this.$store.state.productData[index]['name']) {
+                    let imageUrl = this.$store.state.productData[index]['images'];
+                    if (!imageUrl) imageUrl = require('../../assets/img/products/empty.jpg');
+                    return imageUrl;
+                } else {
+                    return false;
                 }
-                return imageUrl;
             },
             updateNewState(rowInd, colInd, backPage) {
                 let index = this.getIndex(rowInd, colInd, backPage);
                 this.$store.state.productData[index]['product_is_new'] = !this.$store.state.productData[index]['product_is_new'];
+                let product = this.$store.state.productData[index];
+                if (product['product_is_new']) {
+                    this.$store.state.product_new.push(product['id'])
+                } else if (this.$store.state.product_new.indexOf(product['id'])>=0){
+                    this.$store.state.product_new.splice(this.$store.state.product_new.indexOf(product['id']),1);
+                }
             },
             checkNewState(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'product_is_new')
@@ -236,6 +269,11 @@
                     name: this.blockEditor,
                     type: 'block'
                 }
+                let product = this.$store.state.productData[this.editorIndex];
+                this.$store.state.blocks.push({
+                    id: product['id'],
+                    name: this.blockEditor
+                });
                 this.$store.state.productData.splice(this.editorIndex, 0, newBlock);
             },
             checkNewBlock(rowInd, colInd, backPage) {
@@ -243,6 +281,14 @@
             },
             removeNewBlock(rowInd, colInd, backPage) {
                 let index = this.getIndex(rowInd, colInd, backPage);
+                let product = this.$store.state.productData[index+1];
+                let searchIndex = null;
+                for (let i=0;i<this.$store.state.blocks.length;i++) {
+                    if (product['id'] == this.$store.state.blocks['id']) {
+                        searchIndex = i;break;
+                    }
+                }
+                if (searchIndex >= 0) this.$store.state.blocks.splice(searchIndex, 1);
                 this.$store.state.productData.splice(index, 1);
             },
             getProductTitle(rowInd, colInd, backPage) {

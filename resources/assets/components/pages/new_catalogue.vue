@@ -12,16 +12,18 @@
                             <tr>
                                 <td>Catalogue Name:</td>
                                 <td>
-                                    <input type="text" v-model="catalogue_name" class="form-control">
+                                    <input type="text" v-model="$store.state.catalogue.name" class="form-control">
                                 </td>
                             </tr>
                             <tr>
                                 <td>Catalogue Logo/Image:</td>
                                 <td>
-                                    <label for="file-upload" class="select-label">{{uploadFileName}}</label>
+                                    <label for="fileUpload" class="select-label">
+                                        {{$store.state.catalogue.file_name ? $store.state.catalogue.file_name : 'Select File'}}
+                                    </label>
                                     <img src="~img/upload-icon.png" alt="upload icon" class="upload-icon" />
-                                    <label for="file-upload" class="btn greyBgColor text-white">UPLOAD</label>
-                                    <input id="file-upload" type="file" @change="onFileChange" />
+                                    <label for="fileUpload" class="btn greyBgColor text-white">UPLOAD</label>
+                                    <input id="fileUpload" type="file" @change="onFileChange" />
                                 </td>
                             </tr>
                             <tr>
@@ -37,7 +39,7 @@
                                             <img
                                                     :src="getImgUrl(index)"
                                                     v-bind:alt="coverImage"
-                                                    :class="{'select-image': selectedImage == index}"
+                                                    :class="{'select-image': $store.state.catalogue.selectedImage == index}"
                                                     class="cover-image" />
                                         </slide>
                                     </carousel>
@@ -50,10 +52,10 @@
             <div class="col-md-4 catalogue-right">
                 <p class="text-center grey-text-color">PREVIEW</p>
                 <div class="preview">
-                    <img :src="getImgUrl(selectedImage)" class="preview-background"/>
+                    <img :src="getImgUrl($store.state.catalogue.selectedImage)" class="preview-background"/>
                     <div class="preview-content">
-                        <img :src="uploadFileUrl" v-if="uploadFileUrl" class="upload-image"/>
-                        <div v-if="catalogue_name" class="preview-title text-white">{{catalogue_name}}</div>
+                        <img :src="$store.state.catalogue.file_upload_path" v-if="$store.state.catalogue.file_upload_path" class="upload-image"/>
+                        <div v-if="$store.state.catalogue.name" class="preview-title text-white">{{$store.state.catalogue.name}}</div>
                     </div>
                 </div>
             </div>
@@ -61,8 +63,9 @@
         <div class="content-bottom">
             <hr/>
             <div class="row d-block">
-                <router-link tag="a" to="/" exact class="btn btn-secondary text-white">CANCEL</router-link>
-                <router-link tag="a" to="/select_products" class="btn greenBgColor pull-right text-white" @click.native="saveCatalogue">NEXT</router-link>
+                <router-link tag="a" to="/" exact class="btn btn-secondary text-white" @click.native="$store.dispatch('initCatalogue')">CANCEL</router-link>
+                <router-link tag="a" to="/select_products" v-if="$store.state.catalogue.name" class="btn greenBgColor pull-right text-white" @click.native="saveCatalogue">NEXT</router-link>
+                <router-link tag="a" to="/select_products" v-else class="btn greenBgColor pull-right text-white" event="">NEXT</router-link>
             </div>
         </div>
     </div>
@@ -79,8 +82,6 @@
         data() {
             return {
                 imageList : coverImages,
-                selectedImage: 0,
-                catalogue_name: this.$store.state.catalogue.name,
                 instance: "",
                 options: {
                     url: 'https://httpbin.org/post',
@@ -91,8 +92,6 @@
                         message: 'You can only upload a max of 5 files'
                     }
                 },
-                uploadFileName: 'Select File',
-                uploadFileUrl: ''
             }
         },
         mounted: function () {
@@ -100,7 +99,7 @@
         },
         methods: {
             handleSlideClick(index) {
-                this.selectedImage = index;
+                this.$store.state.catalogue.selectedImage = index;
             },
             getImgUrl(index) {
                 return require('../../assets/img/covers/' + this.imageList[index]);
@@ -109,21 +108,30 @@
                 let files = e.target.files || e.dataTransfer.files;
                 if (!files.length)
                     return;
-                this.createImage(files[0]);
+                let file = files[0];
+                let formData = new FormData();
+                formData.append('file', file);
+                formData.append('file_name', file.name);
+                let app = this;
+                axios.post( '/api/uploadToS3',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(response => {
+                    if (response.data) {
+                        app.$store.state.catalogue.file_upload_path = response.data;
+                        app.$store.state.catalogue.file_name = file.name;
+                    }
+                }).catch(function(){
+                    console.log('FAILURE!!');
+                });
             },
-            createImage(file) {
-                this.uploadFileName = file.name;
-                let uploadFileUrl = new Image();
-                let reader = new FileReader();
-                var vm = this;
-                reader.onload = (e) => {
-                    vm.uploadFileUrl = e.target.result;
-                };
-                reader.readAsDataURL(file);
+            saveCatalogue(e) {
+
             },
-            saveCatalogue(event) {
-                this.$store.state.catalogue.name = this.catalogue_name;
-            }
         }
     }
 </script>

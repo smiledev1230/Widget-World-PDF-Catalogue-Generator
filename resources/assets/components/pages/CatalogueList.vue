@@ -3,10 +3,10 @@
         <ul class="task_block1">
             <li v-for="(catalogue,index) in catalogues" class="task_block">
                 <div>
-                    <span class="catalogue-title">{{catalogue.title}} - </span>
+                    <span class="catalogue-title">{{catalogue.name}} - </span>
                     <span class="catalogue-label" :class="labelColor[catalogue.state]">{{catalogueLabel[catalogue.state]}}</span>
                     <div v-if="catalogue.state == 0" class="pull-right">
-                        <router-link tag="a" to="/new_catalogue" class="btn text-white yellowColor continue-btn"
+                        <router-link tag="a" :to="catalogue.saved_page ? catalogue.saved_page : '/new_catalogue'" class="btn text-white yellowColor continue-btn"
                                      @click.native="continueCatalogue(index)">CONTINUE
                         </router-link>
                     </div>
@@ -19,16 +19,16 @@
                 </div>
                 <hr/>
                 <div class="catalogue-history">
-                    <div v-if="catalogue.state == 0">{{catalogue.date}}</div>
-                    <div v-else-if="catalogue.state == 1">{{catalogue.date}} - PDF Saved</div>
+                    <div v-if="catalogue.state == 0">{{catalogue.pdf_date}}</div>
+                    <div v-else-if="catalogue.state == 1">{{catalogue.pdf_date}} - PDF Saved</div>
                     <div v-else>
-                        <p v-for="history in catalogue.history">{{history.date}} - PDF sent to {{history.emails}}</p>
+                        <p v-for="(date, i) in catalogue.sent_date" :key="i">{{date}} - PDF sent to {{catalogue.emails[i]}}</p>
                     </div>
                 </div>
             </li>
         </ul>
         <b-modal id="editModal" title="Duplicate and Edit" ref="editModal" v-model="editModal" class="catalogue-modal">
-            <p>Duplicate catalogue <b>{{old_catalogue.title}}</b> and edit to create a new catalogue.</p>
+            <p>Duplicate catalogue <b>{{old_catalogue.name}}</b> and edit to create a new catalogue.</p>
             <vue-form class="form-horizontal form-validation" :state="editState" @submit.prevent="onSubmit">
                 <div class="col-lg-12">
                     <div class="form-group">
@@ -50,14 +50,14 @@
         <catalogue-send :catalogue="old_catalogue" :catalogueSend.sync="catalogueSend"/>
         <b-modal id="deleteModal" title="Delete Catalogue" ref="deleteModal" v-model="deleteModal"
                  class="catalogue-modal">
-            <p>Delete catalogue <b>{{old_catalogue.title}}</b></p>
+            <p>Delete catalogue <b>{{old_catalogue.name}}</b></p>
             <div slot="modal-footer" class="w-100">
                 <b-btn class="pl-3 pr-3" @click="deleteModal=false">CANCEL</b-btn>
                 <b-btn class="float-right greenBgColor pl-3 pr-3" @click="deleteCatalogue">DELETE</b-btn>
             </div>
         </b-modal>
-        <b-modal id="pdfModal" title="old_catalogue.title" ref="pdfModal" v-model="pdfModal" class="catalogue-modal">
-            <div slot="modal-title">{{old_catalogue.title}}</div>
+        <b-modal id="pdfModal" title="old_catalogue.name" ref="pdfModal" v-model="pdfModal" class="catalogue-modal">
+            <div slot="modal-title">{{old_catalogue.name}}</div>
             <div class="merchantModalContent">
                 <product-preview :productData="$store.state.productData"/>
             </div>
@@ -81,50 +81,12 @@
             'catalogue-send': catalogueSend,
             'product-preview': productPreview,
         },
+        props: ['limited'],
         data() {
             this.$store.state.productData = productData;
             this.$store.state.catalogue.pageColumns = 3;
             return {
-                catalogues: [
-                    {
-                        id: 1,
-                        title: 'Catalogue Name One',
-                        state: 0,
-                        date: '13/07/2018'
-                    },
-                    {
-                        id: 2,
-                        title: 'Catalogue Name Two',
-                        state: 2,
-                        history: [
-                            {
-                                date: '02/07/2018',
-                                emails: 'karen@brandzonline.com.au; james@ketcocreative.com.au'
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        title: 'Catalogue Name Three',
-                        state: 1,
-                        date: '20/06/2018'
-                    },
-                    {
-                        id: 4,
-                        title: 'Catalogue Name Four',
-                        state: 2,
-                        history: [
-                            {
-                                date: '08/07/2018',
-                                emails: 'admin@brandzonline.com.au'
-                            },
-                            {
-                                date: '20/06/2018',
-                                emails: 'karen@brandzonline.com.au; james@ketcocreative.com.au'
-                            }
-                        ]
-                    }
-                ],
+                catalogues: [],
                 catalogueLabel: ['Draft', 'PDF', 'PDF SENT'],
                 labelColor: ['yellowColor', 'blueColor', 'greenColor'],
                 editModal: false,
@@ -136,6 +98,11 @@
                 selectedIndex: -1,
                 new_catalogue_title: '',
             }
+        },
+        created() {
+            axios.get('/api/getRecentCatalogue', {params: {limited: this.limited}}).then(response => {
+                this.catalogues = response.data
+            });
         },
         mounted: function () {
 
@@ -173,8 +140,73 @@
                 }
             },
             continueCatalogue(index) {
-                let selectedCatalogue = this.catalogues[index];
-                this.$store.state.catalogue.name = selectedCatalogue.title;
+                let catalogue = this.catalogues[index];
+                console.log("selected catalogue", catalogue);
+                if (catalogue.id) this.$store.state.catalogue.id = catalogue.id;
+                this.$store.state.catalogue.name = catalogue.name;
+                this.$store.state.catalogue.file_name = catalogue.logo_name;
+                this.$store.state.catalogue.file_upload_path = catalogue.logo_url;
+                this.$store.state.catalogue.selectedImage = catalogue.cover_index;
+                if (catalogue.page_columns) this.$store.state.catalogue.page_columns = catalogue.page_columns;
+                if (catalogue.display_type) this.$store.state.catalogue.display_type = catalogue.display_type;
+                if (catalogue.logos_options) this.$store.state.catalogue.logos_options = catalogue.logos_options;
+                if (catalogue.display_options) this.$store.state.catalogue.display_options = catalogue.display_options;
+                if (catalogue.barcode_options) this.$store.state.catalogue.barcode_options = catalogue.barcode_options;
+                if (catalogue.suppliers) this.$store.state.sel_supplier_ids = catalogue.suppliers;
+                if (catalogue.categories) this.$store.state.sel_category_ids = catalogue.categories;
+                if (catalogue.product_new) this.$store.state.product_new = catalogue.product_new;
+                if (catalogue.blocks) this.$store.state.blocks = catalogue.blocks;
+                this.getTreeData();
+            },
+            getTreeData() {
+                if (this.$store.state.sel_supplier_ids) {
+                    let checkedNode = this.$store.state.sel_supplier_ids;
+                    let supplierList = this.$store.state.suppliers;
+                    let supplierIds = this.$store.state.supplierIds;
+                    let selectedIds = [];
+                    let sid, idx, pid, ppid;
+                    for (let i=0; i<checkedNode.length;i++) {
+                        sid = checkedNode[i];
+                        selectedIds.push(sid);
+                        idx = supplierIds.indexOf(sid);
+                        if (supplierList[idx] && supplierList[idx]['pid']) {
+                            pid = supplierList[idx]['pid'];
+                            selectedIds.push(pid);
+                            ppid = supplierIds.indexOf(pid);
+                            if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
+                        }
+                    }
+                    for (let j=0;j<supplierList.length;j++) {
+                        if (!supplierList[j]['hasChild'] && supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
+                            selectedIds.push(supplierList[j]['id']);
+                        }
+                    }
+                    this.$store.state.suppliers_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
+                }
+                if (this.$store.state.sel_category_ids) {
+                    let checkedNode = this.$store.state.sel_category_ids;
+                    let categoryList = this.$store.state.categories;
+                    let categoryIds = this.$store.state.categoryIds;
+                    let selectedIds = [];
+                    let sid, idx, pid, ppid;
+                    for (let i=0; i<checkedNode.length;i++) {
+                        sid = parseInt(checkedNode[i]);
+                        selectedIds.push(sid);
+                        idx = categoryIds.indexOf(sid);
+                        if (categoryList[idx] && categoryList[idx]['pid']) {
+                            pid = categoryList[idx]['pid'];
+                            selectedIds.push(pid);
+                            ppid = categoryIds.indexOf(pid);
+                            if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
+                        }
+                    }
+                    for (let j=0;j<categoryList.length;j++) {
+                        if (!categoryList[j]['hasChild'] && categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
+                            selectedIds.push(categoryList[j]['id']);
+                        }
+                    }
+                    this.$store.state.categories_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
+                }
             }
         }
     }
@@ -182,6 +214,8 @@
 <style lang="scss" scoped>
     @import "../layouts/css/customvariables";
     .catalogue-list {
+        max-height: 600px;
+        overflow-y: auto;
         .task_block {
             border: 1px solid $border_color;
             padding: 10px 15px;

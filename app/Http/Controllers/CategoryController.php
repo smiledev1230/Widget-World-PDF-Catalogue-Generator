@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\PCategory;
+use App\Models\PCategory;
 
 class CategoryController extends Controller
 {
@@ -46,7 +46,7 @@ class CategoryController extends Controller
                     $image_path = $image_path[0];
                 }
                 $ppRow = array(
-                    'id'=> $row->id,
+                    'id'=> 10000000 + $row->id,
                     'name'=> $row->name,
                     'images'=> $image_path,
                     'items_per_outer'=> $row->items_per_outer,

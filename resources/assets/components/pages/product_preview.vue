@@ -154,11 +154,14 @@
                 this.selectedPage += 2;
             },
             getImgUrl(rowInd, colInd, backPage) {
-                let imageUrl = this.getProductInfo(rowInd, colInd, backPage, 'images');
-                if (!imageUrl) {
-                    imageUrl = require('../../assets/img/products/9310072000954.jpg');
+                let index = this.getIndex(rowInd, colInd, backPage);
+                if (this.$store.state.productData[index] && this.$store.state.productData[index]['name']) {
+                    let imageUrl = this.$store.state.productData[index]['images'];
+                    if (!imageUrl) imageUrl = require('../../assets/img/products/empty.jpg');
+                    return imageUrl;
+                } else {
+                    return false;
                 }
-                return imageUrl;
             },
             checkNewState(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'product_is_new')

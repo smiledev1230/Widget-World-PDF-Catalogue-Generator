@@ -9,7 +9,7 @@
                 </b-tab>
                 <b-tab title="Categories" @click="selectCategory">
                     <div class="tree-view">
-                        <ejs-treeview id='categoryTree' :fields="setCatFields" showCheckBox="true" :checkedNodes='checkedNodes' :nodeChecked='categoryChecked'></ejs-treeview>
+                        <ejs-treeview id='categoryTree' :fields="setCatFields" showCheckBox="true" :nodeChecked="categoryChecked"></ejs-treeview>
                     </div>
                 </b-tab>
             </b-tabs>
@@ -19,7 +19,7 @@
             <div class="row d-block">
                 <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary text-white">CANCEL</router-link>
                 <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
-                <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white" @click="saveCategories">NEXT</router-link>
+                <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white" @click.native="next">NEXT</router-link>
                 <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
             </div>
         </div>
@@ -29,6 +29,7 @@
     import Vue from 'vue';
     import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
     Vue.use(TreeViewPlugin);
+    import { DataManager,Query,ODataAdaptor } from "@syncfusion/ej2-data";
     export default {
         name: "select_products",
         components: {
@@ -37,41 +38,25 @@
             return {
                 tabIndex: 0,
                 showCheck: true,
-                suppliers: [],
-                categories: [],
-                categoryIds: [],
-                checkedCategories: [],
-                checkedNodes: []
+                supplierIds: this.$store.state.supplierIds,
+                categoryIds: this.$store.state.categoryIds,
             }
         },
         mounted: function () {
             this.$store.state.page_text = "Select the products to be displayed in your catalogue. You can choose a complete range from single or multiple Suppliers, single or multiple categories or indivudal products. On the next screen you can insert these products into your pages.";
-            let app = this;
-            axios
-                .get("/api/getSupplier")
-                .then(response => {
-                    app.suppliers = [];
-                    if (response && response.data) {
-                        app.suppliers = response.data;
-                    }
-                });
-            axios
-                .get("/api/getCategory")
-                .then(response => {
-                    app.categories = [];
-                    if (response && response.data) {
-                        app.categories = response.data;
-                        app.$store.state.categories = app.categories;
-                        for (let i=0;i<app.categories.length;i++) {
-                            app.categoryIds.push(app.categories[i]['id']);
-                        }
-                    }
-                });
         },
         computed: {
             setSupplierFields() {
+                let dataSource = this.$store.state.suppliers;
+                if (dataSource.length>0 && this.$store.state.sel_supplier_ids.length>0) {
+                    for (let i=0;i<dataSource.length;i++) {
+                        if (this.$store.state.sel_supplier_ids.indexOf(dataSource[i]['id']) >= 0) {
+                            dataSource[i]['isChecked'] = true;
+                        }
+                    }
+                }
                 return {
-                    dataSource: this.suppliers,
+                    dataSource: dataSource,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
@@ -79,8 +64,16 @@
                 }
             },
             setCatFields() {
+                let dataSource = this.$store.state.categories;
+                if (dataSource.length>0 && this.$store.state.sel_category_ids.length>0) {
+                    for (let i=0;i<dataSource.length;i++) {
+                        if (this.$store.state.sel_category_ids.indexOf(dataSource[i]['id'].toString()) >= 0) {
+                            dataSource[i]['isChecked'] = true;
+                        }
+                    }
+                }
                 return {
-                    dataSource: this.categories,
+                    dataSource: dataSource,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
@@ -91,27 +84,109 @@
         methods: {
             saveProducts() {
                 console.log("saveProducts");
+                this.next();
+                let formData = new FormData();
+                let storeData = this.$store.state;
+                if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                formData.append('name', storeData.catalogue.name);
+                if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
+                formData.append('cover_index', storeData.catalogue.selectedImage);
+                formData.append('suppliers',storeData.sel_supplier_ids);
+                formData.append('categories', storeData.sel_category_ids);
+                formData.append('saved_page', 'select_products');
+                formData.append('state', '0');
+                let app = this;
+                axios.post( '/api/saveSelectProduct',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(response => {
+                    console.log('success!!', response);
+                    app.$router.push("/");
+                }).catch(function(){
+                    console.log('FAILURE!!');
+                });
             },
             selectCategory() {
                 console.log("selectCategory");
             },
             supplierChecked: function() {
-                let supplierObj = document.getElementById('supplierTree').ej2_instances[0];
-                this.$store.state.suppliers = supplierObj.checkedNodes;
+                console.log("supplierChecked");
             },
             categoryChecked: function() {
-                let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
-                let checkedNode = categoryObj.getAllCheckedNodes();
-                this.$store.state.categories = [];
-                for (let i=0; i<checkedNode.length;i++) {
-
-                }
-                // console.log("dddd ", this.checkedNodes);
+                console.log("categoryChecked");
             },
-            saveCategories() {
+            next() {
                 let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
                 let checkedNode = categoryObj.getAllCheckedNodes();
-                console.log("dddd ", checkedNodes);
+                console.log("categories checkedNode ", checkedNode);
+                if (checkedNode.length > 0) {
+                    let selectedIds = [];
+                    let sid, idx, pid, ppid;
+                    this.$store.state.sel_category_ids = [];
+                    let categoryList = this.$store.state.categories;
+                    for (let i=0; i<checkedNode.length;i++) {
+                        sid = parseInt(checkedNode[i]);
+                        selectedIds.push(sid);
+                        idx = this.categoryIds.indexOf(sid);
+                        if (categoryList[idx] && categoryList[idx]['pid']) {
+                            pid = categoryList[idx]['pid'];
+                            selectedIds.push(pid);
+                            ppid = this.categoryIds.indexOf(pid);
+                            if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
+                            this.$store.state.categories[idx]['isChecked'] = true;
+                        }
+                        this.$store.state.sel_category_ids.push(sid);
+                    }
+                    for (let j=0;j<categoryList.length;j++) {
+                        if (!categoryList[j]['hasChild'] && categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
+                            selectedIds.push(categoryList[j]['id']);
+                            this.$store.state.categories[j]['isChecked'] = true;
+                            this.$store.state.sel_category_ids.push(categoryList[j]['id']);
+                        }
+                    }
+                    this.$store.state.categories_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
+                    console.log("this.$store.state.categories_ids ", this.$store.state.categories_ids);
+                }
+                this.setSuppliers();
+            },
+            setSuppliers() {
+                let supplierObj = document.getElementById('supplierTree').ej2_instances[0];
+                let checkedNode = supplierObj.getAllCheckedNodes();
+                console.log("suppliers checkedNode ", checkedNode);
+                if (checkedNode.length > 0) {
+                    let selectedIds = [];
+                    let idx, pid, ppid;
+                    let supplierList = this.$store.state.suppliers;
+                    this.$store.state.sel_supplier_ids = [];
+                    for (let i=0; i<checkedNode.length;i++) {
+                        selectedIds.push(checkedNode[i]);
+                        idx = this.supplierIds.indexOf(checkedNode[i]);
+                        if (supplierList[idx] && supplierList[idx]['pid']) {
+                            pid = supplierList[idx]['pid'];
+                            selectedIds.push(pid);
+                            ppid = this.supplierIds.indexOf(pid);
+                            if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
+                            this.$store.state.suppliers[idx]['isChecked'] = true;
+                        }
+                        this.$store.state.sel_supplier_ids.push(checkedNode[i]);
+                    }
+                    let pchilds = [];
+                    for (let j=0;j<supplierList.length;j++) {
+                        if (!supplierList[j]['hasChild'] && supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
+                            pchilds.push(supplierList[j]['id']);
+                            this.$store.state.suppliers[j]['isChecked'] = true;
+                            this.$store.state.sel_supplier_ids.push(supplierList[j]['id']);
+                        }
+                    }
+                    selectedIds = selectedIds.concat(pchilds);
+                    this.$store.state.suppliers_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
+                    console.log("this.$store.state.suppliers_ids ", this.$store.state.suppliers_ids);
+                }
             }
         }
     }
