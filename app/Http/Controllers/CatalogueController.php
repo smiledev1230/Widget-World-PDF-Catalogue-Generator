@@ -68,4 +68,28 @@ class CatalogueController extends Controller
         }
         return response()->json($catalogue);
     }
+
+    public function duplicateCatalogue(Request $request)
+    {
+        $params = $request->all();
+        $id = $params['id'];
+        $name = $params['name'];
+        $cat = Catalogue::find($id);
+        $cat->name = $name;
+        $cat->state = 1;
+        $newCat = $cat->replicate();
+        $newId = $newCat->save();
+        $result = 'error';
+        if ($newId) {
+            $result = $this->getRecentCatalogue($request);
+        }
+        return $result;
+    }
+
+    public function deleteCatalogue(Request $request)
+    {
+        $id = $request->all('id');
+        Catalogue::where('id', $id)->delete();
+        return $this->getRecentCatalogue($request);
+    }
 }

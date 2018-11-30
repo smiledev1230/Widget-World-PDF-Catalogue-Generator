@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </vue-form>
-            <p class="pl-4">File: {{catalogue.title}}.pdf</p>
+            <p class="pl-4">File: {{catalogue.name}}.pdf</p>
             <div slot="modal-footer" class="w-100">
                 <b-btn class="pl-3 pr-3" @click="sendModal=false">CANCEL</b-btn>
                 <b-btn class="float-right greenBgColor pl-3 pr-3" @click="sendPDF()">SEND</b-btn>

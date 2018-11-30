@@ -95,16 +95,16 @@
                     hasChildren: 'hasChild'
                 },
                 display_type: [
-                    { text: 'Suppliers', value: true },
-                    { text: 'Categories', value: false },
+                    { text: 'Suppliers', value: 1 },
+                    { text: 'Categories', value: 0 },
                 ],
                 page_columns: [
                     { text: '2', value: '2' },
                     { text: '3', value: '3' },
                 ],
                 logos_options: [
-                    { text: 'Yes', value: true },
-                    { text: 'No', value: false },
+                    { text: 'Yes', value: 1 },
+                    { text: 'No', value: 0 },
                 ],
                 display_options: [
                     {text: 'Title', value: 'title'},
@@ -112,15 +112,17 @@
                     {text: 'Units Per Outer', value: 'units'},
                 ],
                 barcode_options: [
-                    {text: 'Barcode #', value: false},
-                    {text: 'Barcode Image', value: true, disabled: true},
+                    {text: 'Barcode #', value: 0},
+                    {text: 'Barcode Image', value: 1, disabled: true},
                 ]
             }
         },
         mounted: function () {
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
-            console.log("store.state", this.$store.state);
+            if (this.$store.state.catalogue.page_columns == 2 && this.$store.state.catalogue.barcode_options) {
+                this.barcode_options[1]['disabled'] = false;
+            }
         },
         methods: {
             getSupplierList() {
@@ -142,10 +144,30 @@
                 return categoryList;
             },
             getProductData(allProduct) {
+                let stateData = this.$store.state;
                 let productData = [];
+                let productIds = [];
                 for (let i=0;i<allProduct.length;i++) {
                     if (!allProduct[i]['hasChild']) {
+                        if (stateData.product_new && stateData.product_new.indexOf(allProduct[i]['id'])>=0) {
+                            allProduct[i]['product_is_new'] = true;
+                        }
                         productData.push(allProduct[i]);
+                        productIds.push(allProduct[i]['id']);
+                    }
+                }
+                if (stateData.blocks && stateData.blocks.length>0) {
+                    let k=0;
+                    for (let i=0;i<stateData.blocks.length;i++) {
+                        if (productIds.indexOf(stateData.blocks[i]['id'])>=0) {
+                            let newBlock = {
+                                id: new Date().getTime(),
+                                name: stateData.blocks[i]['name'],
+                                type: 'block'
+                            }
+                            productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+k, 0, newBlock);
+                            k++;
+                        }
                     }
                 }
                 return productData;
@@ -212,7 +234,7 @@
                     this.barcode_options[1]['disabled'] = false;
                 } else {
                     this.barcode_options[1]['disabled'] = true;
-                    this.$store.state.catalogue.barcode_options = false;
+                    this.$store.state.catalogue.barcode_options = 0;
                 }
             },
             setProduct(e) {

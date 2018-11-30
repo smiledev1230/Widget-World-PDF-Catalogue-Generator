@@ -24,10 +24,10 @@ const store = new Vuex.Store({
             file_upload_path: null,
             selectedImage: 0,
             page_columns: 3,
-            display_type: true,
-            logos_options: false,
+            display_type: 1,
+            logos_options: 0,
             display_options: ['title', 'rrp', 'units'],
-            barcode_options: false,
+            barcode_options: 0,
         },
         suppliers: [],
         supplierIds: [],
@@ -62,7 +62,7 @@ const store = new Vuex.Store({
                 display_options: ['title', 'rrp', 'units'],
                 barcode_options: false,
             }
-            this.state.suppliers = this.state.suppliers_ids = this.state.sel_supplier_ids = this.state.categories = this.state.categories_ids = this.state.sel_category_ids = this.state.productData = [];
+            this.state.sel_supplier_ids = this.state.sel_category_ids = this.state.productData = [];
         }
     }
 })

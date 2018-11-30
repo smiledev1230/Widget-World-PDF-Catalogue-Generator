@@ -175,30 +175,7 @@
             }
         },
         mounted: function () {
-            let stateData = this.$store.state;
-            let productIds = [];
-            if (stateData.product_new.length > 0) {
-                for (let i=0;i<stateData.productData.length;i++) {
-                    if (stateData.product_new.indexOf(stateData.productData[i]['id'])>=0) {
-                        this.$store.state.productData[i]['product_is_new'] = true;
-                    }
-                    productIds.push(stateData.productData[i]['id']);
-                }
-            }
-            if (stateData.blocks.length > 0) {
-                let k=0;
-                for (let i=0;i<stateData.blocks.length;i++) {
-                    if (productIds.indexOf(stateData.blocks[i]['id'])>=0) {
-                        let newBlock = {
-                            id: new Date().getTime(),
-                            name: stateData.blocks[i]['name'],
-                            type: 'block'
-                        }
-                        this.$store.state.productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+k, 0, newBlock);
-                        k++;
-                    }
-                }
-            }
+
         },
         methods: {
             prevPage() {

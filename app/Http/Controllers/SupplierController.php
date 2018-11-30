@@ -19,9 +19,8 @@ class SupplierController extends Controller
             ->join("pcategories AS pp", "pp.id", "=", "pc.pcategory_id")
             ->join("suppliers AS s", "s.id", "=", "p.supplier_id")
             ->whereNotNull('p.supplier_id')
-            ->orWhereNotNull('pc.pcategory_id')
+            ->WhereNotNull('pc.pcategory_id')
             ->get();
-
         $this->categories = $this->category_ids = array();
         $this->suppliers = $this->supplier_ids = array();
 
@@ -55,17 +54,19 @@ class SupplierController extends Controller
                 $image_path = json_decode($image_path);
                 $image_path = $image_path[0];
             }
-            $ppRow = array(
-                'id'=> "s".$row->supplier_id."-c".$row->pcategory_id."-p".$row->id,
-                'pid'=> "s".$row->supplier_id."-c".$row->pcategory_id,
-                'name'=> $row->name,
-                'images'=> $image_path,
-                'items_per_outer'=> $row->items_per_outer,
-                'rrp'=> $row->rrp,
-                'barcode_unit'=> $row->barcode_unit,
-                'product_is_new'=> 0,
-            );
-            return $ppRow;
+            if ($row->parent_id) {
+                $ppRow = array(
+                    'id'=> "s".$row->supplier_id."-c".$row->pcategory_id."-p".$row->id,
+                    'pid'=> "s".$row->supplier_id."-c".$row->pcategory_id,
+                    'name'=> $row->name,
+                    'images'=> $image_path,
+                    'items_per_outer'=> $row->items_per_outer,
+                    'rrp'=> $row->rrp,
+                    'barcode_unit'=> $row->barcode_unit,
+                    'product_is_new'=> 0,
+                );
+                return $ppRow;
+            }
         })->toArray();
         $product_categories = array_filter($product_list);
         $supplier_tree_data = array_merge($this->suppliers, $this->categories, $product_categories);

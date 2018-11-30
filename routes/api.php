@@ -11,6 +11,10 @@ Route::post('update', 'UserController@update');
 Route::post('register', 'UserController@register');
 Route::post('/uploadToS3', 'CatalogueController@uploadToS3');
 Route::post('/saveSelectProduct', 'CatalogueController@saveSelectProduct');
+Route::post('savePDF', 'GeneratePDFController@savePDF');
+Route::post('duplicateCatalogue', 'CatalogueController@duplicateCatalogue');
+Route::post('deleteCatalogue', 'CatalogueController@deleteCatalogue');
+
 Route::get('/products/{product}', 'ProductController@show');
 
 Route::group(['middleware' => 'auth:api'], function(){

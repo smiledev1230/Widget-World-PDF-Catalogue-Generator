@@ -57,6 +57,7 @@
         "vue-plyr": "^5.0.4",
         "vue-quill-editor": "^3.0.4",
         "vue-router": "^3.0.1",
+        "vue-simple-spinner": "^1.2.8",
         "vue-slider-component": "^2.4.7",
         "vue-tables-2": "^1.1.0",
         "vue-template-compiler": "^2.5.17",
