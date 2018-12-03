@@ -68,7 +68,7 @@
                 axios.post("/api/savePDF", params).then(response => {
                     console.log("response", response);
                     app.$store.state.preloader = false;
-                    app.saveCatalogue(response);
+                    app.saveCatalogue(response.data);
                 }).catch(e=>{
                     app.$store.state.preloader = false;
                 });

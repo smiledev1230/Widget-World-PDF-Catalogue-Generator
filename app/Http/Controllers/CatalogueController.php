@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Filesystem\FilesystemAdapter;
+
 use Auth;
 use App\Models\Catalogue;
+use App\Models\EmailContent;
+use App\Models\CatalogueSent;
 
 class CatalogueController extends Controller
 {
@@ -91,5 +96,30 @@ class CatalogueController extends Controller
         $id = $request->all('id');
         Catalogue::where('id', $id)->delete();
         return $this->getRecentCatalogue($request);
+    }
+
+    public function sendPDF(Request $request)
+    {
+        $params = $request->all();
+        $pdf_path = $params['pdf_path'];
+        $pdf_name = $params['name'].'.pdf';
+        $to = explode(';', $params['emails']);
+        $subject = $params['subject'];
+        $emailContent = new EmailContent();
+        $emailContent->notes = $params['notes'];
+        Mail::send('email', ['emailContent' => $emailContent], function ($message) use ($to, $subject, $pdf_name, $pdf_path) {
+            if (Storage::disk('s3')->exists($pdf_path)) {
+                $pdfFile = Storage::disk('s3')->get($pdf_path);
+                $message->attachData($pdfFile, $pdf_name);
+            }
+            $message->from(env('ORDER_FROM_EMAIL', 'info@brandzonline.com.au'), env('ORDER_FROM_NAME', 'Info'))->to($to)->subject($subject);
+        });
+        if (Mail::failures()) {
+            return 'error';
+        } else {
+            Catalogue::find($request->id)->fill(array('state' => '2'))->update();
+            CatalogueSent::create(array('pdf_id' => $request->id, 'emails' => implode('; ', $to)));
+            return $this->getRecentCatalogue($request);
+        }
     }
 }

@@ -21,6 +21,7 @@
         mounted: function () {
             this.$store.state.page_text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.";
             if (!this.$store.state.login_status) this.$router.push("/login");
+            console.log("init Catalogue");
             this.$store.dispatch('initCatalogue');
             let app = this;
             if (app.$store.state.suppliers.length <= 0) {

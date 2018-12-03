@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
-                        <textarea v-model="sendForm.message" name="message" rows="6"
+                        <textarea v-model="sendForm.notes" name="notes" rows="6"
                                   class="form-control resize_vertical" placeholder="Message"></textarea>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
     export default {
         name: "catalogue_preview",
         components: {},
-        props: ['catalogue', 'catalogueSend'],
+        props: ['catalogue', 'catalogueSend', 'limited', 'catalogues'],
         data() {
             return {
                 sendModal: false,
@@ -60,7 +60,7 @@
                 sendForm: {
                     subject: '',
                     emails: '',
-                    message: ''
+                    notes: ''
                 }
             }
         },
@@ -78,7 +78,39 @@
         methods: {
             sendPDF() {
                 this.sendModal=false;
-                console.log("sendPDF");
+                if (this.sendForm.subject && this.sendForm.emails) {
+                    let app = this;
+                    let formData = new FormData();
+                    formData.append('id', this.catalogue.id);
+                    formData.append('pdf_path', this.catalogue.pdf_path);
+                    formData.append('name', this.catalogue.name);
+                    formData.append('subject', this.sendForm.subject);
+                    formData.append('emails', this.sendForm.emails);
+                    formData.append('notes', this.sendForm.notes);
+                    formData.append('limited', this.limited);
+                    axios.post( '/api/sendPDF',
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    ).then(response => {
+                        console.log('success!!', response);
+                        if (response.data != 'error') {
+                            app.$emit('update:catalogues', response.data);
+                        }
+                    }).catch(function(){
+                        console.log('FAILURE!!');
+                    });
+                } else {
+                    return false;
+                }
+                this.sendForm ={
+                    subject: '',
+                    emails: '',
+                    notes: ''
+                }
             }
         }
     }

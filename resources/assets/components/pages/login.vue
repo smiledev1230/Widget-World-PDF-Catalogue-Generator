@@ -9,7 +9,7 @@
                         </div>
                     </div>
                 </div>
-                <vue-form :state="formstate" @submit.prevent="onSubmit">
+                <vue-form class="form-horizontal form-validation" :state="formstate" @submit.prevent="onSubmit">
                     <div class="row">
                         <div class="col-sm-12 mt-3 ">
                             <div class="form-group">
@@ -33,8 +33,8 @@
                                            maxlength="10"/>
                                     <field-messages name="password" show="$invalid && $submitted" class="text-danger">
                                         <div slot="required">Password is required</div>
-                                        <div slot="minlength">Password should be atleast 4 characters long</div>
-                                        <div slot="maxlength">Password should be atmost 10 characters long</div>
+                                        <div slot="minlength">Password should be at least 4 characters long</div>
+                                        <div slot="maxlength">Password should be at most 10 characters long</div>
                                     </field-messages>
                                 </validate>
                             </div>

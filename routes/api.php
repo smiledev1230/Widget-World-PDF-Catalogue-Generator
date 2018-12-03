@@ -14,6 +14,7 @@ Route::post('/saveSelectProduct', 'CatalogueController@saveSelectProduct');
 Route::post('savePDF', 'GeneratePDFController@savePDF');
 Route::post('duplicateCatalogue', 'CatalogueController@duplicateCatalogue');
 Route::post('deleteCatalogue', 'CatalogueController@deleteCatalogue');
+Route::post('sendPDF', 'CatalogueController@sendPDF');
 
 Route::get('/products/{product}', 'ProductController@show');
 

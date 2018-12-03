@@ -26,7 +26,6 @@ class GeneratePDFController extends Controller
         $pdf = PDF::loadView('pdf', compact('productData','page_columns', 'display_options', 'barcode_options', 'pages', 'fileName'));
 //        $pdf->save($fileName.'.pdf');return 'ok';
         Storage::disk('s3')->put($filePath, $pdf->output(), 'public');
-        $s3SavedPath = Storage::disk('s3')->url($filePath);
-        return response()->json($s3SavedPath);
+        return response()->json($filePath);
     }
 }

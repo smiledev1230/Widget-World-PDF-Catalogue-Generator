@@ -47,7 +47,7 @@
                 <b-btn class="float-right greenBgColor pl-3 pr-3" @click="duplicate()">DUPLICATE</b-btn>
             </div>
         </b-modal>
-        <catalogue-send :catalogue="old_catalogue" :catalogueSend.sync="catalogueSend"/>
+        <catalogue-send :catalogue="old_catalogue" :catalogueSend.sync="catalogueSend" :limited="limited" :catalogues.sync="catalogues" />
         <b-modal id="deleteModal" title="Delete Catalogue" ref="deleteModal" v-model="deleteModal"
                  class="catalogue-modal">
             <p>Delete catalogue <b>{{old_catalogue.name}}</b></p>
