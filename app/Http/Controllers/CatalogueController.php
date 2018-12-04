@@ -66,7 +66,7 @@ class CatalogueController extends Controller
         if (!$params['name']) return response('false');
         if ($params['suppliers']) $params['suppliers'] = serialize($params['suppliers']);
         if ($params['categories']) $params['categories'] = serialize($params['categories']);
-        if ($params['id']) {
+        if (isset($params['id']) && !empty($params['id'])){
             $catalogue = Catalogue::find($params['id'])->fill($params)->update();
         } else {
             $catalogue = Catalogue::create($params);

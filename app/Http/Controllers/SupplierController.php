@@ -13,11 +13,11 @@ class SupplierController extends Controller
     //
     public function getSupplier() {
         // Get category data of all product
-        $product_node = DB::table('products as p')
+        $product_node = DB::table('product_category AS pc')
             ->select('p.id', 'pc.pcategory_id', 'pp.parent_id','s.name as sname', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit')
-            ->join("product_category AS pc", "p.id", "=", "pc.product_id")
-            ->join("pcategories AS pp", "pp.id", "=", "pc.pcategory_id")
-            ->join("suppliers AS s", "s.id", "=", "p.supplier_id")
+            ->join("products as p", "p.id", "=", "pc.product_id")
+            ->leftJoin("pcategories AS pp", "pp.id", "=", "pc.pcategory_id")
+            ->leftJoin("suppliers AS s", "s.id", "=", "p.supplier_id")
             ->whereNotNull('p.supplier_id')
             ->WhereNotNull('pc.pcategory_id')
             ->get();
@@ -31,7 +31,8 @@ class SupplierController extends Controller
                 $sRow = array(
                     'id' => $supplier_id,
                     'name' => $row->sname,
-                    'hasChild'=> 1
+                    'hasChild' => 1,
+                    'expanded' => 1
                 );
                 array_push($this->suppliers, $sRow);
             }
@@ -54,7 +55,7 @@ class SupplierController extends Controller
                 $image_path = json_decode($image_path);
                 $image_path = $image_path[0];
             }
-            if ($row->parent_id) {
+            if ($row->pcategory_id) {
                 $ppRow = array(
                     'id'=> "s".$row->supplier_id."-c".$row->pcategory_id."-p".$row->id,
                     'pid'=> "s".$row->supplier_id."-c".$row->pcategory_id,

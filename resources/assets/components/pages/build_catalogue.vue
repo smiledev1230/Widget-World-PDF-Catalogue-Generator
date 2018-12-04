@@ -38,7 +38,13 @@
         <div class="content-main row mt-4">
             <div class="col-3 nopadding">
                 <div class="tree-view">
-                    <ejs-treeview v-if="$store.state.catalogue.display_type" id='supplierTree' :fields="supplierFields" allowDragAndDrop='true'></ejs-treeview>
+                    <ejs-treeview
+                            v-if='$store.state.catalogue.display_type'
+                            id='supplierTree'
+                            :fields='supplierFields'
+                            allowDragAndDrop='true'
+                            :nodeDragStop='catalogueDragStop'>
+                    </ejs-treeview>
                     <ejs-treeview v-else id='categoryTree' :fields="categoryFields" allowDragAndDrop='true'></ejs-treeview>
                 </div>
                 <a class="btn greenBgColor pull-right text-white mt-3" @click="updateCatalogue">UPDATE</a>
@@ -241,6 +247,18 @@
                 let productList = e ? this.getSupplierList() : this.getCategoryList();
                 this.$store.state.productData = this.getProductData(productList);
                 this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            },
+            catalogueDragStop: function(args) {
+                console.log("bbb",args);
+                let draggedNodeData = args.draggedNodeData;
+                let droppedNodeData = args.droppedNodeData;
+                if (draggedNodeData.parentID != droppedNodeData.parentID) {
+                    args.cancel = true;
+                    return;
+                } else {
+                    // let dragIndex = this.$store.state.categories.indexOf(draggedNodeData.id);
+                }
+
             }
         }
     }

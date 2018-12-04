@@ -132,6 +132,17 @@
                     for (let i=0; i<checkedNode.length;i++) {
                         sid = parseInt(checkedNode[i]);
                         selectedIds.push(sid);
+                        this.$store.state.sel_category_ids.push(sid);
+                    }
+                    for (let j=0;j<categoryList.length;j++) {
+                        if (categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
+                            selectedIds.push(categoryList[j]['id']);
+                            this.$store.state.categories[j]['isChecked'] = true;
+                            this.$store.state.sel_category_ids.push(categoryList[j]['id']);
+                        }
+                    }
+                    for (let k=0; k<checkedNode.length;k++) {
+                        sid = parseInt(checkedNode[k]);
                         idx = this.categoryIds.indexOf(sid);
                         if (categoryList[idx] && categoryList[idx]['pid']) {
                             pid = categoryList[idx]['pid'];
@@ -139,14 +150,6 @@
                             ppid = this.categoryIds.indexOf(pid);
                             if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
                             this.$store.state.categories[idx]['isChecked'] = true;
-                        }
-                        this.$store.state.sel_category_ids.push(sid);
-                    }
-                    for (let j=0;j<categoryList.length;j++) {
-                        if (!categoryList[j]['hasChild'] && categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
-                            selectedIds.push(categoryList[j]['id']);
-                            this.$store.state.categories[j]['isChecked'] = true;
-                            this.$store.state.sel_category_ids.push(categoryList[j]['id']);
                         }
                     }
                     this.$store.state.categories_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
@@ -165,22 +168,24 @@
                     this.$store.state.sel_supplier_ids = [];
                     for (let i=0; i<checkedNode.length;i++) {
                         selectedIds.push(checkedNode[i]);
-                        idx = this.supplierIds.indexOf(checkedNode[i]);
+                        this.$store.state.sel_supplier_ids.push(checkedNode[i]);
+                    }
+                    let pchilds = [];
+                    for (let j=0;j<supplierList.length;j++) {
+                        if (supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
+                            pchilds.push(supplierList[j]['id']);
+                            this.$store.state.suppliers[j]['isChecked'] = true;
+                            this.$store.state.sel_supplier_ids.push(supplierList[j]['id']);
+                        }
+                    }
+                    for (let k=0; k<checkedNode.length;k++) {
+                        idx = this.supplierIds.indexOf(checkedNode[k]);
                         if (supplierList[idx] && supplierList[idx]['pid']) {
                             pid = supplierList[idx]['pid'];
                             selectedIds.push(pid);
                             ppid = this.supplierIds.indexOf(pid);
                             if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
                             this.$store.state.suppliers[idx]['isChecked'] = true;
-                        }
-                        this.$store.state.sel_supplier_ids.push(checkedNode[i]);
-                    }
-                    let pchilds = [];
-                    for (let j=0;j<supplierList.length;j++) {
-                        if (!supplierList[j]['hasChild'] && supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
-                            pchilds.push(supplierList[j]['id']);
-                            this.$store.state.suppliers[j]['isChecked'] = true;
-                            this.$store.state.sel_supplier_ids.push(supplierList[j]['id']);
                         }
                     }
                     selectedIds = selectedIds.concat(pchilds);
