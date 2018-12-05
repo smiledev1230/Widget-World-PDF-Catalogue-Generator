@@ -12,56 +12,48 @@ class CategoryController extends Controller
     //
     public function getCategory()
     {
-        $parent_ids = PCategory::select('parent_id')
-            ->whereNotNull('parent_id');
-        $parent_node = PCategory::select('id','name', 'parent_id')
-            ->whereIn('id', $parent_ids)
-            ->get();
-        $parent_categories = $parent_node->map(function ($row) {
+        $category_nodes = PCategory::All()->map(function ($row) {
             $pRow = array(
-                'id'=> $row->id,
+                'id'=> 'c'.$row->id,
                 'name'=> $row->name,
                 'hasChild'=> 1
             );
-            if ($row->parent_id) $pRow['pid'] = $row->parent_id;
+            if ($row->parent_id) $pRow['pid'] = 'c'.$row->parent_id;
             return $pRow;
         })->toArray();
 
-        $child_categories = PCategory::select('id','name', 'parent_id as pid', DB::raw('true as hasChild'))
-            ->whereNotIn('id', $parent_ids)
-            ->get()
-            ->toArray();
-
-        $product_node = DB::table('product_category as pc')
-            ->select('p.id','p.name', 'pc.pcategory_id', 'p.images', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit')
-            ->join("products AS p", "p.id", "=", "pc.product_id")
-            ->whereNotIn("pc.pcategory_id", $parent_ids)
+        $parent_ids = PCategory::select('parent_id')
+            ->whereNotNull('parent_id')
+            ->groupBy('parent_id');
+        $product_node = DB::table('pcategories AS p')
+            ->select('pro.id','pro.name', 'pc.pcategory_id', 'pro.images', 'pro.items_per_outer', 'pro.rrp', 'pro.barcode_unit', 'pro.barcode_image', DB::raw("CONCAT(IFNULL(LPAD(pp.parent_id,5,'0'), '00000'), '.', LPAD(p.parent_id,5,'0'), '.', LPAD(p.id,5,'0'), '.', pc.product_id) AS path"))
+            ->leftJoin('pcategories AS pp', 'pp.id', '=', 'p.parent_id')
+            ->join('product_category AS pc', 'p.id', '=', 'pc.pcategory_id')
+            ->join('products AS pro', 'pc.product_id', '=', 'pro.id')
+            ->whereNotIn('pc.pcategory_id', $parent_ids)
             ->get();
-        $this->product_ids = array();
-        $product_list = $product_node->map(function ($row) {
-            if (!in_array($row->id, $this->product_ids)) {
-                array_push($this->product_ids, $row->id);
-                $image_path = $row->images;
-                if ($image_path) {
-                    $image_path = json_decode($image_path);
-                    $image_path = $image_path[0];
-                }
-                $ppRow = array(
-                    'id'=> 10000000 + $row->id,
-                    'name'=> $row->name,
-                    'images'=> $image_path,
-                    'items_per_outer'=> $row->items_per_outer,
-                    'rrp'=> $row->rrp,
-                    'barcode_unit'=> $row->barcode_unit,
-                    'product_is_new'=> 0,
-                    'product'=> 1,
-                );
-                if ($row->pcategory_id) $ppRow['pid'] = $row->pcategory_id;
-                return $ppRow;
+
+        $product_nodes = $product_node->map(function ($row) {
+            $image_path = $row->images;
+            if ($image_path) {
+                $image_path = json_decode($image_path);
+                $image_path = $image_path[0];
             }
+            $ppRow = array(
+                'id'=> 'c'.$row->pcategory_id.'-p'.$row->id,
+                'name'=> $row->name,
+                'images'=> $image_path,
+                'items_per_outer'=> $row->items_per_outer,
+                'rrp'=> $row->rrp,
+                'barcode_unit'=> $row->barcode_unit,
+                'barcode_image'=> $row->barcode_image,
+                'product_is_new'=> 0,
+            );
+            if ($row->pcategory_id) $ppRow['pid'] = 'c'.$row->pcategory_id;
+            return $ppRow;
         })->toArray();
-        $product_categories = array_filter($product_list);
-        $categories = array_merge($parent_categories, $child_categories, $product_categories);
+
+        $categories = array_merge($category_nodes, $product_nodes);
         return $categories;
     }
 }

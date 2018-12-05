@@ -183,6 +183,8 @@
                 if (catalogue.blocks) this.$store.state.blocks = catalogue.blocks;
                 this.$store.state.suppliers_ids = this.getSupplierTreeIds(this.$store.state.sel_supplier_ids);
                 this.$store.state.categories_ids = this.getCategoryTreeIds(this.$store.state.sel_category_ids);
+                this.$store.state.drag_supplier_ids = catalogue.drag_supplier_ids;
+                this.$store.state.drag_category_ids = catalogue.drag_category_ids;
             },
             getSupplierTreeIds(checkedNode) {
                 let supplierList = this.$store.state.suppliers;
@@ -190,9 +192,26 @@
                 let selectedIds = [];
                 let sid, idx, pid, ppid;
                 for (let i=0; i<checkedNode.length;i++) {
-                    sid = checkedNode[i];
-                    selectedIds.push(sid);
-                    idx = supplierIds.indexOf(sid);
+                    selectedIds.push(checkedNode[i]);
+                }
+                let pchilds = [];
+                let checkedAncestor = false;
+                for (let j=0;j<supplierList.length;j++) {
+                    if (supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
+                        pchilds.push(supplierList[j]['id']);
+                        if (supplierList[j]['hasChild']) checkedAncestor = true;
+                    }
+                }
+                if (checkedAncestor) {
+                    for (let p=0;p<supplierList.length;p++) {
+                        let supplierRow = supplierList[p];
+                        if (supplierRow['pid'] && pchilds.indexOf(supplierRow['pid']) >= 0) {
+                            pchilds.push(supplierRow['id']);
+                        }
+                    }
+                }
+                for (let k=0; k<checkedNode.length;k++) {
+                    idx = supplierIds.indexOf(checkedNode[k]);
                     if (supplierList[idx] && supplierList[idx]['pid']) {
                         pid = supplierList[idx]['pid'];
                         selectedIds.push(pid);
@@ -200,32 +219,29 @@
                         if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
                     }
                 }
-                for (let j=0;j<supplierList.length;j++) {
-                    if (!supplierList[j]['hasChild'] && supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
-                        selectedIds.push(supplierList[j]['id']);
-                    }
-                }
+                selectedIds = selectedIds.concat(pchilds);
                 return selectedIds.filter((v, i, a) => a.indexOf(v) === i);
             },
             getCategoryTreeIds(checkedNode) {
+                let selectedIds = [];
+                let idx, pid, ppid;
                 let categoryList = this.$store.state.categories;
                 let categoryIds = this.$store.state.categoryIds;
-                let selectedIds = [];
-                let sid, idx, pid, ppid;
                 for (let i=0; i<checkedNode.length;i++) {
-                    sid = parseInt(checkedNode[i]);
-                    selectedIds.push(sid);
-                    idx = categoryIds.indexOf(sid);
+                    selectedIds.push(checkedNode[i]);
+                }
+                for (let j=0;j<categoryList.length;j++) {
+                    if (categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
+                        selectedIds.push(categoryList[j]['id']);
+                    }
+                }
+                for (let k=0; k<checkedNode.length;k++) {
+                    idx = categoryIds.indexOf(checkedNode[k]);
                     if (categoryList[idx] && categoryList[idx]['pid']) {
                         pid = categoryList[idx]['pid'];
                         selectedIds.push(pid);
                         ppid = categoryIds.indexOf(pid);
                         if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
-                    }
-                }
-                for (let j=0;j<categoryList.length;j++) {
-                    if (!categoryList[j]['hasChild'] && categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
-                        selectedIds.push(categoryList[j]['id']);
                     }
                 }
                 return selectedIds.filter((v, i, a) => a.indexOf(v) === i);

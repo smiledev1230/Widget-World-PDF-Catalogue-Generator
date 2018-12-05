@@ -13,7 +13,7 @@ class Catalogue extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'logo_name', 'logo_url', 'cover_index', 'suppliers', 'categories', 'display_type', 'page_columns', 'logos_options', 'display_options', 'barcode_options', 'product_new', 'blocks', 'saved_page', 'pdf_path', 'state'
+        'name', 'logo_name', 'logo_url', 'cover_index', 'suppliers', 'categories', 'display_type', 'page_columns', 'logos_options', 'display_options', 'barcode_options', 'product_new', 'blocks', 'saved_page', 'pdf_path', 'state', 'drag_supplier_ids', 'drag_category_ids'
     ];
 
 }

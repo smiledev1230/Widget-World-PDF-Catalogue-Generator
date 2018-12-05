@@ -43,11 +43,17 @@
                             id='supplierTree'
                             :fields='supplierFields'
                             allowDragAndDrop='true'
+                            :nodeDragStop='supplierDragStop'>
+                    </ejs-treeview>
+                    <ejs-treeview
+                            v-else
+                            id='categoryTree'
+                            :fields="categoryFields"
+                            allowDragAndDrop='true'
                             :nodeDragStop='catalogueDragStop'>
                     </ejs-treeview>
-                    <ejs-treeview v-else id='categoryTree' :fields="categoryFields" allowDragAndDrop='true'></ejs-treeview>
                 </div>
-                <a class="btn greenBgColor pull-right text-white mt-3" @click="updateCatalogue">UPDATE</a>
+                <a class="btn greenBgColor pull-right text-white mt-3" @click="saveProducts">UPDATE</a>
             </div>
             <div class="col-9 pr-0">
                 <div class="content-right">
@@ -64,6 +70,7 @@
                 <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
             </div>
         </div>
+        <save-modal :showStatus.sync="showStatus" />
     </div>
 </template>
 <script>
@@ -71,30 +78,34 @@
     import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
     Vue.use(TreeViewPlugin);
     import productList from "./product_list";
+    import saveModal  from "./save_modal";
+
     export default {
         name: "build_catalogue",
         components: {
             'productList': productList,
+            'save-modal': saveModal
         },
         data() {
-            let supplierList = this.getSupplierList();
-            let categoryList = this.getCategoryList();
-            this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
+            this.supplierList = this.getSupplierList();
+            this.categoryList = this.getCategoryList();
+            this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(this.supplierList): this.getProductData(this.categoryList);
             let total_pages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             return {
                 showCollapse: false,
                 showCheck: false,
                 totalPages: total_pages,
                 categories: [],
+                showStatus: false,
                 supplierFields: {
-                    dataSource: supplierList,
+                    dataSource: this.supplierList,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
                     hasChildren: 'hasChild'
                 },
                 categoryFields: {
-                    dataSource: categoryList,
+                    dataSource: this.categoryList,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
@@ -163,7 +174,7 @@
                     }
                 }
                 if (stateData.blocks && stateData.blocks.length>0) {
-                    let k=0;
+                    let p=0;
                     for (let i=0;i<stateData.blocks.length;i++) {
                         if (productIds.indexOf(stateData.blocks[i]['id'])>=0) {
                             let newBlock = {
@@ -171,9 +182,33 @@
                                 name: stateData.blocks[i]['name'],
                                 type: 'block'
                             }
-                            productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+k, 0, newBlock);
-                            k++;
+                            productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+p, 0, newBlock);
+                            p++;
                         }
+                    }
+                }
+                if (stateData.catalogue.display_type && stateData.drag_supplier_ids.length > 0) {
+                    let dragId, dragRow, dropId;
+                    for (let k=0; k<stateData.drag_supplier_ids.length;k+=2) {
+                        dragId = productIds.indexOf(stateData.drag_supplier_ids[k]);
+                        dragRow = productData[dragId];
+                        productData.splice(dragId, 1);
+                        productIds.splice(dragId, 1);
+                        dropId = productIds.indexOf(stateData.drag_supplier_ids[k+1]);
+                        productData.splice(dropId, 0, dragRow);
+                        productIds.splice(dropId, 0, stateData.drag_supplier_ids[k]);
+                    }
+                }
+                if (!stateData.catalogue.display_type && stateData.drag_category_ids.length > 0) {
+                    let dragId, dragRow, dropId;
+                    for (let k=0; k<stateData.drag_category_ids.length;k+=2) {
+                        dragId = productIds.indexOf(stateData.drag_category_ids[k]);
+                        dragRow = productData[dragId];
+                        productData.splice(dragId, 1);
+                        productIds.splice(dragId, 1);
+                        dropId = productIds.indexOf(stateData.drag_category_ids[k+1]);
+                        productData.splice(dropId, 0, dragRow);
+                        productIds.splice(dropId, 0, stateData.drag_category_ids[k]);
                     }
                 }
                 return productData;
@@ -194,6 +229,8 @@
                 formData.append('logos_options', storeData.catalogue.logos_options);
                 formData.append('display_options', storeData.catalogue.display_options);
                 formData.append('barcode_options', storeData.catalogue.barcode_options);
+                formData.append('drag_supplier_ids', storeData.drag_supplier_ids);
+                formData.append('drag_category_ids', storeData.drag_category_ids);
                 formData.append('saved_page', 'build_catalogue');
                 formData.append('state', '0');
                 if (storeData.blocks.length>0) formData.append('blocks', JSON.stringify(storeData.blocks));
@@ -209,7 +246,7 @@
                     }
                 ).then(response => {
                     console.log('success!!', response);
-                    app.$router.push("/");
+                    app.showStatus = true;
                 }).catch(function(){
                     console.log('FAILURE!!');
                 });
@@ -244,22 +281,34 @@
                 }
             },
             setProduct(e) {
-                let productList = e ? this.getSupplierList() : this.getCategoryList();
+                let productList = e ? this.supplierList : this.categoryList;
                 this.$store.state.productData = this.getProductData(productList);
                 this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             },
             catalogueDragStop: function(args) {
-                console.log("bbb",args);
-                let draggedNodeData = args.draggedNodeData;
-                let droppedNodeData = args.droppedNodeData;
-                if (draggedNodeData.parentID != droppedNodeData.parentID) {
+                let dragNode = args.draggedNodeData;
+                let dropNode = args.droppedNodeData;
+                if (dragNode.parentID != dropNode.parentID) {
                     args.cancel = true;
                     return;
                 } else {
-                    // let dragIndex = this.$store.state.categories.indexOf(draggedNodeData.id);
+                    this.$store.state.drag_category_ids.push(dragNode.id);
+                    this.$store.state.drag_category_ids.push(dropNode.id);
+                    this.$store.state.productData = this.getProductData(this.categoryList);
                 }
-
-            }
+            },
+            supplierDragStop: function(args) {
+                let dragNode = args.draggedNodeData;
+                let dropNode = args.droppedNodeData;
+                if (dragNode.parentID != dropNode.parentID) {
+                    args.cancel = true;
+                    return;
+                } else {
+                    this.$store.state.drag_supplier_ids.push(dragNode.id);
+                    this.$store.state.drag_supplier_ids.push(dropNode.id);
+                    this.$store.state.productData = this.getProductData(this.supplierList);
+                }
+            },
         }
     }
 </script>

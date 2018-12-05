@@ -52,6 +52,8 @@
                     for (let i=0;i<dataSource.length;i++) {
                         if (this.$store.state.sel_supplier_ids.indexOf(dataSource[i]['id']) >= 0) {
                             dataSource[i]['isChecked'] = true;
+                        } else {
+                            dataSource[i]['isChecked'] = false;
                         }
                     }
                 }
@@ -69,6 +71,8 @@
                     for (let i=0;i<dataSource.length;i++) {
                         if (this.$store.state.sel_category_ids.indexOf(dataSource[i]['id'].toString()) >= 0) {
                             dataSource[i]['isChecked'] = true;
+                        } else {
+                            dataSource[i]['isChecked'] = false;
                         }
                     }
                 }
@@ -124,15 +128,14 @@
                 let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
                 let checkedNode = categoryObj.getAllCheckedNodes();
                 console.log("categories checkedNode ", checkedNode);
+                this.$store.state.sel_category_ids = this.$store.state.categories_ids = [];
                 if (checkedNode.length > 0) {
                     let selectedIds = [];
-                    let sid, idx, pid, ppid;
-                    this.$store.state.sel_category_ids = [];
+                    let idx, pid, ppid;
                     let categoryList = this.$store.state.categories;
                     for (let i=0; i<checkedNode.length;i++) {
-                        sid = parseInt(checkedNode[i]);
-                        selectedIds.push(sid);
-                        this.$store.state.sel_category_ids.push(sid);
+                        selectedIds.push(checkedNode[i]);
+                        this.$store.state.sel_category_ids.push(checkedNode[i]);
                     }
                     for (let j=0;j<categoryList.length;j++) {
                         if (categoryList[j]['pid'] && selectedIds.indexOf(categoryList[j]['pid']) >= 0) {
@@ -142,8 +145,7 @@
                         }
                     }
                     for (let k=0; k<checkedNode.length;k++) {
-                        sid = parseInt(checkedNode[k]);
-                        idx = this.categoryIds.indexOf(sid);
+                        idx = this.categoryIds.indexOf(checkedNode[k]);
                         if (categoryList[idx] && categoryList[idx]['pid']) {
                             pid = categoryList[idx]['pid'];
                             selectedIds.push(pid);
@@ -161,21 +163,33 @@
                 let supplierObj = document.getElementById('supplierTree').ej2_instances[0];
                 let checkedNode = supplierObj.getAllCheckedNodes();
                 console.log("suppliers checkedNode ", checkedNode);
+                this.$store.state.sel_supplier_ids = this.$store.state.suppliers_ids = [];
                 if (checkedNode.length > 0) {
                     let selectedIds = [];
                     let idx, pid, ppid;
                     let supplierList = this.$store.state.suppliers;
-                    this.$store.state.sel_supplier_ids = [];
                     for (let i=0; i<checkedNode.length;i++) {
                         selectedIds.push(checkedNode[i]);
                         this.$store.state.sel_supplier_ids.push(checkedNode[i]);
                     }
                     let pchilds = [];
+                    let checkedAncestor = false;
                     for (let j=0;j<supplierList.length;j++) {
                         if (supplierList[j]['pid'] && selectedIds.indexOf(supplierList[j]['pid']) >= 0) {
                             pchilds.push(supplierList[j]['id']);
                             this.$store.state.suppliers[j]['isChecked'] = true;
                             this.$store.state.sel_supplier_ids.push(supplierList[j]['id']);
+                            if (supplierList[j]['hasChild']) checkedAncestor = true;
+                        }
+                    }
+                    if (checkedAncestor) {
+                        for (let p=0;p<supplierList.length;p++) {
+                            let supplierRow = supplierList[p];
+                            if (supplierRow['pid'] && pchilds.indexOf(supplierRow['pid']) >= 0) {
+                                pchilds.push(supplierRow['id']);
+                                this.$store.state.suppliers[p]['isChecked'] = true;
+                                this.$store.state.sel_supplier_ids.push(supplierRow['id']);
+                            }
                         }
                     }
                     for (let k=0; k<checkedNode.length;k++) {
@@ -190,7 +204,7 @@
                     }
                     selectedIds = selectedIds.concat(pchilds);
                     this.$store.state.suppliers_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
-                    console.log("this.$store.state.suppliers_ids ", this.$store.state.suppliers_ids);
+                    // console.log("this.$store.state.suppliers_ids ", this.$store.state.suppliers_ids);
                 }
             }
         }

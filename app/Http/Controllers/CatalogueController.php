@@ -43,6 +43,8 @@ class CatalogueController extends Controller
             if ($row->display_options) $row->display_options = explode(',', $row->display_options);
             if ($row->product_new) $row->product_new = explode(',', $row->product_new);
             if ($row->blocks) $row->blocks = json_decode($row->blocks);
+            if ($row->drag_supplier_ids) $row->drag_supplier_ids = explode(',', $row->drag_supplier_ids);
+            if ($row->drag_category_ids) $row->drag_category_ids = explode(',', $row->drag_category_ids);
             return $row;
         });
         return response()->json($result);
@@ -63,7 +65,7 @@ class CatalogueController extends Controller
     public function saveSelectProduct(Request $request)
     {
         $params = $request->all();
-        if (!$params['name']) return response('false');
+        if (!$params['name'] || $params['name'] == 'null') return response('false');
         if ($params['suppliers']) $params['suppliers'] = serialize($params['suppliers']);
         if ($params['categories']) $params['categories'] = serialize($params['categories']);
         if (isset($params['id']) && !empty($params['id'])){

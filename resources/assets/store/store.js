@@ -40,6 +40,8 @@ const store = new Vuex.Store({
         productData: [],
         blocks: [],
         product_new: [],
+        drag_supplier_ids: [],
+        drag_category_ids: [],
         user: {
             name: "Addision",
             email: "add@gmail.com",
@@ -62,7 +64,12 @@ const store = new Vuex.Store({
                 display_options: ['title', 'rrp', 'units'],
                 barcode_options: 0,
             }
-            this.state.sel_supplier_ids = this.state.sel_category_ids = this.state.productData = [];
+            this.state.sel_supplier_ids
+                = this.state.sel_category_ids
+                = this.state.productData
+                = this.state.drag_supplier_ids
+                = this.state.drag_category_ids
+                = [];
             for (let i=0;i<this.state.suppliers.length;i++) {
                 this.state.suppliers[i]['isChecked'] = false;
             }
