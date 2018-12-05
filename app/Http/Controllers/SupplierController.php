@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\PCategory;
 
 class SupplierController extends Controller
 {
     public $categories, $category_ids;
     public $suppliers, $supplier_ids;
+    public $_pcategory_ids = [];
+
+    public function __construct()
+    {
+        $this->_pcategory_ids = PCategory::select('parent_id')
+            ->whereNotNull('parent_id')
+            ->pluck('parent_id')
+            ->toArray();
+    }
 
     //
-    public function getSupplier() {
+    public function getSupplier()
+    {
         // Get category data of all product
         $product_node = DB::table('product_category AS pc')
             ->select('p.id', 'pc.pcategory_id', 'pp.parent_id','s.name as sname', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit')
@@ -55,7 +66,7 @@ class SupplierController extends Controller
                 $image_path = json_decode($image_path);
                 $image_path = $image_path[0];
             }
-            if ($row->pcategory_id) {
+            if (!in_array($row->pcategory_id, $this->_pcategory_ids)) {
                 $ppRow = array(
                     'id'=> "s".$row->supplier_id."-c".$row->pcategory_id."-p".$row->id,
                     'pid'=> "s".$row->supplier_id."-c".$row->pcategory_id,

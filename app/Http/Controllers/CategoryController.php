@@ -10,7 +10,8 @@ class CategoryController extends Controller
 {
     public $product_ids;
     //
-    public function getCategory() {
+    public function getCategory()
+    {
         $parent_ids = PCategory::select('parent_id')
             ->whereNotNull('parent_id');
         $parent_node = PCategory::select('id','name', 'parent_id')
