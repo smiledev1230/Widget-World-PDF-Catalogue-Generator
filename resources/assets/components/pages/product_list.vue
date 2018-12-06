@@ -209,12 +209,21 @@
             },
             updateNewState(rowInd, colInd, backPage) {
                 let index = this.getIndex(rowInd, colInd, backPage);
-                this.$store.state.productData[index]['product_is_new'] = !this.$store.state.productData[index]['product_is_new'];
-                let product = this.$store.state.productData[index];
-                if (product['product_is_new']) {
-                    this.$store.state.product_new.push(product['id'])
-                } else if (this.$store.state.product_new.indexOf(product['id'])>=0){
-                    this.$store.state.product_new.splice(this.$store.state.product_new.indexOf(product['id']),1);
+                let stateData = this.$store.state;
+                let product = stateData.productData[index];
+                this.$store.state.productData[index]['product_is_new'] = !product['product_is_new'];
+                if (stateData.catalogue.display_type) {
+                    if (product['product_is_new']) {
+                        this.$store.state.supplier_new.push(product['id'])
+                    } else if (stateData.supplier_new.indexOf(product['id'])>=0){
+                        this.$store.state.product_new.splice(stateData.supplier_new.indexOf(product['id']),1);
+                    }
+                } else {
+                    if (product['product_is_new']) {
+                        this.$store.state.category_new.push(product['id'])
+                    } else if (stateData.category_new.indexOf(product['id'])>=0){
+                        this.$store.state.category_new.splice(stateData.category_new.indexOf(product['id']),1);
+                    }
                 }
             },
             checkNewState(rowInd, colInd, backPage) {
@@ -246,26 +255,41 @@
                     name: this.blockEditor,
                     type: 'block'
                 }
-                let product = this.$store.state.productData[this.editorIndex];
-                this.$store.state.blocks.push({
-                    id: product['id'],
-                    name: this.blockEditor
-                });
                 this.$store.state.productData.splice(this.editorIndex, 0, newBlock);
+                let product = this.$store.state.productData[this.editorIndex];
+                if (this.$store.state.catalogue.display_type) {
+                    this.$store.state.supplier_block.push({
+                        id: product['id'],
+                        name: this.blockEditor
+                    });
+                } else {
+                    this.$store.state.category_block.push({
+                        id: product['id'],
+                        name: this.blockEditor
+                    });
+                }
             },
             checkNewBlock(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'type');
             },
             removeNewBlock(rowInd, colInd, backPage) {
+                let stateData = this.$store.state;
                 let index = this.getIndex(rowInd, colInd, backPage);
-                let product = this.$store.state.productData[index+1];
+                let product = stateData.productData[index+1];
                 let searchIndex = null;
-                for (let i=0;i<this.$store.state.blocks.length;i++) {
-                    if (product['id'] == this.$store.state.blocks['id']) {
+                let product_block = stateData.catalogue.display_type ? stateData.supplier_block : stateData.category_block;
+                for (let i=0;i<product_block.length;i++) {
+                    if (product['id'] == product_block[i]['id']) {
                         searchIndex = i;break;
                     }
                 }
-                if (searchIndex >= 0) this.$store.state.blocks.splice(searchIndex, 1);
+                if (searchIndex >= 0) {
+                    if (stateData.catalogue.display_type) {
+                        this.$store.state.supplier_block.splice(searchIndex, 1);
+                    } else {
+                        this.$store.state.category_block.splice(searchIndex, 1);
+                    }
+                }
                 this.$store.state.productData.splice(index, 1);
             },
             getProductTitle(rowInd, colInd, backPage) {

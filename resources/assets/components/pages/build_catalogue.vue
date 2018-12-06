@@ -78,7 +78,7 @@
     import { TreeViewPlugin } from "@syncfusion/ej2-vue-navigations";
     Vue.use(TreeViewPlugin);
     import productList from "./product_list";
-    import saveModal  from "./save_modal";
+    import saveModal from "./save_modal";
 
     export default {
         name: "build_catalogue",
@@ -87,9 +87,9 @@
             'save-modal': saveModal
         },
         data() {
-            this.supplierList = this.getSupplierList();
-            this.categoryList = this.getCategoryList();
-            this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(this.supplierList): this.getProductData(this.categoryList);
+            let supplierList = this.getSupplierList();
+            let categoryList = this.getCategoryList();
+            this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
             let total_pages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             return {
                 showCollapse: false,
@@ -97,15 +97,17 @@
                 totalPages: total_pages,
                 categories: [],
                 showStatus: false,
+                supplierList: [],
+                categoryList: [],
                 supplierFields: {
-                    dataSource: this.supplierList,
+                    dataSource: supplierList,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
                     hasChildren: 'hasChild'
                 },
                 categoryFields: {
-                    dataSource: this.categoryList,
+                    dataSource: categoryList,
                     id: 'id',
                     parentID: 'pid',
                     text: 'name',
@@ -140,75 +142,94 @@
             if (this.$store.state.catalogue.page_columns == 2 && this.$store.state.catalogue.barcode_options) {
                 this.barcode_options[1]['disabled'] = false;
             }
+            console.log("state catalogue", this.$store.state.catalogue);
         },
         methods: {
             getSupplierList() {
+                let stateData = this.$store.state;
                 let supplierList = [];
-                for (let i=0;i<this.$store.state.suppliers.length;i++) {
-                    if (this.$store.state.suppliers_ids.indexOf(this.$store.state.suppliers[i]['id']) >= 0) {
-                        supplierList.push(this.$store.state.suppliers[i]);
+                let supplier;
+                for (let i=0;i<stateData.suppliers.length;i++) {
+                    supplier = stateData.suppliers[i];
+                    if (stateData.suppliers_ids.indexOf(supplier['id']) >= 0) {
+                        supplierList.push(supplier);
                     }
                 }
                 return supplierList;
             },
             getCategoryList() {
+                let stateData = this.$store.state;
                 let categoryList = [];
-                for (let i=0;i<this.$store.state.categories.length;i++) {
-                    if (this.$store.state.categories_ids.indexOf(this.$store.state.categories[i]['id']) >= 0) {
-                        categoryList.push(this.$store.state.categories[i]);
+                let category;
+                for (let i=0;i<stateData.categories.length;i++) {
+                    category = stateData.categories[i];
+                    if (stateData.categories_ids.indexOf(category['id']) >= 0) {
+                        categoryList.push(category);
                     }
                 }
                 return categoryList;
             },
             getProductData(allProduct) {
+                let type = this.$store.state.catalogue.display_type;
                 let stateData = this.$store.state;
                 let productData = [];
                 let productIds = [];
+                let product_new, product_block, drag_ids;
+                if (type) {
+                    product_new = stateData.supplier_new;
+                    product_block = stateData.supplier_block;
+                    drag_ids = stateData.drag_supplier_ids;
+                } else {
+                    product_new = stateData.category_new;
+                    product_block = stateData.category_block;
+                    drag_ids = stateData.drag_category_ids;
+                }
+                if (stateData.catalogue.logos_options) {
+                    let logo_id = new Date().getTime();
+                    productIds.push(logo_id);
+                    let newBlock = {
+                        id: logo_id,
+                        name: null,
+                        image: 'Arnotts-Logo.jpg',
+                        type: 'logo'
+                    }
+                    productData.push(newBlock);
+                }
                 for (let i=0;i<allProduct.length;i++) {
                     if (!allProduct[i]['hasChild']) {
-                        if (stateData.product_new && stateData.product_new.indexOf(allProduct[i]['id'])>=0) {
+                        productIds.push(allProduct[i]['id']);
+                        if (product_new && product_new.indexOf(allProduct[i]['id'])>=0) {
                             allProduct[i]['product_is_new'] = true;
+                        } else {
+                            allProduct[i]['product_is_new'] = false;
                         }
                         productData.push(allProduct[i]);
-                        productIds.push(allProduct[i]['id']);
                     }
                 }
-                if (stateData.blocks && stateData.blocks.length>0) {
+                if (product_block && product_block.length>0) {
                     let p=0;
-                    for (let i=0;i<stateData.blocks.length;i++) {
-                        if (productIds.indexOf(stateData.blocks[i]['id'])>=0) {
+                    for (let j=0;j<product_block.length;j++) {
+                        if (productIds.indexOf(product_block[j]['id'])>=0) {
                             let newBlock = {
                                 id: new Date().getTime(),
-                                name: stateData.blocks[i]['name'],
+                                name: product_block[j]['name'],
                                 type: 'block'
                             }
-                            productData.splice(productIds.indexOf(stateData.blocks[i]['id'])+p, 0, newBlock);
+                            productData.splice(productIds.indexOf(product_block[j]['id'])+p, 0, newBlock);
                             p++;
                         }
                     }
                 }
-                if (stateData.catalogue.display_type && stateData.drag_supplier_ids.length > 0) {
+                if (drag_ids && drag_ids.length > 0) {
                     let dragId, dragRow, dropId;
-                    for (let k=0; k<stateData.drag_supplier_ids.length;k+=2) {
-                        dragId = productIds.indexOf(stateData.drag_supplier_ids[k]);
+                    for (let k=0; k<drag_ids.length;k+=2) {
+                        dragId = productIds.indexOf(drag_ids[k]);
                         dragRow = productData[dragId];
                         productData.splice(dragId, 1);
                         productIds.splice(dragId, 1);
-                        dropId = productIds.indexOf(stateData.drag_supplier_ids[k+1]);
+                        dropId = productIds.indexOf(drag_ids[k+1]);
                         productData.splice(dropId, 0, dragRow);
-                        productIds.splice(dropId, 0, stateData.drag_supplier_ids[k]);
-                    }
-                }
-                if (!stateData.catalogue.display_type && stateData.drag_category_ids.length > 0) {
-                    let dragId, dragRow, dropId;
-                    for (let k=0; k<stateData.drag_category_ids.length;k+=2) {
-                        dragId = productIds.indexOf(stateData.drag_category_ids[k]);
-                        dragRow = productData[dragId];
-                        productData.splice(dragId, 1);
-                        productIds.splice(dragId, 1);
-                        dropId = productIds.indexOf(stateData.drag_category_ids[k+1]);
-                        productData.splice(dropId, 0, dragRow);
-                        productIds.splice(dropId, 0, stateData.drag_category_ids[k]);
+                        productIds.splice(dropId, 0, drag_ids[k]);
                     }
                 }
                 return productData;
@@ -233,8 +254,10 @@
                 formData.append('drag_category_ids', storeData.drag_category_ids);
                 formData.append('saved_page', 'build_catalogue');
                 formData.append('state', '0');
-                if (storeData.blocks.length>0) formData.append('blocks', JSON.stringify(storeData.blocks));
-                if (storeData.product_new.length>0) formData.append('product_new', storeData.product_new);
+                if (storeData.supplier_block.length>0) formData.append('supplier_block', JSON.stringify(storeData.supplier_block));
+                if (storeData.category_block.length>0) formData.append('category_block', JSON.stringify(storeData.category_block));
+                if (storeData.supplier_new.length>0) formData.append('supplier_new', storeData.supplier_new);
+                if (storeData.category_new.length>0) formData.append('category_new', storeData.category_new);
 
                 let app = this;
                 axios.post( '/api/saveSelectProduct',
@@ -246,6 +269,8 @@
                     }
                 ).then(response => {
                     console.log('success!!', response);
+                    if (response.data && response.data.id)
+                        app.$store.state.catalogue.id = response.data.id;
                     app.showStatus = true;
                 }).catch(function(){
                     console.log('FAILURE!!');
@@ -281,7 +306,7 @@
                 }
             },
             setProduct(e) {
-                let productList = e ? this.supplierList : this.categoryList;
+                let productList = e ? this.getSupplierList() : this.getCategoryList();
                 this.$store.state.productData = this.getProductData(productList);
                 this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             },
@@ -294,7 +319,7 @@
                 } else {
                     this.$store.state.drag_category_ids.push(dragNode.id);
                     this.$store.state.drag_category_ids.push(dropNode.id);
-                    this.$store.state.productData = this.getProductData(this.categoryList);
+                    this.$store.state.productData = this.getProductData(this.getCategoryList());
                 }
             },
             supplierDragStop: function(args) {
@@ -306,7 +331,7 @@
                 } else {
                     this.$store.state.drag_supplier_ids.push(dragNode.id);
                     this.$store.state.drag_supplier_ids.push(dropNode.id);
-                    this.$store.state.productData = this.getProductData(this.supplierList);
+                    this.$store.state.productData = this.getProductData(this.getSupplierList());
                 }
             },
         }

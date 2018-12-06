@@ -19,39 +19,39 @@
                             <?php $idx = $p*3*$page_columns+$j*3+$i; ?>
                             @if ($idx < count($productData) && $productData[$idx])
                                 <div class="nopadding {{ $page_columns == 2 ? 'col-6' : 'col-4'}}">
-                                    @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]['type'] == 'block')
+                                    @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'block')
                                         <div class="new-block">
-                                            {{ $productData[$idx]['name'] }}
+                                            {{ $productData[$idx]->name }}
                                         </div>
-                                    @elseif (array_key_exists('type', $productData[$idx]) && $productData[$idx]['type'] == 'logo')
-                                        <img src="{{ $product_path.$productData[0]['image'] }}" />
+                                    @elseif (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo')
+                                        <img src="{{ $product_path.$productData[0]->image }}" />
                                     @else
                                         <div class="product-image">
-                                            @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]['type'] == 'product_is_new')
+                                            @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'product_is_new')
                                                 <div class="ribbon active">NEW</div>
                                             @endif
-                                            <img src="{{ $productData[$idx]['images'] ? $productData[$idx]['images'] : $product_path.'empty.jpg' }}" />
+                                            <img src="{{ $productData[$idx]->images ? $productData[$idx]->images : $product_path.'empty.jpg' }}" />
                                             <div class="product-box">
                                                 @if (in_array('title', $display_options))
-                                                    <div class="product-title">{{ $productData[$idx]['name'] }}</div>
+                                                    <div class="product-title">{{ $productData[$idx]->name }}</div>
                                                 @endif
                                                 <div>
                                                     @if (in_array('units', $display_options))
-                                                        <div class="product-detail">{{ $productData[$idx]['items_per_outer'] }} units per outer</div>
+                                                        <div class="product-detail">{{ $productData[$idx]->items_per_outer }} units per outer</div>
                                                     @endif
                                                     <div class="product-detail pb-1">
                                                         @if ($barcode_options)
-                                                            <div>{{$productData[$idx]['barcode_unit']}}</div>
+                                                            <div>{{$productData[$idx]->barcode_unit}}</div>
                                                         @elseif (in_array('rrp', $display_options))
-                                                            <div class="redLabelColor">RRP ${{ $productData[$idx]['rrp'] ? $productData[$idx]['rrp'] : '0.00' }}</div>
+                                                            <div class="redLabelColor">RRP ${{ $productData[$idx]->rrp ? $productData[$idx]->rrp : '0.00' }}</div>
                                                         @endif
                                                     </div>
                                                     <div class="barcode-image">
                                                         @if ($barcode_options && array_key_exists('barcode_image', $productData[$idx]))
-                                                            <img src="{{ $productData[$idx]['barcode_image'] ? $productData[$idx]['barcode_image'] : $product_path.'barcode.png' }}" />
+                                                            <img src="{{ $productData[$idx]->barcode_image ? $productData[$idx]->barcode_image : $product_path.'barcode.png' }}" />
                                                         @elseif (in_array('rrp', $display_options))
                                                             <div class="product-rrp">
-                                                                RRP<br/>${{$productData[$idx]['rrp']}}
+                                                                RRP<br/>${{$productData[$idx]->rrp}}
                                                             </div>
                                                         @endif
                                                     </div>

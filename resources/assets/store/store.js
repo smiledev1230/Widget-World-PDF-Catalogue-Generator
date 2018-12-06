@@ -38,8 +38,10 @@ const store = new Vuex.Store({
         categories_ids: [],
         sel_category_ids: [],
         productData: [],
-        blocks: [],
-        product_new: [],
+        supplier_block: [],
+        category_block: [],
+        supplier_new: [],
+        category_new: [],
         drag_supplier_ids: [],
         drag_category_ids: [],
         user: {
@@ -67,6 +69,10 @@ const store = new Vuex.Store({
             this.state.sel_supplier_ids
                 = this.state.sel_category_ids
                 = this.state.productData
+                = this.state.supplier_block
+                = this.state.category_block
+                = this.state.supplier_new
+                = this.state.category_new
                 = this.state.drag_supplier_ids
                 = this.state.drag_category_ids
                 = [];

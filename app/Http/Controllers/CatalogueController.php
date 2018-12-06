@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 use Auth;
+use PDF;
 use App\Models\Catalogue;
 use App\Models\EmailContent;
 use App\Models\CatalogueSent;
 
 class CatalogueController extends Controller
 {
+    public $_dir = "conversions/";
+
     public function getRecentCatalogue(Request $request)
     {
         $params = $request->all();
@@ -41,8 +44,10 @@ class CatalogueController extends Controller
             if ($row->suppliers) $row->suppliers = explode(',', unserialize($row->suppliers));
             if ($row->categories) $row->categories = explode(',', unserialize($row->categories));
             if ($row->display_options) $row->display_options = explode(',', $row->display_options);
-            if ($row->product_new) $row->product_new = explode(',', $row->product_new);
-            if ($row->blocks) $row->blocks = json_decode($row->blocks);
+            if ($row->supplier_new) $row->supplier_new = explode(',', $row->supplier_new);
+            if ($row->category_new) $row->category_new = explode(',', $row->category_new);
+            if ($row->supplier_block) $row->supplier_block = json_decode($row->supplier_block);
+            if ($row->category_block) $row->category_block = json_decode($row->category_block);
             if ($row->drag_supplier_ids) $row->drag_supplier_ids = explode(',', $row->drag_supplier_ids);
             if ($row->drag_category_ids) $row->drag_category_ids = explode(',', $row->drag_category_ids);
             return $row;
@@ -69,7 +74,8 @@ class CatalogueController extends Controller
         if ($params['suppliers']) $params['suppliers'] = serialize($params['suppliers']);
         if ($params['categories']) $params['categories'] = serialize($params['categories']);
         if (isset($params['id']) && !empty($params['id'])){
-            $catalogue = Catalogue::find($params['id'])->fill($params)->update();
+            Catalogue::find($params['id'])->fill($params)->update();
+            $catalogue = Catalogue::where("id",$params['id'])->first()->toArray();
         } else {
             $catalogue = Catalogue::create($params);
         }
@@ -83,7 +89,7 @@ class CatalogueController extends Controller
         $name = $params['name'];
         $cat = Catalogue::find($id);
         $cat->name = $name;
-        $cat->state = 1;
+        $cat->state = $params['state'];
         $newCat = $cat->replicate();
         $newId = $newCat->save();
         $result = 'error';
@@ -98,6 +104,25 @@ class CatalogueController extends Controller
         $id = $request->all('id');
         Catalogue::where('id', $id)->delete();
         return $this->getRecentCatalogue($request);
+    }
+
+    public function savePDF(Request $request){
+        $params = $request->all();
+        $fileName = $params['name'];
+        $filePath = $this->_dir.uniqid().'_'.$fileName.'.pdf';
+
+        $productData = $params['productData'];
+        $productData = json_decode($productData);
+        $page_columns = $params['page_columns'];
+        $display_options = explode(',', $params['display_options']);
+        $barcode_options = explode(',', $params['barcode_options']);
+        $pages = $params['pages'];
+//        return view('pdf', compact('productData','page_columns', 'display_options', 'barcode_options', 'pages', 'fileName'));
+        $pdf = PDF::loadView('pdf', compact('productData','page_columns', 'display_options', 'barcode_options', 'pages', 'fileName'));
+//        $pdf->save($fileName.'.pdf');return 'ok';
+        Storage::disk('s3')->put($filePath, $pdf->output(), 'public');
+        $request->merge(['pdf_path' => $filePath]);
+        return $this->saveSelectProduct($request);
     }
 
     public function sendPDF(Request $request)
@@ -119,9 +144,13 @@ class CatalogueController extends Controller
         if (Mail::failures()) {
             return 'error';
         } else {
-            Catalogue::find($request->id)->fill(array('state' => '2'))->update();
+            Catalogue::find($request->id)->fill(array('state' => '1'))->update();
             CatalogueSent::create(array('pdf_id' => $request->id, 'emails' => implode('; ', $to)));
-            return $this->getRecentCatalogue($request);
+            if ($params['limited'] != -1) {
+                return $this->getRecentCatalogue($request);
+            } else {
+                return 'success';
+            }
         }
     }
 }

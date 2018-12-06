@@ -79,30 +79,67 @@
             sendPDF() {
                 this.sendModal=false;
                 if (this.sendForm.subject && this.sendForm.emails) {
-                    let app = this;
-                    let formData = new FormData();
-                    formData.append('id', this.catalogue.id);
-                    formData.append('pdf_path', this.catalogue.pdf_path);
-                    formData.append('name', this.catalogue.name);
-                    formData.append('subject', this.sendForm.subject);
-                    formData.append('emails', this.sendForm.emails);
-                    formData.append('notes', this.sendForm.notes);
-                    formData.append('limited', this.limited);
-                    axios.post( '/api/sendPDF',
-                        formData,
-                        {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
+                    let sendFormData = new FormData();
+                    sendFormData.append('name', this.catalogue.name);
+                    sendFormData.append('subject', this.sendForm.subject);
+                    sendFormData.append('emails', this.sendForm.emails);
+                    sendFormData.append('notes', this.sendForm.notes);
+                    sendFormData.append('limited', this.limited);
+
+                    if (this.catalogue.pdf_path) {
+                        sendFormData.append('id', this.catalogue.id);
+                        sendFormData.append('pdf_path', this.catalogue.pdf_path);
+                        this.sendData(sendFormData);
+                    } else {
+                        let app = this;
+                        let formData = new FormData();
+                        let storeData = this.$store.state;
+                        if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                        formData.append('name', storeData.catalogue.name);
+                        if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
+                        if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
+                        formData.append('cover_index', storeData.catalogue.selectedImage);
+                        formData.append('suppliers',storeData.sel_supplier_ids);
+                        formData.append('categories', storeData.sel_category_ids);
+                        formData.append('display_type', storeData.catalogue.display_type);
+                        formData.append('page_columns', storeData.catalogue.page_columns);
+                        formData.append('logos_options', storeData.catalogue.logos_options);
+                        formData.append('display_options', storeData.catalogue.display_options);
+                        formData.append('barcode_options', storeData.catalogue.barcode_options);
+                        formData.append('drag_supplier_ids', storeData.drag_supplier_ids);
+                        formData.append('drag_category_ids', storeData.drag_category_ids);
+                        formData.append('saved_page', 'catalogue_preview');
+                        formData.append('state', '1');
+                        if (storeData.supplier_block.length>0) formData.append('supplier_block', JSON.stringify(storeData.supplier_block));
+                        if (storeData.category_block.length>0) formData.append('category_block', JSON.stringify(storeData.category_block));
+                        if (storeData.supplier_new.length>0) formData.append('supplier_new', storeData.supplier_new);
+                        if (storeData.category_new.length>0) formData.append('category_new', storeData.category_new);
+
+                        formData.append('productData', JSON.stringify(storeData.productData));
+                        let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
+                        formData.append('pages', totalPages);
+
+                        axios.post( '/api/savePDF',
+                            formData,
+                            {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
                             }
-                        }
-                    ).then(response => {
-                        console.log('success!!', response);
-                        if (response.data != 'error') {
-                            app.$emit('update:catalogues', response.data);
-                        }
-                    }).catch(function(){
-                        console.log('FAILURE!!');
-                    });
+                        ).then(response => {
+                            console.log("response", response);
+                            if (response.data && response.data.id) {
+                                app.$store.state.catalogue.id = response.data.id;
+                                sendFormData.append('id',  response.data.id);
+                                sendFormData.append('pdf_path',  response.data.pdf_path);
+                                app.sendData(sendFormData);
+                            }
+                        }).catch(function(){
+                            console.log('FAILURE!!');
+                        });
+                    }
+                    console.log("savePDF");
+
                 } else {
                     return false;
                 }
@@ -111,6 +148,24 @@
                     emails: '',
                     notes: ''
                 }
+            },
+            sendData(formData) {
+                let app = this;
+                axios.post( '/api/sendPDF',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(response => {
+                    console.log('success!!', response);
+                    if (response.data != 'error' && app.limited != -1) {
+                        app.$emit('update:catalogues', response.data);
+                    }
+                }).catch(function(){
+                    console.log('FAILURE!!');
+                });
             }
         }
     }

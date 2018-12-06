@@ -64,7 +64,7 @@
             <hr/>
             <div class="row d-block">
                 <router-link tag="a" to="/" exact class="btn btn-secondary text-white" @click.native="$store.dispatch('initCatalogue')">CANCEL</router-link>
-                <router-link tag="a" to="/select_products" v-if="$store.state.catalogue.name" class="btn greenBgColor pull-right text-white" @click.native="saveCatalogue">NEXT</router-link>
+                <router-link tag="a" to="/select_products" v-if="$store.state.catalogue.name" class="btn greenBgColor pull-right text-white">NEXT</router-link>
                 <router-link tag="a" to="/select_products" v-else class="btn greenBgColor pull-right text-white" event="">NEXT</router-link>
             </div>
         </div>
@@ -96,6 +96,7 @@
         },
         mounted: function () {
             this.$store.state.page_text = "Create a new catalogue to send electronically to your clients/customers or get it professionally printed and take it with you\n" + "to your next meeting to wow your clients and increase conversions.";
+            this.$store.dispatch('initCatalogue');
         },
         methods: {
             handleSlideClick(index) {
@@ -128,10 +129,7 @@
                 }).catch(function(){
                     console.log('FAILURE!!');
                 });
-            },
-            saveCatalogue(e) {
-
-            },
+            }
         }
     }
 </script>
@@ -171,6 +169,7 @@
                     .preview-background {
                         max-width: 100%;
                         max-height: 70%;
+                        padding-left: 15%;
                         min-width: 200px;
                     }
                     .preview-content {

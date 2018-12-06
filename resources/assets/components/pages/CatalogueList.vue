@@ -19,8 +19,13 @@
                 </div>
                 <hr/>
                 <div class="catalogue-history">
-                    <div v-if="catalogue.state == 0">{{catalogue.pdf_date}}</div>
-                    <div v-else-if="catalogue.state == 1">{{catalogue.pdf_date}} - PDF Saved</div>
+                    <div v-if="catalogue.state == 0">
+                        {{catalogue.pdf_date}}
+                        <div class="pull-right btn-group">
+                            <i class="fa fa-edit mr-2" @click="openEditModal(catalogue)"></i>
+                            <i class="fa fa-trash" @click="openDeleteModal(catalogue)"></i>
+                        </div>
+                    </div>
                     <div v-else>
                         <p v-for="(date, i) in catalogue.sent_date" :key="i">{{date}} - PDF sent to {{catalogue.emails[i]}}</p>
                     </div>
@@ -85,8 +90,8 @@
             this.$store.state.catalogue.page_columns = 3;
             return {
                 catalogues: [],
-                catalogueLabel: ['Draft', 'PDF', 'PDF SENT'],
-                labelColor: ['yellowColor', 'blueColor', 'greenColor'],
+                catalogueLabel: ['Draft', 'PDF SENT'],
+                labelColor: ['yellowColor', 'greenColor'],
                 editModal: false,
                 deleteModal: false,
                 pdfModal: false,
@@ -134,6 +139,7 @@
                     let preload = {
                         id: this.old_catalogue.id,
                         name: this.new_catalogue_title,
+                        state: this.old_catalogue.state,
                         limited: this.limited
                     }
                     let app = this;
@@ -172,19 +178,21 @@
                 this.$store.state.catalogue.file_name = catalogue.logo_name;
                 this.$store.state.catalogue.file_upload_path = catalogue.logo_url;
                 this.$store.state.catalogue.selectedImage = catalogue.cover_index;
-                if (catalogue.page_columns) this.$store.state.catalogue.page_columns = catalogue.page_columns;
-                this.$store.state.catalogue.display_type = catalogue.display_type;
-                this.$store.state.catalogue.logos_options = catalogue.logos_options;
+                if (catalogue.page_columns !== null) this.$store.state.catalogue.page_columns = catalogue.page_columns;
+                if (catalogue.display_type !== null) this.$store.state.catalogue.display_type = catalogue.display_type;
+                if (catalogue.logos_options !== null) this.$store.state.catalogue.logos_options = catalogue.logos_options;
                 if (catalogue.display_options) this.$store.state.catalogue.display_options = catalogue.display_options;
-                this.$store.state.catalogue.barcode_options = catalogue.barcode_options;
+                if (catalogue.barcode_options) this.$store.state.catalogue.barcode_options = catalogue.barcode_options;
                 if (catalogue.suppliers) this.$store.state.sel_supplier_ids = catalogue.suppliers;
                 if (catalogue.categories) this.$store.state.sel_category_ids = catalogue.categories;
-                if (catalogue.product_new) this.$store.state.product_new = catalogue.product_new;
-                if (catalogue.blocks) this.$store.state.blocks = catalogue.blocks;
+                if (catalogue.supplier_new) this.$store.state.supplier_new = catalogue.supplier_new;
+                if (catalogue.category_new) this.$store.state.category_new = catalogue.category_new;
+                if (catalogue.supplier_block) this.$store.state.supplier_block = catalogue.supplier_block;
+                if (catalogue.category_block) this.$store.state.category_block = catalogue.category_block;
+                if (catalogue.drag_supplier_ids) this.$store.state.drag_supplier_ids = catalogue.drag_supplier_ids;
+                if (catalogue.drag_category_ids) this.$store.state.drag_category_ids = catalogue.drag_category_ids;
                 this.$store.state.suppliers_ids = this.getSupplierTreeIds(this.$store.state.sel_supplier_ids);
                 this.$store.state.categories_ids = this.getCategoryTreeIds(this.$store.state.sel_category_ids);
-                this.$store.state.drag_supplier_ids = catalogue.drag_supplier_ids;
-                this.$store.state.drag_category_ids = catalogue.drag_category_ids;
             },
             getSupplierTreeIds(checkedNode) {
                 let supplierList = this.$store.state.suppliers;
