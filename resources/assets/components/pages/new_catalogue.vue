@@ -167,9 +167,7 @@
                     margin: 10px;
                     display: inline-grid;
                     .preview-background {
-                        max-width: 100%;
-                        max-height: 70%;
-                        padding-left: 15%;
+                        width: 100%;
                         min-width: 200px;
                     }
                     .preview-content {

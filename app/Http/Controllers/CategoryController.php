@@ -26,11 +26,15 @@ class CategoryController extends Controller
             ->whereNotNull('parent_id')
             ->groupBy('parent_id');
         $product_node = DB::table('pcategories AS p')
-            ->select('pro.id','pro.name', 'pc.pcategory_id', 'pro.images', 'pro.items_per_outer', 'pro.rrp', 'pro.barcode_unit', 'pro.barcode_image', DB::raw("CONCAT(IFNULL(LPAD(pp.parent_id,5,'0'), '00000'), '.', LPAD(p.parent_id,5,'0'), '.', LPAD(p.id,5,'0'), '.', pc.product_id) AS path"))
+            ->select('pro.id','pro.name', 'pc.pcategory_id', 'pro.images', 'pro.items_per_outer', 'pro.rrp', 'pro.barcode_unit', 'pro.barcode_image', DB::raw("CONCAT(IFNULL(LPAD(pp.parent_id,5,'0'), '00000'), '.', LPAD(p.parent_id,5,'0'), '.', LPAD(p.id,5,'0'), '.', pro.name) AS path"))
             ->leftJoin('pcategories AS pp', 'pp.id', '=', 'p.parent_id')
             ->join('product_category AS pc', 'p.id', '=', 'pc.pcategory_id')
             ->join('products AS pro', 'pc.product_id', '=', 'pro.id')
             ->whereNotIn('pc.pcategory_id', $parent_ids)
+            ->orderBy('pp.id')
+            ->orderBy('p.id')
+            ->orderBy('path')
+            ->orderBy('pro.name')
             ->get();
 
         $product_nodes = $product_node->map(function ($row) {

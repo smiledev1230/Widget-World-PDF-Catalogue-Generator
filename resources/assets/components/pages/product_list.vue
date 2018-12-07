@@ -216,7 +216,7 @@
                     if (product['product_is_new']) {
                         this.$store.state.supplier_new.push(product['id'])
                     } else if (stateData.supplier_new.indexOf(product['id'])>=0){
-                        this.$store.state.product_new.splice(stateData.supplier_new.indexOf(product['id']),1);
+                        this.$store.state.supplier_new.splice(stateData.supplier_new.indexOf(product['id']),1);
                     }
                 } else {
                     if (product['product_is_new']) {

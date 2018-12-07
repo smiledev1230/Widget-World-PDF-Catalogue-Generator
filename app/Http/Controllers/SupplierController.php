@@ -25,15 +25,17 @@ class SupplierController extends Controller
     {
         // Get category data of all product
         $product_node = DB::table('product_category AS pc')
-            ->select('p.id', 'pc.pcategory_id', 'pp.parent_id','s.name as sname', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.barcode_image', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit', DB::raw("CONCAT(IFNULL(LPAD(p.supplier_id,5,'0'), '00000'), '.', IFNULL(LPAD(ppp.parent_id,5,'0'), '00000'), '.', LPAD(pp.parent_id,5,'0'), '.', LPAD(pp.id,5,'0'), '.', pc.product_id) AS path"))
+            ->select('p.id', 'pc.pcategory_id', 'pp.parent_id','s.name as sname', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.barcode_image', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit', DB::raw("CONCAT(IFNULL(LPAD(p.supplier_id,5,'0'), '00000'), '.', IFNULL(LPAD(ppp.parent_id,5,'0'), '00000'), '.', LPAD(pp.parent_id,5,'0'), '.', LPAD(pp.id,5,'0'), '.', p.name) AS path"))
             ->join("products as p", "p.id", "=", "pc.product_id")
             ->leftJoin("pcategories AS pp", "pp.id", "=", "pc.pcategory_id")
             ->leftJoin("pcategories AS ppp", "ppp.id", "=", "pp.parent_id")
             ->leftJoin("suppliers AS s", "s.id", "=", "p.supplier_id")
             ->whereNotNull('p.supplier_id')
             ->WhereNotNull('pc.pcategory_id')
-            ->orderBy('p.supplier_id')
+            ->orderBy('s.name')
+            ->orderBy('pc.pcategory_id')
             ->orderBy('path')
+            ->orderBy('p.name')
             ->get();
         $this->categories = $this->category_ids = array();
         $this->suppliers = $this->supplier_ids = array();

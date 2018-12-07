@@ -413,7 +413,7 @@
             }
             @media (min-width: 576px) {
                 .modal-dialog {
-                    max-width: 60%;
+                    max-width: 58%;
                 }
             }
         }
