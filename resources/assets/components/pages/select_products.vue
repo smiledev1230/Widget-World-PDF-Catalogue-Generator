@@ -18,7 +18,7 @@
             <hr/>
             <div class="row d-block">
                 <router-link tag="a" to="/" exact class="btn btn-secondary text-white">CANCEL</router-link>
-                <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white">BACK</router-link>
+                <router-link tag="a" to="/new_catalogue" exact class="btn btn-secondary back-btn text-white" @click.native="backClick">BACK</router-link>
                 <router-link tag="a" to="/build_catalogue" exact class="btn greenBgColor pull-right text-white" @click.native="next">NEXT</router-link>
                 <a class="btn btn-secondary pull-right text-white mr-3" @click="saveProducts">SAVE FOR LATER</a>
             </div>
@@ -91,6 +91,9 @@
             },
         },
         methods: {
+            backClick() {
+                this.$store.new_state = false;
+            },
             saveProducts() {
                 console.log("saveProducts");
                 this.next();

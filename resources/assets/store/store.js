@@ -17,6 +17,7 @@ const store = new Vuex.Store({
         page_text: null,
         page_subText: null,
         login_status: false,
+        new_state: true,
         catalogue: {
             id: null,
             name: null,

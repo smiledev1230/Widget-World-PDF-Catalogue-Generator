@@ -96,7 +96,10 @@
         },
         mounted: function () {
             this.$store.state.page_text = "Create a new catalogue to send electronically to your clients/customers or get it professionally printed and take it with you\n" + "to your next meeting to wow your clients and increase conversions.";
-            this.$store.dispatch('initCatalogue');
+            if (this.$store.new_state) {
+                this.$store.dispatch('initCatalogue');
+            }
+            this.$store.new_state = true;
         },
         methods: {
             handleSlideClick(index) {

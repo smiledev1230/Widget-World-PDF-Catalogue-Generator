@@ -203,6 +203,7 @@
                         } else {
                             allProduct[i]['product_is_new'] = false;
                         }
+                        allProduct[i]['rrp'] = Number.parseFloat(allProduct[i]['rrp']).toFixed(2);
                         productData.push(allProduct[i]);
                     }
                 }
@@ -313,7 +314,9 @@
             catalogueDragStop: function(args) {
                 let dragNode = args.draggedNodeData;
                 let dropNode = args.droppedNodeData;
-                if (dragNode.parentID != dropNode.parentID) {
+                let categoryIndex = this.$store.state.categoryIds.indexOf(dragNode.id);
+                if ((categoryIndex>= 0 && this.$store.state.categories[categoryIndex]['hasChild'])
+                    || (dragNode.parentID != dropNode.parentID)) {
                     args.cancel = true;
                     return;
                 } else {
@@ -327,7 +330,9 @@
             supplierDragStop: function(args) {
                 let dragNode = args.draggedNodeData;
                 let dropNode = args.droppedNodeData;
-                if (dragNode.parentID != dropNode.parentID) {
+                let categoryIndex = this.$store.state.supplierIds.indexOf(dragNode.id);
+                if ((categoryIndex>= 0 && this.$store.state.suppliers[categoryIndex]['hasChild'])
+                    || (dragNode.parentID != dropNode.parentID)) {
                     args.cancel = true;
                     return;
                 } else {
