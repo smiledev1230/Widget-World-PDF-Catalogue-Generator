@@ -151,24 +151,29 @@
             },
             savePDF() {
                 console.log("savePDF");
-                let totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
-                let params = {
-                    fileName: this.$store.state.catalogue.name,
-                    productData: this.$store.state.productData,
-                    page_columns: this.$store.state.catalogue.page_columns,
-                    display_options: this.$store.state.catalogue.display_options,
-                    barcode_options: this.$store.state.catalogue.barcode_options,
-                    pages: totalPages,
-
-                }
                 let app = this;
-                app.$store.state.preloader = true;
-                axios.post("/api/savePDF", params).then(response => {
+                let formData = new FormData();
+                let storeData = this.$store.state;
+                formData.append('name', storeData.catalogue.name);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                formData.append('productData', JSON.stringify(storeData.productData));
+                formData.append('page_columns', storeData.catalogue.page_columns);
+                formData.append('display_options', storeData.catalogue.display_options);
+                formData.append('barcode_options', storeData.catalogue.barcode_options);
+                let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
+                formData.append('pages', totalPages);
+
+                axios.post( '/api/savePDF',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                ).then(response => {
                     console.log("response", response);
-                    app.$store.state.preloader = false;
-                    app.saveCatalogue(response.data);
                 }).catch(e=>{
-                    app.$store.state.preloader = false;
+
                 });
             },
             openSendModal() {

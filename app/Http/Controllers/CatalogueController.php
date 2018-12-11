@@ -110,15 +110,16 @@ class CatalogueController extends Controller
         $params = $request->all();
         $fileName = $params['name'];
         $filePath = $this->_dir.uniqid().'_'.$fileName.'.pdf';
+        $logo_path = array_key_exists('logo_path', $params) ? $params['logo_path'] : '';
 
         $productData = $params['productData'];
         $productData = json_decode($productData);
         $page_columns = $params['page_columns'];
-        $display_options = explode(',', $params['display_options']);
-        $barcode_options = explode(',', $params['barcode_options']);
+        $display_options = $params['display_options'] ? explode(',', $params['display_options']) : '';
+        $barcode_options = $params['barcode_options'] ? explode(',', $params['barcode_options']) : '';
         $pages = $params['pages'];
-//        return view('pdf', compact('productData','page_columns', 'display_options', 'barcode_options', 'pages', 'fileName'));
-        $pdf = PDF::loadView('pdf', compact('productData','page_columns', 'display_options', 'barcode_options', 'pages', 'fileName'));
+//        return view('pdf', compact('fileName', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
+        $pdf = PDF::loadView('pdf', compact('fileName', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
 //        $pdf->save($fileName.'.pdf');return 'ok';
         Storage::disk('s3')->put($filePath, $pdf->output(), 'public');
         $request->merge(['pdf_path' => $filePath]);
