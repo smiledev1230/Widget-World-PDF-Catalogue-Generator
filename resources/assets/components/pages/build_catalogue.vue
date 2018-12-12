@@ -123,7 +123,7 @@
                 ],
                 logos_options: [
                     { text: 'Yes', value: 1 },
-                    { text: 'No', value: 0 },
+                    { text: 'No', value: 0, disabled: false },
                 ],
                 display_options: [
                     {text: 'Title', value: 'title'},
@@ -143,6 +143,7 @@
                 this.barcode_options[1]['disabled'] = false;
             }
             console.log("state catalogue", this.$store.state.catalogue);
+            if (!this.$store.state.supplierBrand) this.$store.state.supplierBrand = require('../../assets/img/products/empty.jpg');
         },
         methods: {
             getSupplierList() {
@@ -152,6 +153,7 @@
                 for (let i=0;i<stateData.suppliers.length;i++) {
                     supplier = stateData.suppliers[i];
                     if (stateData.suppliers_ids.indexOf(supplier['id']) >= 0) {
+                        if (supplier['brandLogo']) stateData.supplierBrand = supplier['brandLogo'];
                         supplierList.push(supplier);
                     }
                 }
@@ -190,7 +192,7 @@
                     let newBlock = {
                         id: logo_id,
                         name: null,
-                        image: 'Arnotts-Logo.jpg',
+                        images: this.$store.state.supplierBrand,
                         type: 'logo'
                     }
                     productData.push(newBlock);
@@ -284,12 +286,11 @@
                 console.log("updateOptions");
             },
             updateProduct(e) {
-                console.log("updateProduct", e);
                 if (e) {
                     let newBlock = {
                         id: new Date().getTime(),
                         name: null,
-                        image: 'Arnotts-Logo.jpg',
+                        images: this.$store.state.supplierBrand,
                         type: 'logo'
                     }
                     this.$store.state.productData.splice(0, 0, newBlock);
@@ -307,7 +308,15 @@
                 }
             },
             setProduct(e) {
-                let productList = e ? this.getSupplierList() : this.getCategoryList();
+                let productList = '';
+                if (e) {
+                    productList = this.getSupplierList();
+                    this.logos_options[1]['disabled'] = false;
+                } else {
+                    productList = this.getCategoryList();
+                    this.logos_options[1]['disabled'] = true;
+                    this.$store.state.catalogue.logos_options = 0;
+                }
                 this.$store.state.productData = this.getProductData(productList);
                 this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             },

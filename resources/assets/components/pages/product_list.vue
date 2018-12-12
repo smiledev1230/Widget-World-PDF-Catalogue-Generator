@@ -16,7 +16,7 @@
                             </div>
                             <div class="product-image product-logo"
                                  v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
-                                <img :src="getLogoUrl()"/>
+                                <img :src="$store.state.productData[0]['images']"/>
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)">
                                 <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)"
@@ -307,13 +307,6 @@
             },
             getBarcodeNumber(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'barcode_unit');
-            },
-            getLogoUrl() {
-                if (this.$store.state.productData[0]['image']) {
-                    return require("../../assets/img/products/" + this.$store.state.productData[0]['image']);
-                } else {
-                    return;
-                }
             },
             getCols(n) {
                 let cols = [];

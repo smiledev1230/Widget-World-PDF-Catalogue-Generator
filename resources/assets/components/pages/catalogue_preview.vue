@@ -105,7 +105,7 @@
                     let newBlock = {
                         id: logo_id,
                         name: null,
-                        image: 'Arnotts-Logo.jpg',
+                        images: this.$store.state.supplierBrand,
                         type: 'logo'
                     }
                     productData.push(newBlock);

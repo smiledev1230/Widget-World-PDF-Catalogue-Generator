@@ -12,7 +12,7 @@
                                 <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
                             </div>
                             <div class="product-image product-logo" v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
-                                <img :src="getLogoUrl()" />
+                                <img :src="productData[0]['images']" />
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)" >
                                 <div class="ribbon" v-if="checkNewState(rowInd, colInd, 0)" :class="{active: checkNewState(rowInd, colInd, 0)}">NEW</div>
@@ -197,13 +197,6 @@
             },
             getBarcodeNumber(rowInd, colInd, backPage) {
                 return this.getProductInfo(rowInd, colInd, backPage, 'barcode_unit');
-            },
-            getLogoUrl() {
-                if (this.productData[0]['image']) {
-                    return require("../../assets/img/products/" + this.productData[0]['image']);
-                } else {
-                    return;
-                }
             },
             getCols() {
                 let cols = [];

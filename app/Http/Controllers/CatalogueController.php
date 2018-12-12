@@ -120,7 +120,7 @@ class CatalogueController extends Controller
         $pages = $params['pages'];
 //        return view('pdf', compact('fileName', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
         $pdf = PDF::loadView('pdf', compact('fileName', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
-//        $pdf->save($fileName.'.pdf');return 'ok';
+        // $pdf->save($fileName.'.pdf');return 'ok';
         Storage::disk('s3')->put($filePath, $pdf->output(), 'public');
         $request->merge(['pdf_path' => $filePath]);
         return $this->saveSelectProduct($request);

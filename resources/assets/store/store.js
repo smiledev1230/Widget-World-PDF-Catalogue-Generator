@@ -45,6 +45,7 @@ const store = new Vuex.Store({
         category_new: [],
         drag_supplier_ids: [],
         drag_category_ids: [],
+        supplierBrand: '',
         user: {
             name: "Addision",
             email: "add@gmail.com",

@@ -25,10 +25,12 @@ class SupplierController extends Controller
     {
         // Get category data of all product
         $product_node = DB::table('product_category AS pc')
-            ->select('p.id', 'pc.pcategory_id', 'pp.parent_id','s.name as sname', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.barcode_image', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit', DB::raw("CONCAT(IFNULL(LPAD(p.supplier_id,5,'0'), '00000'), '.', IFNULL(LPAD(ppp.parent_id,5,'0'), '00000'), '.', LPAD(pp.parent_id,5,'0'), '.', LPAD(pp.id,5,'0'), '.', p.name) AS path"))
+            ->select('p.id', 'pc.pcategory_id', 'pp.name AS pc_name', 'p2.id AS p2_id', 'p2.name AS p2_name', 'p3.id AS p3_id', 'p3.name AS p3_name', 'p4.id AS p4_id', 'p4.name AS p4_name', 'p4.parent_id', 's.name as sname', 's.logo as brand_logo', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.barcode_image', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit', DB::raw("CONCAT(IFNULL(LPAD(p3.parent_id,5,'0'), '00000'), '.', IFNULL(LPAD(p2.parent_id,5,'0'), '00000'), '.', LPAD(pp.parent_id,5,'0'), '.', LPAD(pp.id,5,'0'), '.', p.name) AS path"))
             ->join("products as p", "p.id", "=", "pc.product_id")
             ->leftJoin("pcategories AS pp", "pp.id", "=", "pc.pcategory_id")
-            ->leftJoin("pcategories AS ppp", "ppp.id", "=", "pp.parent_id")
+            ->leftJoin("pcategories AS p2", "p2.id", "=", "pp.parent_id")
+            ->leftJoin("pcategories AS p3", "p3.id", "=", "p2.parent_id")
+            ->leftJoin("pcategories AS p4", "p4.id", "=", "p3.parent_id")
             ->leftJoin("suppliers AS s", "s.id", "=", "p.supplier_id")
             ->whereNotNull('p.supplier_id')
             ->WhereNotNull('pc.pcategory_id')
@@ -37,6 +39,7 @@ class SupplierController extends Controller
             ->orderBy('path')
             ->orderBy('p.name')
             ->get();
+
         $this->categories = $this->category_ids = array();
         $this->suppliers = $this->supplier_ids = array();
 
@@ -47,8 +50,8 @@ class SupplierController extends Controller
                 $sRow = array(
                     'id' => $supplier_id,
                     'name' => $row->sname,
+                    'brandLogo' => $row->brand_logo,
                     'hasChild' => 1,
-//                    'expanded' => 1
                 );
                 array_push($this->suppliers, $sRow);
             }
@@ -56,14 +59,59 @@ class SupplierController extends Controller
             $category_id = "s".$row->supplier_id."-c".$row->pcategory_id;
             if (!in_array($category_id, $this->category_ids)) {
                 array_push($this->category_ids, $category_id);
-                $p_id = $row->parent_id ? "s".$row->supplier_id."-c".$row->parent_id : $supplier_id;
+                $p_id = $row->p2_id ? "s".$row->supplier_id."-c".$row->p2_id : $supplier_id;
                 $cRow = array(
                     'id' => $category_id,
-                    'name' => $row->cname,
+                    'name' => $row->pc_name,
                     'pid' => $p_id,
                     'hasChild'=> 1
                 );
                 array_push($this->categories, $cRow);
+            }
+
+            if ($row->p2_id) {
+                $category_id = "s".$row->supplier_id."-c".$row->p2_id;
+                if (!in_array($category_id, $this->category_ids)) {
+                    array_push($this->category_ids, $category_id);
+                    $p_id = $row->p3_id ? "s".$row->supplier_id."-c".$row->p3_id : $supplier_id;
+                    $cRow = array(
+                        'id' => $category_id,
+                        'name' => $row->p2_name,
+                        'pid' => $p_id,
+                        'hasChild'=> 1
+                    );
+                    array_push($this->categories, $cRow);
+                }
+            }
+
+            if ($row->p3_id) {
+                $category_id = "s".$row->supplier_id."-c".$row->p3_id;
+                if (!in_array($category_id, $this->category_ids)) {
+                    array_push($this->category_ids, $category_id);
+                    $p_id = $row->p4_id ? "s".$row->supplier_id."-c".$row->p4_id : $supplier_id;
+                    $cRow = array(
+                        'id' => $category_id,
+                        'name' => $row->p3_name,
+                        'pid' => $p_id,
+                        'hasChild'=> 1
+                    );
+                    array_push($this->categories, $cRow);
+                }
+            }
+
+            if ($row->p4_id) {
+                $category_id = "s".$row->supplier_id."-c".$row->p4_id;
+                if (!in_array($category_id, $this->category_ids)) {
+                    array_push($this->category_ids, $category_id);
+                    $p_id = $row->parent_id ? "s".$row->supplier_id."-c".$row->parent_id : $supplier_id;
+                    $cRow = array(
+                        'id' => $category_id,
+                        'name' => $row->p4_name,
+                        'pid' => $p_id,
+                        'hasChild'=> 1
+                    );
+                    array_push($this->categories, $cRow);
+                }
             }
 
             $image_path = $row->images;
