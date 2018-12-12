@@ -16,7 +16,7 @@
                             </div>
                             <div class="product-image product-logo"
                                  v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
-                                <img :src="$store.state.productData[0]['images']"/>
+                                <img :src="getImgUrl(rowInd, colInd, 0)"/>
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)">
                                 <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)"
@@ -71,10 +71,14 @@
                              v-for="rightCol in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="rightCol"
                              :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
-                            <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
+                            <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1) == 'block'">
                                 <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i
                                         class="fa fa-minus" aria-hidden="true"></i></div>
                                 <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block"/>
+                            </div>
+                            <div class="product-image product-logo"
+                                 v-else-if="checkNewBlock(rightRow, rightCol, 1) == 'logo'">
+                                <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rightRow, rightCol, 1)">
                                 <div class="ribbon" @click="updateNewState(rightRow, rightCol, 1)"

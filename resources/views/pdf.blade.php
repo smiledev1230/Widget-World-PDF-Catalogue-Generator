@@ -6,8 +6,9 @@
 </head>
 <body>
 <div class="front-page">
+    <img src="{{ public_path('/images/'.$brand_path) }}" class="cover-image" />
     @if ($logo_path)
-        <img src="{{ $logo_path }}" />
+        <img src="{{ $logo_path }}" class="logo-image" />
     @endif
     <div class="front-footer">
         {{ $fileName }}
@@ -26,13 +27,14 @@ $product_path = public_path().'/assets/img/products/';
                 @for ($i = 0; $i < $page_columns; $i++)
                     <?php $idx = $p*3*$page_columns+$j*3+$i; ?>
                     @if ($idx < count($productData) && $productData[$idx])
-                        <td class="product">
+                        <?php $logoState = array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo'; ?>
+                        <td class="product <?php if (!$logoState) echo 'product-border'; ?>">
                             @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'block')
                                 <div class="new-block">
                                     {{ $productData[$idx]->name }}
                                 </div>
-                            @elseif (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo')
-                                <img src="{{ $productData[0]->images }}" />
+                            @elseif ($logoState)
+                                <img src="{{ $productData[$idx]->images }}" class="brand-image"/>
                             @else
                                 <div class="product-body">
                                     @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'product_is_new')
@@ -100,11 +102,23 @@ $product_path = public_path().'/assets/img/products/';
     .front-page {
         page-break-after: always;
     }
+    .front-page .cover-image {
+        position: absolute;
+        max-width: 100%;
+        max-height: 100%;
+    }
+    .front-page .logo-image {
+        position: absolute;
+        bottom: 160px;
+        height: 65px;
+        margin-left: 40%;
+    }
     .front-footer {
         position: absolute;
         bottom: 100px;
-        width: 100%;
+        width: 80.5%;
         min-height: 35px;
+        margin-left: 6%;
         text-align: center;
         padding: 5px;
         background: #bb2026;
@@ -119,14 +133,17 @@ $product_path = public_path().'/assets/img/products/';
         margin: 0 auto;
     }
     .page-content .product {
-        border: 1px solid #d7d9da;
         padding: 2px;
+        width: 33%;
     }
-    .product-body img {
+    .product-border {
+        border: 1px solid #d7d9da;
+    }
+    .product-body img, .brand-image {
         min-width: 120px;
         min-height: 170px;
-        max-width: 190px;
-        max-height: 270px;
+        max-width: 150px;
+        max-height: 190px;
     }
     .product-title {
         text-align: center;

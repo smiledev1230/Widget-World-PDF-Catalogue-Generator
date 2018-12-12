@@ -42,8 +42,8 @@ class SupplierController extends Controller
 
         $this->categories = $this->category_ids = array();
         $this->suppliers = $this->supplier_ids = array();
-
-        $product_list = $product_node->map(function ($row) {
+        $supplier_data = array();
+        foreach ($product_node as $row) {
             $supplier_id = "s".$row->supplier_id;
             if (!in_array($supplier_id, $this->supplier_ids)) {
                 array_push($this->supplier_ids, $supplier_id);
@@ -53,7 +53,7 @@ class SupplierController extends Controller
                     'brandLogo' => $row->brand_logo,
                     'hasChild' => 1,
                 );
-                array_push($this->suppliers, $sRow);
+                array_push($supplier_data, $sRow);
             }
 
             $category_id = "s".$row->supplier_id."-c".$row->pcategory_id;
@@ -66,7 +66,7 @@ class SupplierController extends Controller
                     'pid' => $p_id,
                     'hasChild'=> 1
                 );
-                array_push($this->categories, $cRow);
+                array_push($supplier_data, $cRow);
             }
 
             if ($row->p2_id) {
@@ -80,7 +80,7 @@ class SupplierController extends Controller
                         'pid' => $p_id,
                         'hasChild'=> 1
                     );
-                    array_push($this->categories, $cRow);
+                    array_push($supplier_data, $cRow);
                 }
             }
 
@@ -95,7 +95,7 @@ class SupplierController extends Controller
                         'pid' => $p_id,
                         'hasChild'=> 1
                     );
-                    array_push($this->categories, $cRow);
+                    array_push($supplier_data, $cRow);
                 }
             }
 
@@ -110,32 +110,31 @@ class SupplierController extends Controller
                         'pid' => $p_id,
                         'hasChild'=> 1
                     );
-                    array_push($this->categories, $cRow);
+                    array_push($supplier_data, $cRow);
                 }
             }
 
-            $image_path = $row->images;
-            if ($image_path) {
-                $image_path = json_decode($image_path);
-                $image_path = $image_path[0];
-            }
             if (!in_array($row->pcategory_id, $this->_pcategory_ids)) {
+                $image_path = $row->images;
+                if ($image_path) {
+                    $image_path = json_decode($image_path);
+                    $image_path = $image_path[0];
+                }
                 $ppRow = array(
-                    'id'=> "s".$row->supplier_id."-c".$row->pcategory_id."-p".$row->id,
-                    'pid'=> "s".$row->supplier_id."-c".$row->pcategory_id,
-                    'name'=> $row->name,
-                    'images'=> $image_path,
-                    'items_per_outer'=> $row->items_per_outer,
-                    'rrp'=> $row->rrp,
-                    'barcode_unit'=> $row->barcode_unit,
-                    'barcode_image'=> $row->barcode_image,
-                    'product_is_new'=> 0,
+                    'id' => "s" . $row->supplier_id . "-c" . $row->pcategory_id . "-p" . $row->id,
+                    'pid' => "s" . $row->supplier_id . "-c" . $row->pcategory_id,
+                    'name' => $row->name,
+                    'images' => $image_path,
+                    'items_per_outer' => $row->items_per_outer,
+                    'rrp' => $row->rrp,
+                    'barcode_unit' => $row->barcode_unit,
+                    'barcode_image' => $row->barcode_image,
+                    'product_is_new' => 0,
                 );
-                return $ppRow;
+                array_push($supplier_data, $ppRow);
             }
-        })->toArray();
-        $product_categories = array_filter($product_list);
-        $supplier_tree_data = array_merge($this->suppliers, $this->categories, $product_categories);
-        return $supplier_tree_data;
+        }
+        $supplier_data = array_filter($supplier_data);
+        return $supplier_data;
     }
 }

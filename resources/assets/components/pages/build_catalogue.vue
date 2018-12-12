@@ -186,18 +186,18 @@
                     product_block = stateData.category_block;
                     drag_ids = stateData.drag_category_ids;
                 }
-                if (stateData.catalogue.logos_options) {
-                    let logo_id = new Date().getTime();
-                    productIds.push(logo_id);
-                    let newBlock = {
-                        id: logo_id,
-                        name: null,
-                        images: this.$store.state.supplierBrand,
-                        type: 'logo'
-                    }
-                    productData.push(newBlock);
-                }
                 for (let i=0;i<allProduct.length;i++) {
+                    if (stateData.catalogue.logos_options && allProduct[i]['hasChild'] && allProduct[i]['brandLogo']) {
+                        let logo_id = new Date().getTime();
+                        productIds.push(logo_id);
+                        let newBlock = {
+                            id: logo_id,
+                            name: 'Supplier Brand',
+                            images: allProduct[i]['brandLogo'],
+                            type: 'logo'
+                        }
+                        productData.push(newBlock);
+                    }
                     if (!allProduct[i]['hasChild']) {
                         productIds.push(allProduct[i]['id']);
                         if (product_new && product_new.indexOf(allProduct[i]['id'])>=0) {
@@ -286,17 +286,9 @@
                 console.log("updateOptions");
             },
             updateProduct(e) {
-                if (e) {
-                    let newBlock = {
-                        id: new Date().getTime(),
-                        name: null,
-                        images: this.$store.state.supplierBrand,
-                        type: 'logo'
-                    }
-                    this.$store.state.productData.splice(0, 0, newBlock);
-                } else {
-                    this.$store.state.productData.splice(0,1);
-                }
+                this.$store.state.catalogue.logos_options = e;
+                this.$store.state.productData = this.getProductData(this.getSupplierList());
+                this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
             },
             updatePage(e) {
                 this.totalPages = Math.round(this.$store.state.productData.length/3/e + 0.5);

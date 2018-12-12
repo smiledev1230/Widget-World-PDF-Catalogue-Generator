@@ -37,10 +37,10 @@
                                                :key="index"
                                                @slideClick="handleSlideClick(index)">
                                             <img
-                                                    :src="getImgUrl(index)"
-                                                    v-bind:alt="coverImage"
-                                                    :class="{'select-image': $store.state.catalogue.selectedImage == index}"
-                                                    class="cover-image" />
+                                                :src="getImgUrl(index)"
+                                                v-bind:alt="coverImage"
+                                                :class="{'select-image': $store.state.catalogue.selectedImage == index}"
+                                                class="cover-image" />
                                         </slide>
                                     </carousel>
                                 </td>

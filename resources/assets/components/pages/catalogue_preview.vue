@@ -30,6 +30,7 @@
     import productPreview from "./product_preview";
     import catalogueSend from "./catalogue_send";
     import saveModal from "./save_modal";
+    import { coverImages } from '../../assets/js/global_variable';
 
     export default {
         name: "catalogue_preview",
@@ -51,7 +52,8 @@
                 old_catalogue: {},
                 catalogueSend: false,
                 showStatus: false,
-                totalPages: total_pages
+                totalPages: total_pages,
+                imageList : coverImages,
             }
         },
         mounted: function () {
@@ -99,18 +101,18 @@
                     product_block = stateData.category_block;
                     drag_ids = stateData.drag_category_ids;
                 }
-                if (stateData.catalogue.logos_options) {
-                    let logo_id = new Date().getTime();
-                    productIds.push(logo_id);
-                    let newBlock = {
-                        id: logo_id,
-                        name: null,
-                        images: this.$store.state.supplierBrand,
-                        type: 'logo'
-                    }
-                    productData.push(newBlock);
-                }
                 for (let i=0;i<allProduct.length;i++) {
+                    if (stateData.catalogue.logos_options && allProduct[i]['hasChild'] && allProduct[i]['brandLogo']) {
+                        let logo_id = new Date().getTime();
+                        productIds.push(logo_id);
+                        let newBlock = {
+                            id: logo_id,
+                            name: 'Supplier Brand',
+                            images: allProduct[i]['brandLogo'],
+                            type: 'logo'
+                        }
+                        productData.push(newBlock);
+                    }
                     if (!allProduct[i]['hasChild']) {
                         productIds.push(allProduct[i]['id']);
                         if (product_new && product_new.indexOf(allProduct[i]['id'])>=0) {
@@ -118,6 +120,7 @@
                         } else {
                             allProduct[i]['product_is_new'] = false;
                         }
+                        allProduct[i]['rrp'] = Number.parseFloat(allProduct[i]['rrp']).toFixed(2);
                         productData.push(allProduct[i]);
                     }
                 }
@@ -155,6 +158,7 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
+                formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
                 if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
                 formData.append('productData', JSON.stringify(storeData.productData));
                 formData.append('page_columns', storeData.catalogue.page_columns);

@@ -46,8 +46,9 @@
     import Vue from 'vue';
     import VueForm from "vue-form";
     import options from "src/validations/validations.js";
-
     Vue.use(VueForm, options);
+
+    import { coverImages } from '../../assets/js/global_variable';
 
     export default {
         name: "catalogue_preview",
@@ -56,6 +57,7 @@
         data() {
             return {
                 sendModal: false,
+                imageList : coverImages,
                 formState: {},
                 sendForm: {
                     subject: '',
@@ -96,6 +98,7 @@
                         let storeData = this.$store.state;
                         if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
                         formData.append('name', storeData.catalogue.name);
+                        formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
                         if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
                         if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
                         formData.append('cover_index', storeData.catalogue.selectedImage);

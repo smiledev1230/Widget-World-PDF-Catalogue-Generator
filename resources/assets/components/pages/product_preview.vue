@@ -12,7 +12,7 @@
                                 <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
                             </div>
                             <div class="product-image product-logo" v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
-                                <img :src="productData[0]['images']" />
+                                <img :src="getImgUrl(rowInd, colInd, 0)" />
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rowInd, colInd, 0)" >
                                 <div class="ribbon" v-if="checkNewState(rowInd, colInd, 0)" :class="{active: checkNewState(rowInd, colInd, 0)}">NEW</div>
@@ -60,8 +60,11 @@
                              v-for="rightCol in getCols(catalogue.page_columns)"
                              v-bind:key="rightCol"
                              :class="catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
-                            <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1)">
+                            <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1) == 'block'">
                                 <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block" />
+                            </div>
+                            <div class="product-image product-logo" v-else-if="checkNewBlock(rightRow, rightCol, 1) == 'logo'">
+                                <img :src="getImgUrl(rightRow, rightCol, 1)" />
                             </div>
                             <div class="product-image" v-else-if="getImgUrl(rightRow, rightCol, 1)" >
                                 <div class="ribbon" v-if="checkNewState(rightRow, rightCol, 1)" :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW</div>
