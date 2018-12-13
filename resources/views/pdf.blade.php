@@ -17,30 +17,36 @@
 <?php
 ini_set('max_execution_time', 300);
 $product_path = public_path().'/assets/img/products/';
-//    $product_path =url('/').'/assets/img/products/';
 ?>
 @for ($p = 0; $p < $pages; $p++)
-    <table class="page-content">
+    <table class="page-content" width="100%">
         <tbody>
         @for ($j = 0; $j < 3; $j++)
             <tr>
                 @for ($i = 0; $i < $page_columns; $i++)
                     <?php $idx = $p*3*$page_columns+$j*3+$i; ?>
                     @if ($idx < count($productData) && $productData[$idx])
-                        <?php $logoState = array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo'; ?>
+                        <?php
+                            $logoState = array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo';
+                            $barcodeState = $barcode_options && array_key_exists('barcode_image', $productData[$idx]);
+                        ?>
                         <td class="product <?php if (!$logoState) echo 'product-border'; ?>">
                             @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'block')
                                 <div class="new-block">
                                     {{ $productData[$idx]->name }}
                                 </div>
                             @elseif ($logoState)
-                                <img src="{{ $productData[$idx]->images }}" class="brand-image"/>
+                                <div class="brand-image">
+                                    <img src="{{ $productData[$idx]->images }}"/>
+                                </div>
                             @else
                                 <div class="product-body">
-                                    @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'product_is_new')
-                                        <div class="ribbon active">NEW</div>
+                                    @if (array_key_exists('product_is_new', $productData[$idx]) && $productData[$idx]->product_is_new)
+                                        <div class="product-new <?php if ($barcodeState) echo 'product-new-2'; ?>">NEW</div>
                                     @endif
-                                    <img src="{{ $productData[$idx]->images ? $productData[$idx]->images : $product_path.'empty.jpg' }}" />
+                                    <div class="content-center">
+                                        <img src="{{ $productData[$idx]->images ? $productData[$idx]->images : $product_path.'empty.jpg' }}" class="product-image"/>
+                                    </div>
                                     <div class="product-box">
                                         @if (in_array('title', $display_options))
                                             <div class="product-title">{{ $productData[$idx]->name }}</div>
@@ -48,25 +54,25 @@ $product_path = public_path().'/assets/img/products/';
                                         <table class="product-footer">
                                             <tbody>
                                             <tr>
-                                                <td class="product-detail">
+                                                <th align="left" class="product-detail">
                                                     @if (in_array('units', $display_options))
                                                         {{ $productData[$idx]->items_per_outer }} units per outer<br>
                                                     @endif
-                                                    @if ($barcode_options)
+                                                    @if (!$barcode_options)
                                                         <div>{{$productData[$idx]->barcode_unit}}</div>
                                                     @elseif (in_array('rrp', $display_options))
                                                         <div class="redLabelColor">RRP ${{ $productData[$idx]->rrp ? $productData[$idx]->rrp : '0.00' }}</div>
                                                     @endif
-                                                </td>
-                                                <td class="barcode-image">
-                                                    @if ($barcode_options && array_key_exists('barcode_image', $productData[$idx]))
-                                                        {{--<img src="{{ $productData[$idx]->barcode_image ? $productData[$idx]->barcode_image : $product_path.'barcode.png' }}" />--}}
+                                                </th>
+                                                <th align="right" class="barcode-image">
+                                                    @if ($barcodeState)
+                                                        <img src="{{ $productData[$idx]->barcode_image ? $productData[$idx]->barcode_image : $product_path.'barcode.png' }}" />
                                                     @elseif (in_array('rrp', $display_options))
                                                         <div class="product-rrp">
                                                             RRP<br/>${{ number_format((float)$productData[$idx]->rrp, 2, '.', '') }}
                                                         </div>
                                                     @endif
-                                                </td>
+                                                </th>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -99,6 +105,9 @@ $product_path = public_path().'/assets/img/products/';
         font-family: 'Deja', sans-serif;
         margin: 0px;
     }
+    .content-center {
+        text-align: center;
+    }
     .front-page {
         page-break-after: always;
     }
@@ -106,64 +115,89 @@ $product_path = public_path().'/assets/img/products/';
         position: absolute;
         max-width: 100%;
         max-height: 100%;
+        margin-left: 3%;
     }
     .front-page .logo-image {
         position: absolute;
-        bottom: 160px;
-        height: 65px;
-        margin-left: 40%;
+        bottom: 250px;
+        width: 180px;
+        margin-left: 37.5%;
     }
     .front-footer {
         position: absolute;
         bottom: 100px;
-        width: 80.5%;
-        min-height: 35px;
-        margin-left: 6%;
+        width: 81%;
+        height: 40px;
+        margin-left: 8.8%;
+        padding: 0px 5px;
         text-align: center;
-        padding: 5px;
         background: #bb2026;
         color: #fff;
         font-size: 18px;
-        line-height: 2;
+        line-height: 1.8;
     }
     .page-content {
-        width: calc(100% - 16px);
-        height: calc(100% - 30px);
-        padding: 15px 8px;
         margin: 0 auto;
     }
     .page-content .product {
-        padding: 2px;
-        width: 33%;
+        padding: 5px 5px 0;
+        width: 200px;
+        height: 283px;
+        position: relative;
+        overflow: hidden;
     }
     .product-border {
         border: 1px solid #d7d9da;
     }
-    .product-body img, .brand-image {
+    .brand-image {
+        text-align: center;
+    }
+    .brand-image img {
+        max-width: 200px;
+        max-height: 283px;
+    }
+    .product-body .product-new {
+        text-align: center;
+        transform: rotate(45deg);
+        padding: 3px 0;
+        top: -5px;
+        right: -20px;
+        width: 75px;
+        color: #fff;
+        position: absolute;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1;
+        cursor: pointer;
+        background-color: #a30c11;
+    }
+    .product-body .product-new.product-new-2 {
+        top: 5px;
+    }
+    .product-body .product-image {
         min-width: 120px;
-        min-height: 170px;
-        max-width: 150px;
-        max-height: 190px;
+        min-height: 160px;
+        max-width: 160px;
+        max-height: 180px;
+    }
+    .barcode-image img {
+        height: 55px;
     }
     .product-title {
         text-align: center;
         font-weight: 500;
+        height: 55px;
     }
     .product-footer {
         width: 100%;
     }
     .product-footer .product-detail {
         min-height: 18px;
-        padding-left: 2px;
         font-size: 12px;
         line-height: 18px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-    .product-footer .barcode-image {
-        text-align: right;
-        padding-right: 2px;
     }
     .product-footer .barcode-image .product-rrp {
         font-size: 12px;

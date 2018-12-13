@@ -31,7 +31,7 @@
                                          v-if="$store.state.catalogue.display_options.indexOf('title')>= 0">
                                         {{getProductTitle(rowInd, colInd, 0)}}
                                     </div>
-                                    <div>
+                                    <div :class="{productFooter: $store.state.catalogue.barcode_options}">
                                         <div class="product-detail"
                                              v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rowInd, colInd, 0)}} units per outer
@@ -93,7 +93,7 @@
                                          v-if="$store.state.catalogue.display_options.indexOf('title')>= 0">
                                         {{getProductTitle(rightRow, rightCol, 1)}}
                                     </div>
-                                    <div>
+                                    <div :class="{productFooter: $store.state.catalogue.barcode_options}">
                                         <div class="product-detail"
                                              v-if="$store.state.catalogue.display_options.indexOf('units')>= 0">
                                             {{getUnits(rightRow, rightCol, 1)}} units per outer
@@ -352,8 +352,10 @@
                     border: 1px solid $border_color;
                     overflow: hidden;
                     z-index: 999;
+                    display: flex;
+                    flex-direction: column;
                     img {
-                        width: 100%;
+                        max-width: 100%;
                         max-height: 58%;
                     }
                     .ribbon {
@@ -400,6 +402,9 @@
                             position: absolute;
                             bottom: 35px;
                             width: 100%;
+                        }
+                        .productFooter {
+                            margin-bottom: 10px;
                         }
                         .product-detail {
                             max-width: 60%;
