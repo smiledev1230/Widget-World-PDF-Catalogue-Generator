@@ -140,7 +140,7 @@ class CatalogueController extends Controller
                 $pdfFile = Storage::disk('s3')->get($pdf_path);
                 $message->attachData($pdfFile, $pdf_name);
             }
-            $message->from(env('ORDER_FROM_EMAIL', 'info@brandzonline.com.au'), env('ORDER_FROM_NAME', 'Info'))->to($to)->subject($subject);
+            $message->from(env('MAIL_FROM_ADDRESS', 'info@brandzonline.com.au'), env('MAIL_FROM_NAME', 'Widget World'))->to($to)->subject($subject);
         });
         if (Mail::failures()) {
             return 'error';
