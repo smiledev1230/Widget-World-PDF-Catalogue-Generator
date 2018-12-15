@@ -90,6 +90,7 @@
 
                     if (this.catalogue.pdf_path) {
                         sendFormData.append('id', this.catalogue.id);
+                        sendFormData.append('user_id', this.$store.state.user.id);
                         sendFormData.append('pdf_path', this.catalogue.pdf_path);
                         this.sendData(sendFormData);
                     } else {
@@ -97,6 +98,7 @@
                         let formData = new FormData();
                         let storeData = this.$store.state;
                         if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                        formData.append('user_id', storeData.user.id);
                         formData.append('name', storeData.catalogue.name);
                         formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
                         if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);

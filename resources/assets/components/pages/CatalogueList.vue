@@ -1,7 +1,7 @@
 <template>
     <div class="catalogue-list">
         <ul class="task_block1">
-            <li v-for="(catalogue,index) in catalogues" class="task_block">
+            <li v-for="(catalogue,index) in catalogues" class="task_block" :key="index">
                 <div>
                     <span class="catalogue-title">{{catalogue.name}} - </span>
                     <span class="catalogue-label" :class="labelColor[catalogue.state]">{{catalogueLabel[catalogue.state]}}</span>
@@ -165,6 +165,7 @@
                 if (this.old_catalogue.id) {
                     let preload = {
                         id: this.old_catalogue.id,
+                        user_id: this.$store.state.user.id,
                         limited: this.limited
                     }
                     let app = this;
