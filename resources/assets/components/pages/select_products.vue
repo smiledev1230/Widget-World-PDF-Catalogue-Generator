@@ -48,6 +48,7 @@
             }
         },
         mounted: function () {
+            if (!this.$store.state.user.id) this.$router.push("/login");
             this.$store.state.page_text = "Select the products to be displayed in your catalogue. You can choose a complete range from single or multiple Suppliers, single or multiple categories or indivudal products. On the next screen you can insert these products into your pages.";
         },
         computed: {
@@ -100,6 +101,7 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                formData.append('user_id', storeData.user.id);
                 formData.append('name', storeData.catalogue.name);
                 if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
                 if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
@@ -137,7 +139,6 @@
             next() {
                 let categoryObj = document.getElementById('categoryTree').ej2_instances[0];
                 let checkedNode = categoryObj.getAllCheckedNodes();
-                console.log("categories checkedNode ", checkedNode);
                 this.$store.state.sel_category_ids = this.$store.state.categories_ids = [];
                 if (checkedNode.length > 0) {
                     let selectedIds = [];
@@ -165,14 +166,12 @@
                         }
                     }
                     this.$store.state.categories_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
-                    console.log("this.$store.state.categories_ids ", this.$store.state.categories_ids);
                 }
                 this.setSuppliers();
             },
             setSuppliers() {
                 let supplierObj = document.getElementById('supplierTree').ej2_instances[0];
                 let checkedNode = supplierObj.getAllCheckedNodes();
-                console.log("suppliers checkedNode ", checkedNode);
                 this.$store.state.sel_supplier_ids = this.$store.state.suppliers_ids = [];
                 if (checkedNode.length > 0) {
                     let selectedIds = [];
@@ -214,7 +213,6 @@
                     }
                     selectedIds = selectedIds.concat(pchilds);
                     this.$store.state.suppliers_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
-                    // console.log("this.$store.state.suppliers_ids ", this.$store.state.suppliers_ids);
                 }
             }
         }

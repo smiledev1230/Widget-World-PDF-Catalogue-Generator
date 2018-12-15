@@ -55,11 +55,11 @@
                         </span>
                             <b-dropdown-item class="dropdownheader socio-tabs1" exact>
                                 <div v-for="(note, index) in notifications" :key="index">
-                                    <b-dropdown-item exact v-if="note.state != 0">
-                                        <div :class="note.state == 1 ? 'view-notification' : 'close-notification'">
-                                            <span>{{note.title}}</span>
-                                            <div class="float-right">
-                                                <b-btn v-if="note.state == 1" class="greenBgColor pl-3 pr-3 view-btn" @click="viewNotify(index)">VIEW</b-btn>
+                                    <b-dropdown-item exact v-if="note.state != -1">
+                                        <div :class="note.state ? 'close-notification': 'view-notification'" class="row">
+                                            <div class="col-9">{{note.title}}</div>
+                                            <div class="col-3 text-right">
+                                                <b-btn v-if="!note.state" class="greenBgColor pl-3 pr-3 view-btn" @click="viewNotify(index)">VIEW</b-btn>
                                                 <i v-else class="fa fa-times" aria-hidden="true" @click="removeNotify(index)"></i>
                                             </div>
                                         </div>
@@ -123,26 +123,26 @@
                 <div v-if="selectedNotify.type=='text'" class="text-notify">
                     <img src="~img/notify-bell.png"/>
                     <p class="notify-title">{{selectedNotify.title}}</p>
-                    <p>{{selectedNotify.description}}</p>
+                    <p>{{selectedNotify.content}}</p>
                 </div>
-                <div v-else-if="selectedNotify.type=='image'" class="row image-notify">
+                <div v-else-if="selectedNotify.type=='text_image'" class="row image-notify">
                     <div class="col-6 image">
-                        <img :src="selectedNotify.url" class="w-100" />
+                        <img :src="selectedNotify.images" class="w-100" onerror="this.src='~img/blank.jpg'"/>
                     </div>
                     <div class="col-6 pt-3 text-left">
                         <img src="~img/notify-bell.png"/>
                         <p class="notify-title">{{selectedNotify.title}}</p>
-                        <p>{{selectedNotify.description}}</p>
+                        <p>{{selectedNotify.content}}</p>
                     </div>
                 </div>
                 <div v-else class="video-notify text-center">
                     <vue-plyr :emit="['controls', 'volume']">
-                        <video :src="selectedNotify.url">
-                            <source :src="selectedNotify.url" type="video/mp4" size="720">
+                        <video :src="selectedNotify.images">
+                            <source :src="selectedNotify.images" type="video/mp4" size="720">
                         </video>
                     </vue-plyr>
                     <p class="notify-title">{{selectedNotify.title}}</p>
-                    <p>{{selectedNotify.description}}</p>
+                    <p>{{selectedNotify.content}}</p>
                 </div>
             </div>
             <div slot="modal-footer" class="w-100">
@@ -169,39 +169,17 @@
                 accountEdit: false,
                 selectedNotify: {},
                 userModel: this.$store.state.user,
-                notifications: [
-                    {
-                        title: 'New Product Launched',
-                        type: 'text',
-                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
-                        state: 1,
-                    },
-                    {
-                        title: 'New Product Video',
-                        type: 'video',
-                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
-                        url: 'http://vjs.zencdn.net/v/oceans.mp4',
-                        state: 1,
-                    },
-                    {
-                        title: 'New Product Image',
-                        type: 'image',
-                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
-                        url: 'https://www.slrmag.co.uk/wp-content/uploads/2018/03/What-a-treat-from-Maltesers.jpg',
-                        state: 1,
-                    },
-                    {
-                        title: 'New Product Image',
-                        type: 'image',
-                        description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.',
-                        state: -1,
-                    },
-                    {
-                        title: 'Product Discontinued',
-                        type: 'text',
-                        state: -1,
-                    },
-                ]
+                notifications: []
+            }
+        },
+        mounted: function () {
+            if (this.$store.state.user.id) {
+                let app = this;
+                axios.get('/api/getNotification', {params: {user_id: app.$store.state.user.id}}).then(response => {
+                    if (response && response.data) {
+                        app.notifications = response.data;
+                    }
+                });
             }
         },
         methods: {
@@ -228,13 +206,27 @@
                 }
             },
             viewNotify(index) {
-                this.notifications[index]['state'] = -1;
+                this.notifications[index]['state'] = 1;
                 this.selectedNotify = this.notifications[index];
                 this.notifyModal = false;
                 this.$refs.notifyModal.show();
+                let params = {
+                    user_id: this.$store.state.user.id,
+                    notification_id: this.notifications[index]['id']
+                }
+                axios.post("/api/updateNotificationView", params).then(response => {
+                    console.log("notification update: ", response.data.message);
+                });
             },
             removeNotify(index) {
-                this.notifications[index]['state']=0;
+                let params = {
+                    user_id: this.$store.state.user.id,
+                    notification_id: this.notifications[index]['id']
+                }
+                axios.post("/api/updateNotificationDelete", params).then(response => {
+                    console.log("notification delete: ", response.data.message);
+                });
+                this.notifications[index]['state']= -1;
                 this.notifications.splice(index, 1);
             }
         }
@@ -277,7 +269,7 @@
                     background-color: #f4f9ec;
                     color: $green_color;
                     .view-btn {
-                        margin-top: -5px;
+                        margin-top: -4px;
                     }
                 }
                 .close-notification {
@@ -287,7 +279,7 @@
                     color: $grey_btn_color;
                     .fa-times {
                         font-size: 20px;
-                        margin-right: 18px;
+                        margin-right: 5px;
                         cursor: pointer;
                     }
                 }

@@ -104,9 +104,11 @@
             }
         },
         created() {
-            axios.get('/api/getRecentCatalogue', {params: {limited: this.limited}}).then(response => {
-                this.catalogues = response.data
-            });
+            if (this.$store.state.user.id) {
+                axios.get('/api/getRecentCatalogue', {params: {user_id: this.$store.state.user.id, limited: this.limited}}).then(response => {
+                    this.catalogues = response.data
+                });
+            }
         },
         mounted: function () {
 
@@ -138,8 +140,9 @@
                 if (this.new_catalogue_title) {
                     let preload = {
                         id: this.old_catalogue.id,
+                        user_id: this.$store.state.user.id,
                         name: this.new_catalogue_title,
-                        state: this.old_catalogue.state,
+                        state: 0,
                         limited: this.limited
                     }
                     let app = this;
@@ -172,7 +175,6 @@
             },
             continueCatalogue(index) {
                 let catalogue = this.catalogues[index];
-                console.log("selected catalogue", catalogue);
                 if (catalogue.id) this.$store.state.catalogue.id = catalogue.id;
                 this.$store.state.catalogue.name = catalogue.name;
                 this.$store.state.catalogue.file_name = catalogue.logo_name;

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 
 Route::post('login', 'UserController@login');
+Route::get('getNotification', 'NotificationsController@getNotification');
 Route::get('getSupplier', 'SupplierController@getSupplier');
 Route::get('getCategory', 'CategoryController@getCategory');
 Route::get('getRecentCatalogue', 'CatalogueController@getRecentCatalogue');
@@ -15,6 +16,8 @@ Route::post('savePDF', 'CatalogueController@savePDF');
 Route::post('duplicateCatalogue', 'CatalogueController@duplicateCatalogue');
 Route::post('deleteCatalogue', 'CatalogueController@deleteCatalogue');
 Route::post('sendPDF', 'CatalogueController@sendPDF');
+Route::post('updateNotificationView', 'NotificationsController@updateNotificationView');
+Route::post('updateNotificationDelete', 'NotificationsController@updateNotificationDelete');
 
 Route::get('/products/{product}', 'ProductController@show');
 

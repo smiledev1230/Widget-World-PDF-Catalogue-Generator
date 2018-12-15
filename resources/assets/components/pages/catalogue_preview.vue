@@ -57,6 +57,7 @@
             }
         },
         mounted: function () {
+            if (!this.$store.state.user.id) this.$router.push("/login");
             this.$store.state.page_text = "Preview how your catalogue is going to look and send it as a PDF.";
             this.$store.state.page_subText = "You can always save it for later and come back to it when you are ready to send.";
             this.$store.state.preloader = false;
@@ -154,7 +155,6 @@
             },
             savePDF() {
                 console.log("savePDF");
-                let app = this;
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
@@ -190,9 +190,10 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                formData.append('user_id', storeData.user.id);
                 formData.append('name', storeData.catalogue.name);
                 if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
-                if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
                 formData.append('cover_index', storeData.catalogue.selectedImage);
                 formData.append('suppliers',storeData.sel_supplier_ids);
                 formData.append('categories', storeData.sel_category_ids);

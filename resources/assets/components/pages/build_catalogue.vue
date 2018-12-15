@@ -137,12 +137,12 @@
             }
         },
         mounted: function () {
+            if (!this.$store.state.user.id) this.$router.push("/login");
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
             if (this.$store.state.catalogue.page_columns == 2 && this.$store.state.catalogue.barcode_options) {
                 this.barcode_options[1]['disabled'] = false;
             }
-            console.log("state catalogue", this.$store.state.catalogue);
             if (!this.$store.state.supplierBrand) this.$store.state.supplierBrand = require('../../assets/img/products/empty.jpg');
         },
         methods: {
@@ -242,6 +242,7 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
+                formData.append('user_id', storeData.user.id);
                 formData.append('name', storeData.catalogue.name);
                 if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
                 if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
@@ -287,8 +288,9 @@
             },
             updateProduct(e) {
                 this.$store.state.catalogue.logos_options = e;
-                this.$store.state.productData = this.getProductData(this.getSupplierList());
-                this.totalPages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+                let supplierList = this.getSupplierList();
+                let categoryList = this.getCategoryList();
+                this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
             },
             updatePage(e) {
                 this.totalPages = Math.round(this.$store.state.productData.length/3/e + 0.5);

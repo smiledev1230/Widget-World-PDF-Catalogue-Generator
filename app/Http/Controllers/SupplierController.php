@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\Supplier;
 use App\Models\PCategory;
+use App\Models\GroupSupplier;
 
 class SupplierController extends Controller
 {
@@ -21,8 +21,9 @@ class SupplierController extends Controller
     }
 
     //
-    public function getSupplier()
+    public function getSupplier(Request $request)
     {
+        $s_ids = GroupSupplier::where('group_id',$request->group_id)->pluck('supplier_id')->toArray();
         // Get category data of all product
         $product_node = DB::table('product_category AS pc')
             ->select('p.id', 'pc.pcategory_id', 'pp.name AS pc_name', 'p2.id AS p2_id', 'p2.name AS p2_name', 'p3.id AS p3_id', 'p3.name AS p3_name', 'p4.id AS p4_id', 'p4.name AS p4_name', 'p4.parent_id', 's.name as sname', 's.logo as brand_logo', 'pp.name as cname', 'p.supplier_id', 'p.name', 'p.images', 'p.barcode_image', 'p.items_per_outer', 'p.rrp', 'p.barcode_unit', DB::raw("CONCAT(IFNULL(LPAD(p3.parent_id,5,'0'), '00000'), '.', IFNULL(LPAD(p2.parent_id,5,'0'), '00000'), '.', LPAD(pp.parent_id,5,'0'), '.', LPAD(pp.id,5,'0'), '.', p.name) AS path"))
@@ -32,7 +33,7 @@ class SupplierController extends Controller
             ->leftJoin("pcategories AS p3", "p3.id", "=", "p2.parent_id")
             ->leftJoin("pcategories AS p4", "p4.id", "=", "p3.parent_id")
             ->leftJoin("suppliers AS s", "s.id", "=", "p.supplier_id")
-            ->whereNotNull('p.supplier_id')
+            ->whereIn('p.supplier_id', $s_ids)
             ->WhereNotNull('pc.pcategory_id')
             ->orderBy('s.name')
             ->orderBy('pc.pcategory_id')

@@ -21,37 +21,42 @@ class CatalogueController extends Controller
 
     public function getRecentCatalogue(Request $request)
     {
-        $params = $request->all();
-        if ($params && $params['limited']) {
-            $recent_catalogue = DB::table('catalogue_pdf as p')
-                ->select('p.*', DB::raw('DATE_FORMAT(p.updated_at, "%d/%m/%Y") as pdf_date'), DB::raw('GROUP_CONCAT(s.emails SEPARATOR ",") as emails'), DB::raw('GROUP_CONCAT(DATE_FORMAT(s.created_at, "%d/%m/%Y") SEPARATOR ",") as sent_date'))
-                ->leftJoin("catalogue_sent AS s", "p.id", "=", "s.pdf_id")
-                ->groupBy('p.id')
-                ->orderBy('p.updated_at','desc')
-                ->limit($params['limited'])
-                ->get();
+        if ($request->user_id) {
+            if ($request->limited) {
+                $recent_catalogue = DB::table('catalogue_pdf as p')
+                    ->select('p.*', DB::raw('DATE_FORMAT(p.updated_at, "%d/%m/%Y") as pdf_date'), DB::raw('GROUP_CONCAT(s.emails SEPARATOR ",") as emails'), DB::raw('GROUP_CONCAT(DATE_FORMAT(s.created_at, "%d/%m/%Y") SEPARATOR ",") as sent_date'))
+                    ->leftJoin("catalogue_sent AS s", "p.id", "=", "s.pdf_id")
+                    ->where('p.user_id', $request->user_id)
+                    ->groupBy('p.id')
+                    ->orderBy('p.updated_at','desc')
+                    ->limit($request->limited)
+                    ->get();
+            } else {
+                $recent_catalogue = DB::table('catalogue_pdf as p')
+                    ->select('p.*', DB::raw('DATE_FORMAT(p.updated_at, "%d/%m/%Y") as pdf_date'), DB::raw('GROUP_CONCAT(s.emails SEPARATOR ",") as emails'), DB::raw('GROUP_CONCAT(DATE_FORMAT(s.created_at, "%d/%m/%Y") SEPARATOR ",") as sent_date'))
+                    ->leftJoin("catalogue_sent AS s", "p.id", "=", "s.pdf_id")
+                    ->where('p.user_id', $request->user_id)
+                    ->groupBy('p.id')
+                    ->orderBy('p.updated_at','desc')
+                    ->get();
+            }
+            $result = $recent_catalogue->map(function ($row) {
+                if ($row->sent_date) $row->sent_date = explode(',', $row->sent_date);
+                if ($row->emails) $row->emails = explode(',', $row->emails);
+                if ($row->suppliers) $row->suppliers = explode(',', unserialize($row->suppliers));
+                if ($row->categories) $row->categories = explode(',', unserialize($row->categories));
+                if ($row->display_options) $row->display_options = explode(',', $row->display_options);
+                if ($row->supplier_new) $row->supplier_new = explode(',', $row->supplier_new);
+                if ($row->category_new) $row->category_new = explode(',', $row->category_new);
+                if ($row->supplier_block) $row->supplier_block = json_decode($row->supplier_block);
+                if ($row->category_block) $row->category_block = json_decode($row->category_block);
+                if ($row->drag_supplier_ids) $row->drag_supplier_ids = explode(',', $row->drag_supplier_ids);
+                if ($row->drag_category_ids) $row->drag_category_ids = explode(',', $row->drag_category_ids);
+                return $row;
+            });
         } else {
-            $recent_catalogue = DB::table('catalogue_pdf as p')
-                ->select('p.*', DB::raw('DATE_FORMAT(p.updated_at, "%d/%m/%Y") as pdf_date'), DB::raw('GROUP_CONCAT(s.emails SEPARATOR ",") as emails'), DB::raw('GROUP_CONCAT(DATE_FORMAT(s.created_at, "%d/%m/%Y") SEPARATOR ",") as sent_date'))
-                ->leftJoin("catalogue_sent AS s", "p.id", "=", "s.pdf_id")
-                ->groupBy('p.id')
-                ->orderBy('p.updated_at','desc')
-                ->get();
+            $result = array();
         }
-        $result = $recent_catalogue->map(function ($row) {
-            if ($row->sent_date) $row->sent_date = explode(',', $row->sent_date);
-            if ($row->emails) $row->emails = explode(',', $row->emails);
-            if ($row->suppliers) $row->suppliers = explode(',', unserialize($row->suppliers));
-            if ($row->categories) $row->categories = explode(',', unserialize($row->categories));
-            if ($row->display_options) $row->display_options = explode(',', $row->display_options);
-            if ($row->supplier_new) $row->supplier_new = explode(',', $row->supplier_new);
-            if ($row->category_new) $row->category_new = explode(',', $row->category_new);
-            if ($row->supplier_block) $row->supplier_block = json_decode($row->supplier_block);
-            if ($row->category_block) $row->category_block = json_decode($row->category_block);
-            if ($row->drag_supplier_ids) $row->drag_supplier_ids = explode(',', $row->drag_supplier_ids);
-            if ($row->drag_category_ids) $row->drag_category_ids = explode(',', $row->drag_category_ids);
-            return $row;
-        });
         return response()->json($result);
     }
 
@@ -89,6 +94,7 @@ class CatalogueController extends Controller
         $name = $params['name'];
         $cat = Catalogue::find($id);
         $cat->name = $name;
+        $cat->user_id = $params['user_id'];
         $cat->state = $params['state'];
         $newCat = $cat->replicate();
         $newId = $newCat->save();

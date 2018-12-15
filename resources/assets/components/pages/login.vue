@@ -92,26 +92,57 @@
                         .post("/api/login", {email, password})
                         .then(response => {
                             if (response.data && response.data.user) {
-                                app.$store.state.login_status = true;
                                 app.$store.state.user = {
+                                    id: response.data.user.id,
+                                    group_id: response.data.user.group_id,
                                     name: response.data.user.name,
                                     email: response.data.user.email,
                                     password: password,
                                     token: response.data.user.remember_token,
                                 }
                                 app.$router.push("/");
+                                app.initData();
                             }
                         });
+                }
+            },
+            initData() {
+                let app = this;
+                let group_id = this.$store.state.user.group_id;
+                if (group_id) {
+                    if (app.$store.state.suppliers.length <= 0) {
+                        axios
+                            .get("/api/getSupplier", {params: {group_id: group_id}})
+                            .then(response => {
+                                if (response && response.data) {
+                                    app.$store.state.suppliers = response.data;
+                                    for (let i=0;i<app.$store.state.suppliers.length;i++) {
+                                        app.$store.state.supplierIds.push(app.$store.state.suppliers[i]['id']);
+                                    }
+                                }
+                            });
+                    }
+                    if (app.$store.state.categories.length <= 0) {
+                        axios
+                            .get("/api/getCategory", {params: {group_id: group_id}})
+                            .then(response => {
+                                if (response && response.data) {
+                                    app.$store.state.categories = response.data;
+                                    for (let i=0;i<app.$store.state.categories.length;i++) {
+                                        app.$store.state.categoryIds.push(app.$store.state.categories[i]['id']);
+                                    }
+                                }
+                            });
+                    }
                 }
             }
         },
         mounted: function () {
-
+            this.$store.dispatch('initProductData');
         },
         destroyed: function () {
 
         },
-
     }
 </script>
 <style scoped>

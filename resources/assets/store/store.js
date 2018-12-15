@@ -16,7 +16,6 @@ const store = new Vuex.Store({
         page_title: null,
         page_text: null,
         page_subText: null,
-        login_status: false,
         new_state: true,
         catalogue: {
             id: null,
@@ -47,10 +46,12 @@ const store = new Vuex.Store({
         drag_category_ids: [],
         supplierBrand: '',
         user: {
+            id: null,
+            group_id: null,
             name: "Addision",
             email: "add@gmail.com",
             password: "123456",
-            token: null
+            token: null,
         }
     },
     mutations,
@@ -84,6 +85,12 @@ const store = new Vuex.Store({
             for (let j=0;j<this.state.categories.length;j++) {
                 this.state.categories[j]['isChecked'] = false;
             }
+        },
+        initProductData() {
+            this.state.productData
+                = this.state.suppliers
+                = this.state.categories
+                = [];
         }
     }
 })
