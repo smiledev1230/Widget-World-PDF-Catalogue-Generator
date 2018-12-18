@@ -7,6 +7,7 @@ Route::get('getNotification', 'NotificationsController@getNotification');
 Route::get('getSupplier', 'SupplierController@getSupplier');
 Route::get('getCategory', 'CategoryController@getCategory');
 Route::get('getRecentCatalogue', 'CatalogueController@getRecentCatalogue');
+Route::get('getDownloadPDF', 'CatalogueController@getDownloadPDF');
 
 Route::post('update', 'UserController@update');
 Route::post('register', 'UserController@register');

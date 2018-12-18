@@ -120,10 +120,9 @@
         </b-modal>
         <b-modal id="notifyModal" title="" ref="notifyModal" v-model="notifyModal" class="catalogue-modal">
             <div class="merchantModalContent text-center mt-3">
-                <div v-if="selectedNotify.type=='text'" class="text-notify">
-                    <img src="~img/notify-bell.png"/>
+                <div v-if="selectedNotify.type=='video'" class="video-notify text-center">
+                    <youtube :video-id="selectedNotify.content"></youtube>
                     <p class="notify-title">{{selectedNotify.title}}</p>
-                    <p>{{selectedNotify.content}}</p>
                 </div>
                 <div v-else-if="selectedNotify.type=='text_image'" class="row image-notify">
                     <div class="col-6 image">
@@ -135,12 +134,8 @@
                         <p>{{selectedNotify.content}}</p>
                     </div>
                 </div>
-                <div v-else class="video-notify text-center">
-                    <vue-plyr :emit="['controls', 'volume']">
-                        <video :src="selectedNotify.images">
-                            <source :src="selectedNotify.images" type="video/mp4" size="720">
-                        </video>
-                    </vue-plyr>
+                <div v-else class="text-notify">
+                    <img src="~img/notify-bell.png"/>
                     <p class="notify-title">{{selectedNotify.title}}</p>
                     <p>{{selectedNotify.content}}</p>
                 </div>
@@ -154,10 +149,11 @@
 <script>
     import Vue from 'vue';
     import VueForm from "vue-form";
-    import VuePlyr from 'vue-plyr';
+    import VueYouTubeEmbed from 'vue-youtube-embed';
     import options from "src/validations/validations.js";
+
     Vue.use(VueForm, options);
-    Vue.use(VuePlyr);
+    Vue.use(VueYouTubeEmbed);
 
     export default {
         name: "vueadmin_header",
@@ -169,7 +165,8 @@
                 accountEdit: false,
                 selectedNotify: {},
                 userModel: this.$store.state.user,
-                notifications: []
+                notifications: [],
+                videoUrl: '',
             }
         },
         mounted: function () {
@@ -358,5 +355,9 @@
             color: $white_color;
             cursor: pointer;
         }
+    }
+    iframe {
+        width: 100%;
+        max-height: 351px;
     }
 </style>

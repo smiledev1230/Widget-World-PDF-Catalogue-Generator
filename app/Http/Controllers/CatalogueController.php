@@ -160,4 +160,10 @@ class CatalogueController extends Controller
             }
         }
     }
+
+    public function getDownloadPDF(Request $request)
+    {
+        $pdfData = Storage::disk('s3')->get($request->path);
+        return $pdfData;
+    }
 }

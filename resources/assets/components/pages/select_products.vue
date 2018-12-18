@@ -158,11 +158,16 @@
                     for (let k=0; k<checkedNode.length;k++) {
                         idx = this.categoryIds.indexOf(checkedNode[k]);
                         if (categoryList[idx] && categoryList[idx]['pid']) {
-                            pid = categoryList[idx]['pid'];
-                            selectedIds.push(pid);
-                            ppid = this.categoryIds.indexOf(pid);
-                            if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
                             this.$store.state.categories[idx]['isChecked'] = true;
+                            for (let p=0; p<10; p++) {
+                                pid = idx >0 ? categoryList[idx]['pid'] : '';
+                                if (pid) {
+                                    selectedIds.push(pid);
+                                    idx = this.categoryIds.indexOf(pid);
+                                } else {
+                                    break;
+                                }
+                            }
                         }
                     }
                     this.$store.state.categories_ids = selectedIds.filter((v, i, a) => a.indexOf(v) === i);
@@ -204,11 +209,16 @@
                     for (let k=0; k<checkedNode.length;k++) {
                         idx = this.supplierIds.indexOf(checkedNode[k]);
                         if (supplierList[idx] && supplierList[idx]['pid']) {
-                            pid = supplierList[idx]['pid'];
-                            selectedIds.push(pid);
-                            ppid = this.supplierIds.indexOf(pid);
-                            if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
                             this.$store.state.suppliers[idx]['isChecked'] = true;
+                            for (let p=0; p<10; p++) {
+                                pid = idx >0 ? supplierList[idx]['pid'] : '';
+                                if (pid) {
+                                    selectedIds.push(pid);
+                                    idx = this.supplierIds.indexOf(pid);
+                                } else {
+                                    break;
+                                }
+                            }
                         }
                     }
                     selectedIds = selectedIds.concat(pchilds);

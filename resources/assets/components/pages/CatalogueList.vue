@@ -64,6 +64,7 @@
         <b-modal id="pdfModal" title="old_catalogue.name" ref="pdfModal" v-model="pdfModal" class="catalogue-modal" :class="{page2:old_catalogue.page_columns == 2}">
             <div slot="modal-title">{{old_catalogue.name}}</div>
             <div class="merchantModalContent">
+                <button type="button" aria-label="Download" class="pdf-download" @click="downloadPDF"><i class="fa fa-download" aria-hidden="true"></i></button>
                 <product-preview :catalogue="old_catalogue" :productData="productData" :totalPages="totalPages"/>
             </div>
         </b-modal>
@@ -174,6 +175,24 @@
                     });
                 }
             },
+            downloadPDF() {
+                console.log("downloadPDF: ", this.old_catalogue);
+                if (this.old_catalogue.pdf_path) {
+                    let app = this;
+                    axios({
+                        url: '/api/getDownloadPDF?path='+app.old_catalogue.pdf_path,
+                        method: 'GET',
+                        responseType: 'blob', // important
+                    }).then((response) => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', app.old_catalogue.name+'.pdf');
+                        document.body.appendChild(link);
+                        link.click();
+                    });
+                }
+            },
             continueCatalogue(index) {
                 let catalogue = this.catalogues[index];
                 if (catalogue.id) this.$store.state.catalogue.id = catalogue.id;
@@ -224,10 +243,15 @@
                 for (let k=0; k<checkedNode.length;k++) {
                     idx = supplierIds.indexOf(checkedNode[k]);
                     if (supplierList[idx] && supplierList[idx]['pid']) {
-                        pid = supplierList[idx]['pid'];
-                        selectedIds.push(pid);
-                        ppid = supplierIds.indexOf(pid);
-                        if (supplierList[ppid]['pid']) selectedIds.push(supplierList[ppid]['pid']);
+                        for (let p=0; p<10; p++) {
+                            pid = idx >0 ? supplierList[idx]['pid'] : '';
+                            if (pid) {
+                                selectedIds.push(pid);
+                                idx = supplierIds.indexOf(pid);
+                            } else {
+                                break;
+                            }
+                        }
                     }
                 }
                 selectedIds = selectedIds.concat(pchilds);
@@ -249,10 +273,15 @@
                 for (let k=0; k<checkedNode.length;k++) {
                     idx = categoryIds.indexOf(checkedNode[k]);
                     if (categoryList[idx] && categoryList[idx]['pid']) {
-                        pid = categoryList[idx]['pid'];
-                        selectedIds.push(pid);
-                        ppid = categoryIds.indexOf(pid);
-                        if (categoryList[ppid]['pid']) selectedIds.push(categoryList[ppid]['pid']);
+                        for (let p=0; p<10; p++) {
+                            pid = idx >0 ? categoryList[idx]['pid'] : '';
+                            if (pid) {
+                                selectedIds.push(pid);
+                                idx = categoryIds.indexOf(pid);
+                            } else {
+                                break;
+                            }
+                        }
                     }
                 }
                 return selectedIds.filter((v, i, a) => a.indexOf(v) === i);
@@ -395,6 +424,21 @@
             }
             .modal-body {
                 padding-bottom: 0;
+                .pdf-download {
+                    position: absolute;
+                    right: 50px;
+                    top: -26px;
+                    font-size: 18px;
+                    color: #7e7e7e;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                }
+                .pdf-download:hover {
+                    color: #000;
+                    text-decoration: none;
+                    opacity: .75;
+                }
             }
             .product-list {
                 min-height: 85vh !important;
