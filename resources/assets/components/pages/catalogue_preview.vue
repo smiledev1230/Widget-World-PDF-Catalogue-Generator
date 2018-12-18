@@ -12,7 +12,7 @@
                 <div class="row d-block">
                     <router-link tag="a" to="/build_catalogue" exact class="btn btn-secondary text-white">BACK</router-link>
                     <a class="btn greenBgColor pull-right text-white"  @click="openSendModal()">SEND AS PDF</a>
-                    <a class="btn btn-secondary pull-right text-white mr-3" @click="saveCatalogue">SAVE FOR LATER</a>
+                    <a class="btn blueBgColor pull-right text-white mr-3" @click="saveCatalogue">SAVE FOR LATER</a>
                 </div>
             </div>
             <catalogue-send :catalogue="old_catalogue" :catalogueSend.sync="catalogueSend" :limited="-1"/>

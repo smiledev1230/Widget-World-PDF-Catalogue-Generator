@@ -24,10 +24,22 @@
 .btn.greenBgColor {
   border-color: #7fbd2e !important;
 }
-
 .btn.greenBgColor:active {
   border-color: #7fbd2e !important;
   box-shadow: 0 0 0 0.1rem rgb(139, 197, 63) !important;
+}
+.btn.greenBgColor:hover {
+  background: #6b9830 !important;
+  border-color: #629224 !important;
+}
+
+.btn.blueBgColor {
+  background-color: #0071bb;
+  border-color: #00568e;
+}
+.btn.blueBgColor:hover {
+  background-color: #024d7d;
+  border-color: #013354;
 }
 
 .header {

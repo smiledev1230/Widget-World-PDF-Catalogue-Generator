@@ -119,9 +119,9 @@ $product_path = public_path().'/assets/img/products/';
     }
     .front-page .logo-image {
         position: absolute;
-        bottom: 250px;
-        width: 180px;
-        margin-left: 37.5%;
+        bottom: 280px;
+        width: 240px;
+        margin-left: 240px;
     }
     .front-footer {
         position: absolute;

@@ -185,8 +185,9 @@
                             font-size: 16px;
                         }
                         .upload-image {
-                            height: 65px;
+                            height: 85px;
                             margin-top: -80px;
+                            max-height: 6vw;
                         }
                     }
                 }
