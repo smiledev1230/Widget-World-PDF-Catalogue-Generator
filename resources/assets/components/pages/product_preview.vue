@@ -235,14 +235,17 @@
                 .product-image {
                     position: relative;
                     height: calc(100% - 10px);
-                    min-height: 220px;
+                    min-height: 232px;
                     margin: 5px;
                     border: 1px solid $border_color;
                     overflow: hidden;
                     z-index: 999;
+                    text-align: center;
                     img {
-                        width: 100%;
+                        max-width: 100%;
                         max-height: 58%;
+                        width: auto;
+                        margin: 10px auto 0;
                     }
                     .ribbon {
                         text-align: center;
@@ -271,11 +274,12 @@
                     .product-box {
                         position: absolute;
                         width: 100%;
-                        bottom: 0px;
+                        bottom: 0;
+                        text-align: left;
                         .product-title {
                             min-height: 36px;
                             text-align: center;
-                            padding: 0px 5px;
+                            padding: 0 5px;
                             font-size: 13px;
                             font-weight: bold;
                             position: absolute;
@@ -351,6 +355,9 @@
         min-height: 1065px !important;
         .product-body {
             min-height: 1020px;
+            .page-body .product-image {
+                min-height: 310px;
+            }
             .product-box {
                 .product-detail {
                     line-height: 24px;

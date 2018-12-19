@@ -227,12 +227,14 @@
                     let dragId, dragRow, dropId;
                     for (let k=0; k<drag_ids.length;k+=2) {
                         dragId = productIds.indexOf(drag_ids[k]);
-                        dragRow = productData[dragId];
-                        productData.splice(dragId, 1);
-                        productIds.splice(dragId, 1);
                         dropId = productIds.indexOf(drag_ids[k+1]);
-                        productData.splice(dropId, 0, dragRow);
-                        productIds.splice(dropId, 0, drag_ids[k]);
+                        if (dragId >= 0 && dropId >= 0) {
+                            dragRow = productData[dragId];
+                            productData.splice(dragId, 1);
+                            productIds.splice(dragId, 1);
+                            productData.splice(dropId, 0, dragRow);
+                            productIds.splice(dropId, 0, drag_ids[k]);
+                        }
                     }
                 }
                 return productData;
@@ -303,6 +305,7 @@
             },
             setProduct(e) {
                 let productList = '';
+                this.$store.state.catalogue.display_type = e;
                 if (e) {
                     productList = this.getSupplierList();
                     this.logos_options[1]['disabled'] = false;

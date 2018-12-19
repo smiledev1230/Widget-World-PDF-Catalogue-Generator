@@ -259,8 +259,8 @@
                     name: this.blockEditor,
                     type: 'block'
                 }
-                this.$store.state.productData.splice(this.editorIndex, 0, newBlock);
                 let product = this.$store.state.productData[this.editorIndex];
+                this.$store.state.productData.splice(this.editorIndex, 0, newBlock);
                 if (this.$store.state.catalogue.display_type) {
                     this.$store.state.supplier_block.push({
                         id: product['id'],
@@ -352,11 +352,12 @@
                     border: 1px solid $border_color;
                     overflow: hidden;
                     z-index: 999;
-                    display: flex;
-                    flex-direction: column;
+                    text-align: center;
                     img {
                         max-width: 100%;
-                        max-height: 58%;
+                        max-height: 52%;
+                        width: auto;
+                        margin: 5px auto 0;
                     }
                     .ribbon {
                         text-align: center;
@@ -392,16 +393,23 @@
                     .product-box {
                         position: absolute;
                         width: 100%;
-                        bottom: 0px;
+                        bottom: 0;
+                        text-align: left;
                         .product-title {
                             min-height: 36px;
                             text-align: center;
-                            padding: 0px 5px;
+                            padding: 0 5px;
                             font-size: 12px;
                             font-weight: bold;
                             position: absolute;
                             bottom: 35px;
                             width: 100%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            line-height: 14px;
+                            -webkit-line-clamp: 3;
+                            -webkit-box-orient: vertical;
                         }
                         .productFooter {
                             margin-bottom: 10px;
@@ -473,9 +481,15 @@
     }
 
     .twoPages {
-        min-height: 825px;
+        min-height: 840px;
         .product-body {
             min-height: 780px;
+            .page-body .product-image {
+                min-height: 235px;
+                img {
+                    max-height: 56%;
+                }
+            }
         }
     }
 </style>

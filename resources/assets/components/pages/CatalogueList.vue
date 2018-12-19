@@ -64,7 +64,7 @@
         <b-modal id="pdfModal" title="old_catalogue.name" ref="pdfModal" v-model="pdfModal" class="catalogue-modal" :class="{page2:old_catalogue.page_columns == 2}">
             <div slot="modal-title">{{old_catalogue.name}}</div>
             <div class="merchantModalContent">
-                <button type="button" aria-label="Download" class="pdf-download" @click="downloadPDF"><i class="fa fa-download" aria-hidden="true"></i></button>
+                <b-btn type="button" aria-label="Download" class="pdf-download" @click="downloadPDF"><i class="fa fa-download" aria-hidden="true"></i></b-btn>
                 <product-preview :catalogue="old_catalogue" :productData="productData" :totalPages="totalPages"/>
             </div>
         </b-modal>
@@ -289,6 +289,7 @@
             getProductData(allProduct, checkedIds) {
                 this.productData = [];
                 let productIds = [];
+                let product_block = [];
                 for (let i=0;i<allProduct.length;i++) {
                     if (checkedIds.indexOf(allProduct[i]['id']) >= 0 && !allProduct[i]['hasChild']) {
                         if (this.old_catalogue.product_new && this.old_catalogue.product_new.indexOf(allProduct[i]['id'].toString())>=0) {
@@ -298,16 +299,21 @@
                         productIds.push(allProduct[i]['id']);
                     }
                 }
-                if (this.old_catalogue.blocks) {
+                if (this.old_catalogue.display_type && this.old_catalogue.supplier_block) {
+                    product_block = this.old_catalogue.supplier_block;
+                } else if (!this.old_catalogue.display_type && this.old_catalogue.category_block) {
+                    product_block = this.old_catalogue.category_block;
+                }
+                if (product_block.length > 0) {
                     let k=0;
-                    for (let i=0;i<this.old_catalogue.blocks.length;i++) {
-                        if (productIds.indexOf(this.old_catalogue.blocks[i]['id'])>=0) {
+                    for (let i=0;i<product_block.length;i++) {
+                        if (productIds.indexOf(product_block[i]['id'])>=0) {
                             let newBlock = {
                                 id: new Date().getTime(),
-                                name: this.old_catalogue.blocks[i]['name'],
+                                name: product_block[i]['name'],
                                 type: 'block'
                             }
-                            this.productData.splice(productIds.indexOf(this.old_catalogue.blocks[i]['id'])+k, 0, newBlock);
+                            this.productData.splice(productIds.indexOf(product_block[i]['id'])+k, 0, newBlock);
                             k++;
                         }
                     }
@@ -427,7 +433,7 @@
                 .pdf-download {
                     position: absolute;
                     right: 50px;
-                    top: -26px;
+                    top: -30px;
                     font-size: 18px;
                     color: #7e7e7e;
                     background: transparent;
@@ -441,9 +447,9 @@
                 }
             }
             .product-list {
-                min-height: 85vh !important;
+                min-height: 85vh;
                 .product-body {
-                    min-height: 80vh !important;
+                    min-height: 80vh;
                 }
             }
         }

@@ -4,6 +4,9 @@
             <vue-simple-spinner size="medium" />
         </div>
         <div class="catalogue-content preview-content">
+            <div class="download-pdf">
+                <b-btn type="button" aria-label="Download" class="btn blueBgColor pull-right text-white" @click="downloadPDF"><i class="fa fa-download" aria-hidden="true"></i>DOWNLOAD PDF</b-btn>
+            </div>
             <div class="content-body">
                 <product-preview :catalogue="$store.state.catalogue" :productData.sync="$store.state.productData" :totalPages="totalPages"/>
             </div>
@@ -143,12 +146,14 @@
                     let dragId, dragRow, dropId;
                     for (let k=0; k<drag_ids.length;k+=2) {
                         dragId = productIds.indexOf(drag_ids[k]);
-                        dragRow = productData[dragId];
-                        productData.splice(dragId, 1);
-                        productIds.splice(dragId, 1);
                         dropId = productIds.indexOf(drag_ids[k+1]);
-                        productData.splice(dropId, 0, dragRow);
-                        productIds.splice(dropId, 0, drag_ids[k]);
+                        if (dragId >= 0 && dropId >= 0) {
+                            dragRow = productData[dragId];
+                            productData.splice(dragId, 1);
+                            productIds.splice(dragId, 1);
+                            productData.splice(dropId, 0, dragRow);
+                            productIds.splice(dropId, 0, drag_ids[k]);
+                        }
                     }
                 }
                 return productData;
@@ -227,6 +232,40 @@
                 }).catch(function(){
                     console.log('FAILURE!!');
                 });
+            },
+            downloadPDF() {
+                console.log("downloadPDF: ");
+                let formData = new FormData();
+                let storeData = this.$store.state;
+                formData.append('name', storeData.catalogue.name);
+                formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                formData.append('productData', JSON.stringify(storeData.productData));
+                formData.append('page_columns', storeData.catalogue.page_columns);
+                formData.append('display_options', storeData.catalogue.display_options);
+                formData.append('barcode_options', storeData.catalogue.barcode_options);
+                let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
+                formData.append('pages', totalPages);
+                formData.append('download_pdf', '1');
+
+                axios.post( '/api/savePDF',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        responseType: 'blob'
+                    }
+                ).then(response => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', storeData.catalogue.name+'.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                }).catch(e=>{
+
+                });
             }
         }
     }
@@ -250,6 +289,14 @@
                 .product-body {
                     min-height: calc(45vw - 50px);
                 }
+            }
+        }
+        .download-pdf {
+            position: absolute;
+            top: -45px;
+            right: 0px;
+            .fa-download {
+                margin-right: 5px;
             }
         }
     }

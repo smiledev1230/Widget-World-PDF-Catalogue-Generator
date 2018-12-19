@@ -33,7 +33,7 @@ $product_path = public_path().'/assets/img/products/';
                         <td class="product <?php if (!$logoState) echo 'product-border'; ?>">
                             @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'block')
                                 <div class="new-block">
-                                    {{ $productData[$idx]->name }}
+                                    <?php echo $productData[$idx]->name;?>
                                 </div>
                             @elseif ($logoState)
                                 <div class="brand-image">
@@ -216,6 +216,12 @@ $product_path = public_path().'/assets/img/products/';
         position: absolute;
         bottom: 20px;
         right: 20px;
+    }
+    .new-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 </style>
 </body>
