@@ -24,7 +24,7 @@ $product_path = public_path().'/assets/img/products/';
         @for ($j = 0; $j < 3; $j++)
             <tr>
                 @for ($i = 0; $i < $page_columns; $i++)
-                    <?php $idx = $p*3*$page_columns+$j*3+$i; ?>
+                    <?php $idx = $p*3*$page_columns+$j*$page_columns+$i; ?>
                     @if ($idx < count($productData) && $productData[$idx])
                         <?php
                             $logoState = array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo';

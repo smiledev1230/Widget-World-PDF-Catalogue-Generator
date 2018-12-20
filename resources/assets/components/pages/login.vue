@@ -30,7 +30,7 @@
                                     <label for="password"> Password</label>
                                     <input v-model="model.password" name="password" id="password" type="password"
                                            required placeholder="Password" class="form-control" minlength="4"
-                                           maxlength="10"/>
+                                           maxlength="50"/>
                                     <field-messages name="password" show="$invalid && $submitted" class="text-danger">
                                         <div slot="required">Password is required</div>
                                         <div slot="minlength">Password should be at least 4 characters long</div>

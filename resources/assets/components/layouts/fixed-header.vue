@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <validate tag="div">
                                 <label for="password">Password:</label>
-                                <input :class="{noEdit: !accountEdit}" v-model="userModel.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4" maxlength="10" :readonly="accountEdit ? false : true" />
+                                <input :class="{noEdit: !accountEdit}" v-model="userModel.password" name="password" type="password" required placeholder="Password" class="form-control" minlength="4" maxlength="50" :readonly="accountEdit ? false : true" />
                                 <field-messages name="password" show="$invalid" class="text-danger">
                                     <div slot="required">Password is required</div>
                                     <div slot="minlength">Password should be atleast 4 characters long</div>
