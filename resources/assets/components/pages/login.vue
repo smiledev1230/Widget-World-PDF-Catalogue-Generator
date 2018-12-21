@@ -89,7 +89,7 @@
                     let email = app.model.email;
                     let password = app.model.password;
                     axios
-                        .post("/api/login", {email, password})
+                        .post("/api/login", {email, password, access_to_widget: 1})
                         .then(response => {
                             if (response.data && response.data.user) {
                                 app.$store.state.user = {

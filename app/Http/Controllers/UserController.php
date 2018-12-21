@@ -13,8 +13,7 @@ class UserController extends Controller
     {
         $status = 401;
         $response = ['error' => 'Unauthorised'];
-
-        if (Auth::attempt($request->only(['email', 'password']))) {
+        if (Auth::attempt($request->only(['email', 'password', 'access_to_widget']))) {
             $status = 200;
             $response = [
                 'user' => Auth::user(),

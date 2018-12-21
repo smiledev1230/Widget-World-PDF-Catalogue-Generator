@@ -48,8 +48,8 @@
                         <b-dropdown class="notifications-menu bell_bg" right link>
                         <span slot="text">
                             <img src="~img/bell-icon.png" class="noti-icon" alt="Bell Icon">
-                            <div class="notifications_badge_top" v-if="notifications && notifications.length > 0">
-                                <span class="badge greenBgColor">{{notifications.length}}
+                            <div class="notifications_badge_top" v-if="notifyNumber > 0">
+                                <span class="badge greenBgColor">{{notifyNumber}}
                                 </span>
                             </div>
                         </span>
@@ -166,6 +166,7 @@
                 selectedNotify: {},
                 userModel: this.$store.state.user,
                 notifications: [],
+                notifyNumber: 0,
                 videoUrl: '',
             }
         },
@@ -175,6 +176,10 @@
                 axios.get('/api/getNotification', {params: {user_id: app.$store.state.user.id}}).then(response => {
                     if (response && response.data) {
                         app.notifications = response.data;
+                        app.notifyNumber = 0;
+                        for (let i=0;i<app.notifications.length;i++) {
+                            if (!app.notifications[i]['state']) app.notifyNumber ++;
+                        }
                     }
                 });
             }
@@ -213,6 +218,7 @@
                 }
                 axios.post("/api/updateNotificationView", params).then(response => {
                     console.log("notification update: ", response.data.message);
+                    this.notifyNumber --;
                 });
             },
             removeNotify(index) {
@@ -222,6 +228,7 @@
                 }
                 axios.post("/api/updateNotificationDelete", params).then(response => {
                     console.log("notification delete: ", response.data.message);
+                    this.notifyNumber --;
                 });
                 this.notifications[index]['state']= -1;
                 this.notifications.splice(index, 1);

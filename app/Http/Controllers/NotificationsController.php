@@ -13,9 +13,10 @@ class NotificationsController extends Controller
     public function getNotification(Request $request)
     {
         $user_id = $request->user_id;
-        $deleted_ids = NotificationUserDeleted::select('notification_id')
+        $pms_deleted_ids = NotificationUserDeleted::select('notification_id')->where('ww', '0');
+        $deleted_ids = NotificationUserDeleted::where('ww', '1')
             ->where('user_id', $user_id)
-            ->where('ww', '1')
+            ->union($pms_deleted_ids)
             ->pluck('notification_id')
             ->toArray();
 
@@ -25,6 +26,7 @@ class NotificationsController extends Controller
                 $join->on('n.id', '=', 'v.notification_id')
                     ->where('v.user_id', '=', $user_id);
             })
+            ->where('visible_to_widget', '1')
             ->whereNotIn('n.id', $deleted_ids)
             ->orderBy('n.updated_at', 'desc')
             ->get();
