@@ -1,8 +1,6 @@
 <template>
     <div>
-        <div v-if="$store.state.preloader" class="loader-section">
-            <vue-simple-spinner size="medium" />
-        </div>
+        <spinner v-show="$store.state.preloader"></spinner>
         <div class="catalogue-content preview-content">
             <div class="download-pdf">
                 <b-btn type="button" aria-label="Download" class="btn blueBgColor pull-right text-white" @click="downloadPDF"><i class="fa fa-download" aria-hidden="true"></i>DOWNLOAD PDF</b-btn>
@@ -29,7 +27,7 @@
     import options from "src/validations/validations.js";
     Vue.use(VueForm, options);
 
-    import Spinner from 'vue-simple-spinner'
+    import Spinner from "../layouts/spinner";
     import productPreview from "./product_preview";
     import catalogueSend from "./catalogue_send";
     import saveModal from "./save_modal";
@@ -41,7 +39,7 @@
             'product-preview': productPreview,
             'catalogue-send': catalogueSend,
             'save-modal': saveModal,
-            'vue-simple-spinner':Spinner,
+            'spinner':Spinner,
         },
         data() {
             if (this.$store.state.productData.length == 0) {
@@ -235,6 +233,7 @@
             },
             downloadPDF() {
                 console.log("downloadPDF: ");
+                this.$store.state.preloader = true;
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
@@ -263,8 +262,9 @@
                     link.setAttribute('download', storeData.catalogue.name+'.pdf');
                     document.body.appendChild(link);
                     link.click();
+                    this.$store.state.preloader = false;
                 }).catch(e=>{
-
+                    this.$store.state.preloader = false;
                 });
             }
         }

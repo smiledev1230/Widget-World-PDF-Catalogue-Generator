@@ -351,12 +351,12 @@
             color: $red_label_color;
         }
     }
-    .twoPages {
-        min-height: 1065px !important;
+    .page2 #pdfModal .modal-dialog .twoPages {
+        min-height: 830px !important;
         .product-body {
             min-height: 1020px;
             .page-body .product-image {
-                min-height: 310px;
+                min-height: 232px;
             }
             .product-box {
                 .product-detail {
@@ -367,5 +367,8 @@
                 }
             }
         }
+    }
+    .twoPages {
+        min-height: 865px !important;
     }
 </style>

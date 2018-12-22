@@ -11,7 +11,7 @@ function init() {
 const store = new Vuex.Store({
     state: {
         left_open: true,
-        preloader: true,
+        preloader: false,
         site_name: "Widget World PDF Catalogue Generator",
         page_title: null,
         page_text: null,

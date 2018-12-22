@@ -1,5 +1,6 @@
 <template>
     <div>
+        <spinner v-show="$store.state.preloader"></spinner>
         <b-modal id="sendModal" title="Send Catalogue as PDF" ref="sendModal" v-model="sendModal"
                  class="catalogue-modal">
             <p>Send your finished catalogue to any number of email addresses as a PDF.</p>
@@ -40,6 +41,7 @@
                 <b-btn class="float-right greenBgColor pl-3 pr-3" @click="sendPDF()">SEND</b-btn>
             </div>
         </b-modal>
+        <sent-modal :showStatus.sync="showStatus" />
     </div>
 </template>
 <script>
@@ -48,15 +50,21 @@
     import options from "src/validations/validations.js";
     Vue.use(VueForm, options);
 
+    import Spinner from "../layouts/spinner";
+    import sentModal from "./sent_modal";
     import { coverImages } from '../../assets/js/global_variable';
 
     export default {
         name: "catalogue_preview",
-        components: {},
+        components: {
+            'spinner':Spinner,
+            'sent-modal': sentModal
+        },
         props: ['catalogue', 'catalogueSend', 'limited', 'catalogues'],
         data() {
             return {
                 sendModal: false,
+                showStatus: false,
                 imageList : coverImages,
                 formState: {},
                 sendForm: {
@@ -67,7 +75,7 @@
             }
         },
         mounted: function () {
-
+            this.$store.state.preloader = false;
         },
         watch: {
             catalogueSend: function(){
@@ -80,6 +88,7 @@
         methods: {
             sendPDF() {
                 this.sendModal=false;
+
                 if (this.sendForm.subject && this.sendForm.emails) {
                     let sendFormData = new FormData();
                     sendFormData.append('name', this.catalogue.name);
@@ -123,6 +132,7 @@
                         formData.append('productData', JSON.stringify(storeData.productData));
                         let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
                         formData.append('pages', totalPages);
+                        app.$store.state.preloader = true;
 
                         axios.post( '/api/savePDF',
                             formData,
@@ -133,6 +143,7 @@
                             }
                         ).then(response => {
                             console.log("response", response);
+                            app.$store.state.preloader = false;
                             if (response.data && response.data.id) {
                                 app.$store.state.catalogue.id = response.data.id;
                                 sendFormData.append('id',  response.data.id);
@@ -141,6 +152,7 @@
                             }
                         }).catch(function(){
                             console.log('FAILURE!!');
+                            app.$store.state.preloader = false;
                         });
                     }
                     console.log("savePDF");
@@ -156,6 +168,7 @@
             },
             sendData(formData) {
                 let app = this;
+                this.$store.state.preloader = true;
                 axios.post( '/api/sendPDF',
                     formData,
                     {
@@ -164,12 +177,15 @@
                         }
                     }
                 ).then(response => {
-                    console.log('success!!', response);
+                    console.log('success!!', response.data);
+                    this.$store.state.preloader = false;
+                    app.showStatus = true;
                     if (response.data != 'error' && app.limited != -1) {
                         app.$emit('update:catalogues', response.data);
                     }
                 }).catch(function(){
                     console.log('FAILURE!!');
+                    this.$store.state.preloader = false;
                 });
             }
         }

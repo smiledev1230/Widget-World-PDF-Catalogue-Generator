@@ -110,12 +110,12 @@
                             </validate>
                         </div>
                     </div>
-                    <div class="pencil-btn" v-model="accountEdit" @click="updateEditState"><i class="fa fa-pencil"></i></div>
+                    <!--<div class="pencil-btn" v-model="accountEdit" @click="updateEditState"><i class="fa fa-pencil"></i></div>-->
                 </vue-form>
             </div>
             <div slot="modal-footer" class="w-100">
                 <b-btn class="pl-3 pr-3" @click="accountModal=false">CANCEL</b-btn>
-                <b-btn class="float-right greenBgColor pl-3 pr-3" @click="updateAccount">UPDATE</b-btn>
+                <b-btn class="float-right greenBgColor pl-3 pr-3" @click="updateAccount" disabled>UPDATE</b-btn>
             </div>
         </b-modal>
         <b-modal id="notifyModal" title="" ref="notifyModal" v-model="notifyModal" class="catalogue-modal">
