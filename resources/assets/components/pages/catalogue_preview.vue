@@ -58,7 +58,7 @@
             }
         },
         mounted: function () {
-            if (!this.$store.state.user.id) this.$router.push("/login");
+            if (this.$store.state.suppliers.length == 0 && this.$store.state.categories.length == 0) this.$router.push("/");
             this.$store.state.page_text = "Preview how your catalogue is going to look and send it as a PDF.";
             this.$store.state.page_subText = "You can always save it for later and come back to it when you are ready to send.";
             this.$store.state.preloader = false;

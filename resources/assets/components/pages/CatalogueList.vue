@@ -105,14 +105,14 @@
             }
         },
         created() {
+
+        },
+        mounted: function () {
             if (this.$store.state.user.id) {
                 axios.get('/api/getRecentCatalogue', {params: {user_id: this.$store.state.user.id, limited: this.limited}}).then(response => {
                     this.catalogues = response.data
                 });
             }
-        },
-        mounted: function () {
-
         },
         methods: {
             openPDFModal(cat) {

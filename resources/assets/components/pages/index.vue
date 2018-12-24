@@ -18,11 +18,54 @@
         data() {
             return {}
         },
+        created(){
+            this.initData();
+            // this.getUser();
+        },
         mounted: function () {
             this.$store.state.page_text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.";
-            if (!this.$store.state.user.id) this.$router.push("/login");
             console.log("init Catalogue");
             this.$store.dispatch('initCatalogue');
+            if (this.$store.state.suppliers.length == 0 && this.$store.state.categories.length == 0) {
+                this.initData();
+            }
+        },
+        methods:{
+            initData() {
+                let app = this;
+                let group_id = this.$store.state.user.group_id;
+                if (group_id) {
+                    if (app.$store.state.suppliers.length <= 0) {
+                        axios
+                            .get("/api/getSupplier", {params: {group_id: group_id}})
+                            .then(response => {
+                                if (response && response.data) {
+                                    app.$store.state.suppliers = response.data;
+                                    for (let i=0;i<app.$store.state.suppliers.length;i++) {
+                                        app.$store.state.supplierIds.push(app.$store.state.suppliers[i]['id']);
+                                    }
+                                }
+                            });
+                    }
+                    if (app.$store.state.categories.length <= 0) {
+                        axios
+                            .get("/api/getCategory", {params: {group_id: group_id}})
+                            .then(response => {
+                                if (response && response.data) {
+                                    app.$store.state.categories = response.data;
+                                    for (let i=0;i<app.$store.state.categories.length;i++) {
+                                        app.$store.state.categoryIds.push(app.$store.state.categories[i]['id']);
+                                    }
+                                }
+                            });
+                    }
+                }
+            },
+            getUser(){
+                axios.get('/api/getUser').then(response => {
+
+                })
+            },
         },
     }
 </script>

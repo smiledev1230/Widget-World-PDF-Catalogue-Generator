@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 
 Route::post('login', 'UserController@login');
+Route::post('logout', 'UserController@logout');
+Route::get('getUser','UserController@getUser');
 Route::get('getNotification', 'NotificationsController@getNotification');
 Route::get('getSupplier', 'SupplierController@getSupplier');
 Route::get('getCategory', 'CategoryController@getCategory');
@@ -20,13 +22,5 @@ Route::post('sendPDF', 'CatalogueController@sendPDF');
 Route::post('updateNotificationView', 'NotificationsController@updateNotificationView');
 Route::post('updateNotificationDelete', 'NotificationsController@updateNotificationDelete');
 
-Route::get('/products/{product}', 'ProductController@show');
-
 Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('/users','UserController@index');
-    Route::get('users/{user}','UserController@show');
-    Route::patch('users/{user}','UserController@update');
-    Route::get('users/{user}/orders','UserController@showOrders');
-    Route::patch('products/{product}/units/add','ProductController@updateUnits');
-    Route::resource('/products', 'ProductController')->except(['index','show']);
 });

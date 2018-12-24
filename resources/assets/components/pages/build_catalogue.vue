@@ -137,7 +137,7 @@
             }
         },
         mounted: function () {
-            if (!this.$store.state.user.id) this.$router.push("/login");
+            if (this.$store.state.suppliers.length == 0 && this.$store.state.categories.length == 0) this.$router.push("/");
             this.$store.state.page_text = "Add your selected products and product ranges into your Catalogue.";
             this.$store.state.page_subText = "You can display them grouped in Suppliers or Categories and customise the order if required or display alphabetically as default.";
             if (this.$store.state.catalogue.page_columns == 2 && this.$store.state.catalogue.barcode_options) {

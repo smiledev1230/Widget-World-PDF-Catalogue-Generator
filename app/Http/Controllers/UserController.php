@@ -9,14 +9,22 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function getUser(Request $request)
+    {
+        return json_encode($request->user());
+    }
+
     public function login(Request $request)
     {
         $status = 401;
         $response = ['error' => 'Unauthorised'];
         if (Auth::attempt($request->only(['email', 'password', 'access_to_widget']))) {
             $status = 200;
+            $user = Auth::user();
+            $token = $user->createToken('Laravel Password Grant Client')->accessToken;
             $response = [
-                'user' => Auth::user(),
+                'user' => $user,
+                'token'=> $token
             ];
         }
 
@@ -42,5 +50,14 @@ class UserController extends Controller
         return response()->json([
             'user' => $user,
         ]);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return response()
+            ->json([
+                'logout' => true
+            ]);
     }
 }

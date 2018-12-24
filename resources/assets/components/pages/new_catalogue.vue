@@ -95,6 +95,7 @@
             }
         },
         mounted: function () {
+            if (this.$store.state.suppliers.length == 0 && this.$store.state.categories.length == 0) this.$router.push("/");
             this.$store.state.page_text = "Create a new catalogue to send electronically to your clients/customers or get it professionally printed and take it with you\n" + "to your next meeting to wow your clients and increase conversions.";
             if (this.$store.new_state) {
                 this.$store.dispatch('initCatalogue');

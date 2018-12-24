@@ -40,9 +40,9 @@
                                 </a>
                             </b-dropdown-item>
                             <b-dropdown-item exact class="dropdown_content">
-                                <router-link to="/login" exact class="drpodowtext">
+                                <a href="#" @click.prevent="logout" class="drpodowtext">
                                     <i class="fa fa-sign-out"></i> Logout
-                                </router-link>
+                                </a>
                             </b-dropdown-item>
                         </b-dropdown>
                         <b-dropdown class="notifications-menu bell_bg" right link>
@@ -164,25 +164,25 @@
                 notifyModal: false,
                 accountEdit: false,
                 selectedNotify: {},
-                userModel: this.$store.state.user,
+                userModel: '',
                 notifications: [],
                 notifyNumber: 0,
                 videoUrl: '',
             }
         },
         mounted: function () {
-            if (this.$store.state.user.id) {
-                let app = this;
-                axios.get('/api/getNotification', {params: {user_id: app.$store.state.user.id}}).then(response => {
-                    if (response && response.data) {
-                        app.notifications = response.data;
-                        app.notifyNumber = 0;
-                        for (let i=0;i<app.notifications.length;i++) {
-                            if (!app.notifications[i]['state']) app.notifyNumber ++;
-                        }
+            if (!localStorage.getItem('token')) this.$router.push("/login");
+            if (localStorage.getItem('user')) this.userModel = this.$store.state.user = JSON.parse(localStorage.getItem('user'));
+            let app = this;
+            axios.get('/api/getNotification', {params: {user_id: app.$store.state.user.id}}).then(response => {
+                if (response && response.data) {
+                    app.notifications = response.data;
+                    app.notifyNumber = 0;
+                    for (let i=0;i<app.notifications.length;i++) {
+                        if (!app.notifications[i]['state']) app.notifyNumber ++;
                     }
-                });
-            }
+                }
+            });
         },
         methods: {
             updateAccount() {
@@ -232,6 +232,15 @@
                 });
                 this.notifications[index]['state']= -1;
                 this.notifications.splice(index, 1);
+            },
+            logout() {
+                axios.post('/logout').then(response => {
+                    location.reload();
+                }).catch(error => {
+                    location.reload();
+                });
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
             }
         }
     }
