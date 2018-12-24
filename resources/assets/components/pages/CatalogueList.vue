@@ -118,14 +118,16 @@
             openPDFModal(cat) {
                 this.pdfModal = false;
                 this.old_catalogue = cat;
+                let stateData = this.$store.state;
                 if (cat.display_type) {
                     let suppliers_ids = this.getSupplierTreeIds(cat.suppliers);
-                    this.getProductData(this.$store.state.suppliers, suppliers_ids);
+                    this.getProductData(stateData.suppliers, suppliers_ids);
                 } else {
                     let categories_ids = this.getCategoryTreeIds(cat.categories);
-                    this.getProductData(this.$store.state.categories, categories_ids);
+                    this.getProductData(stateData.categories, categories_ids);
                 }
-                this.totalPages = Math.round(this.productData.length/3/cat.page_columns + 0.5);
+                let rows = cat.page_columns == 4 ? 4 : 3;
+                this.totalPages = Math.round(this.productData.length/rows/cat.page_columns + 0.5);
                 this.$refs.pdfModal.show();
             },
             openEditModal(cat) {

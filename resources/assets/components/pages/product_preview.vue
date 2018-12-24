@@ -137,27 +137,35 @@
             }
         },
         mounted: function () {
-            this.selectedPage = 1;
-            let cols = parseInt(this.catalogue.page_columns);
-            switch (cols) {
-                case 2:
-                    this.pageClass = 'twoPages';
-                    this.pageRows = 3;
-                    this.colClass = 'col-6';
-                    break;
-                case 3:
-                    this.pageClass = '';
-                    this.pageRows = 3;
-                    this.colClass = 'col-4';
-                    break;
-                case 4:
-                    this.pageClass = 'fourPages';
-                    this.pageRows = 4;
-                    this.colClass = 'col-3';
-                    break;
+            this.pageInit();
+        },
+        watch: {
+            totalPages() {
+                this.pageInit();
             }
         },
         methods: {
+            pageInit() {
+                this.selectedPage = 1;
+                let cols = parseInt(this.catalogue.page_columns);
+                switch (cols) {
+                    case 2:
+                        this.pageClass = 'twoPages';
+                        this.pageRows = 3;
+                        this.colClass = 'col-6';
+                        break;
+                    case 3:
+                        this.pageClass = '';
+                        this.pageRows = 3;
+                        this.colClass = 'col-4';
+                        break;
+                    case 4:
+                        this.pageClass = 'fourPages';
+                        this.pageRows = 4;
+                        this.colClass = 'col-3';
+                        break;
+                }
+            },
             prevPage() {
                 this.selectedPage -= 2;
                 if (this.selectedPage < 1) this.selectedPage = 1;
@@ -394,5 +402,8 @@
     }
     .fourPages {
         min-height: 1070px !important;
+        .product-body .page-body .product-image img {
+            max-height: 50%;
+        }
     }
 </style>

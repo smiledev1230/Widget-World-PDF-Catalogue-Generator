@@ -15,16 +15,24 @@
     </div>
 </div>
 <?php
-ini_set('max_execution_time', 300);
-$product_path = public_path().'/assets/img/products/';
+    ini_set('max_execution_time', 300);
+    $product_path = public_path().'/assets/img/products/';
+    $pageRows = $page_columns == 4 ? 4 : 3;
+    if ($page_columns == 4) {
+        $pageRows = 4;
+        $fourCols = 'cols-4';
+    } else {
+        $pageRows = 3;
+        $fourCols = '';
+    }
 ?>
 @for ($p = 0; $p < $pages; $p++)
-    <table class="page-content" width="100%">
+    <table class="page-content <?php echo $fourCols; ?>" width="100%">
         <tbody>
-        @for ($j = 0; $j < 3; $j++)
+        @for ($j = 0; $j < $pageRows; $j++)
             <tr>
                 @for ($i = 0; $i < $page_columns; $i++)
-                    <?php $idx = $p*3*$page_columns+$j*$page_columns+$i; ?>
+                    <?php $idx = $p*$pageRows*$page_columns+$j*$page_columns+$i; ?>
                     @if ($idx < count($productData) && $productData[$idx])
                         <?php
                             $logoState = array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'logo';
@@ -222,6 +230,16 @@ $product_path = public_path().'/assets/img/products/';
         align-items: center;
         justify-content: center;
         text-align: center;
+    }
+    .cols-4.page-content .product {
+        width: 150px;
+        height: 160px;
+    }
+    .cols-4 .product-body .product-image {
+        min-width: 100px;
+        min-height: 100px;
+        max-width: 120px;
+        max-height: 120px;
     }
 </style>
 </body>

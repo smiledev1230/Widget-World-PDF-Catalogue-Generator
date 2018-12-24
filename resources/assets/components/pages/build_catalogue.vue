@@ -91,7 +91,7 @@
             let categoryList = this.getCategoryList();
             let stateData = this.$store.state;
             this.$store.state.productData = stateData.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
-            let total_pages = Math.round(stateData.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            let total_pages = Math.round(stateData.productData.length/3/stateData.catalogue.page_columns + 0.5);
             if (stateData.catalogue.page_columns == 4) {
                 total_pages = Math.round(stateData.productData.length/16 + 0.5);
             }

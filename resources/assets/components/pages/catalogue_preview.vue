@@ -247,8 +247,11 @@
                 formData.append('page_columns', storeData.catalogue.page_columns);
                 formData.append('display_options', storeData.catalogue.display_options);
                 formData.append('barcode_options', storeData.catalogue.barcode_options);
-                let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
-                formData.append('pages', totalPages);
+                let total_pages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
+                if (storeData.catalogue.page_columns == 4) {
+                    total_pages = Math.round(storeData.productData.length/16 + 0.5);
+                }
+                formData.append('pages', total_pages);
                 formData.append('download_pdf', '1');
 
                 axios.post( '/api/savePDF',
