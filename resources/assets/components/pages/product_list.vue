@@ -1,13 +1,13 @@
 <template>
-    <div class="product-list" :class="{twoPages : $store.state.catalogue.page_columns == 2}">
+    <div class="product-list" :class="pageClass">
         <div class="row product-body">
             <div class="col-6 nopadding page-separator">
                 <div class="page-body">
-                    <div v-for="rowInd in 3" class="row" v-bind:key="rowInd">
+                    <div v-for="rowInd in pageRows" class="row" v-bind:key="rowInd">
                         <div class="nopadding"
                              v-for="colInd in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="colInd"
-                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
+                             :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
                                 <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus"
                                                                                                     aria-hidden="true"></i>
@@ -66,11 +66,11 @@
             </div>
             <div class="col-6 nopadding">
                 <div class="page-body">
-                    <div v-for="rightRow in 3" class="row" v-bind:key="rightRow">
+                    <div v-for="rightRow in pageRows" class="row" v-bind:key="rightRow">
                         <div class="nopadding"
                              v-for="rightCol in getCols($store.state.catalogue.page_columns)"
                              v-bind:key="rightCol"
-                             :class="$store.state.catalogue.page_columns == 2 ? 'col-6' : 'col-4'">
+                             :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1) == 'block'">
                                 <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i
                                         class="fa fa-minus" aria-hidden="true"></i></div>
@@ -176,12 +176,41 @@
                 blockEditor: null,
                 editorIndex: 1,
                 quilleditorOption: {},
+                pageClass: '',
+                pageRows: 3,
+                colClass: 'col-4'
             }
         },
         mounted: function () {
-
+            this.pageInit();
+        },
+        watch: {
+            totalPages() {
+                this.pageInit();
+            }
         },
         methods: {
+            pageInit() {
+                this.selectedPage = 1;
+                let cols = parseInt(this.$store.state.catalogue.page_columns);
+                switch (cols) {
+                    case 2:
+                        this.pageClass = 'twoPages';
+                        this.pageRows = 3;
+                        this.colClass = 'col-6';
+                        break;
+                    case 3:
+                        this.pageClass = '';
+                        this.pageRows = 3;
+                        this.colClass = 'col-4';
+                        break;
+                    case 4:
+                        this.pageClass = 'fourPages';
+                        this.pageRows = 4;
+                        this.colClass = 'col-3';
+                        break;
+                }
+            },
             prevPage() {
                 this.selectedPage -= 2;
                 if (this.selectedPage < 1) this.selectedPage = 1;
@@ -491,5 +520,8 @@
                 }
             }
         }
+    }
+    .fourPages {
+        min-height: 945px;
     }
 </style>

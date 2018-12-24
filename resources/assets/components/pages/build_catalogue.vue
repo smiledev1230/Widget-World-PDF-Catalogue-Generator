@@ -20,7 +20,7 @@
                             <div class="col-md-7 pr-0">
                                 <b-form-group>
                                     <b-form-radio-group v-model="$store.state.catalogue.display_type" :options="display_type" @change="setProduct" />
-                                    <b-form-radio-group v-model="$store.state.catalogue.page_columns" :options="page_columns" @change="updatePage" />
+                                    <b-form-checkbox-group plain v-model="$store.state.catalogue.page_columns" :options="page_columns" @change="updatePage" />
                                     <b-form-radio-group v-model="$store.state.catalogue.logos_options" :options="logos_options" @change="updateProduct"/>
                                 </b-form-group>
                             </div>
@@ -89,8 +89,12 @@
         data() {
             let supplierList = this.getSupplierList();
             let categoryList = this.getCategoryList();
-            this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
-            let total_pages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            let stateData = this.$store.state;
+            this.$store.state.productData = stateData.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
+            let total_pages = Math.round(stateData.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            if (stateData.catalogue.page_columns == 4) {
+                total_pages = Math.round(stateData.productData.length/16 + 0.5);
+            }
             return {
                 showCollapse: false,
                 showCheck: false,
@@ -120,6 +124,7 @@
                 page_columns: [
                     { text: '2', value: '2' },
                     { text: '3', value: '3' },
+                    { text: '4', value: '4' },
                 ],
                 logos_options: [
                     { text: 'Yes', value: 1 },
@@ -296,6 +301,8 @@
             },
             updatePage(e) {
                 this.totalPages = Math.round(this.$store.state.productData.length/3/e + 0.5);
+                if (e == 4) this.totalPages = Math.round(this.$store.state.productData.length/16 + 0.5);
+
                 if (e == 2) {
                     this.barcode_options[1]['disabled'] = false;
                 } else {

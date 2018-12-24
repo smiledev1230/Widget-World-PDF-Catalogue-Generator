@@ -42,12 +42,16 @@
             'spinner':Spinner,
         },
         data() {
-            if (this.$store.state.productData.length == 0) {
+            let stateData = this.$store.state;
+            if (stateData.productData.length == 0) {
                 let supplierList = this.getSupplierList();
                 let categoryList = this.getCategoryList();
-                this.$store.state.productData = this.$store.state.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
+                this.$store.state.productData = stateData.catalogue.display_type ? this.getProductData(supplierList): this.getProductData(categoryList);
             }
-            let total_pages = Math.round(this.$store.state.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            let total_pages = Math.round(stateData.productData.length/3/this.$store.state.catalogue.page_columns + 0.5);
+            if (stateData.catalogue.page_columns == 4) {
+                total_pages = Math.round(stateData.productData.length/16 + 0.5);
+            }
             return {
                 sendModal: false,
                 old_catalogue: {},
