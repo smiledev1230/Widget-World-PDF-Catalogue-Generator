@@ -97,6 +97,7 @@
                                     group_id: response.data.user.group_id,
                                     name: response.data.user.name,
                                     email: response.data.user.email,
+                                    role_id: response.data.user.role_id,
                                     password: password,
                                 }
                                 localStorage.setItem('token', response.data.token);

@@ -165,7 +165,7 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
-                formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
+                if (storeData.catalogue.selectedImage) formData.append('brand_path', storeData.catalogue.coverPath);
                 if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
                 formData.append('productData', JSON.stringify(storeData.productData));
                 formData.append('page_columns', storeData.catalogue.page_columns);
@@ -241,7 +241,7 @@
                 let formData = new FormData();
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
-                formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
+                if (storeData.catalogue.selectedImage) formData.append('brand_path', storeData.catalogue.coverPath);
                 if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
                 formData.append('productData', JSON.stringify(storeData.productData));
                 formData.append('page_columns', storeData.catalogue.page_columns);

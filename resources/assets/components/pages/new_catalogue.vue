@@ -35,11 +35,11 @@
                                             :paginationEnabled="false" >
                                         <slide v-for="(coverImage, index) in imageList"
                                                :key="index"
+                                               :class="{'select-image': $store.state.catalogue.selectedImage == coverImage.id}"
                                                @slideClick="handleSlideClick(index)">
                                             <img
-                                                :src="getImgUrl(index)"
+                                                :src="coverImage.cover_url"
                                                 v-bind:alt="coverImage"
-                                                :class="{'select-image': $store.state.catalogue.selectedImage == index}"
                                                 class="cover-image" />
                                         </slide>
                                     </carousel>
@@ -52,7 +52,7 @@
             <div class="col-md-4 catalogue-right">
                 <p class="text-center grey-text-color">PREVIEW</p>
                 <div class="preview">
-                    <img :src="getImgUrl($store.state.catalogue.selectedImage)" class="preview-background"/>
+                    <img :src="getImgUrl()" class="preview-background"/>
                     <div class="preview-content">
                         <img :src="$store.state.catalogue.file_upload_path" v-if="$store.state.catalogue.file_upload_path" class="upload-image"/>
                         <div v-if="$store.state.catalogue.name" class="preview-title text-white">{{$store.state.catalogue.name}}</div>
@@ -72,7 +72,6 @@
 </template>
 <script>
     import { Carousel, Slide } from 'vue-carousel';
-    import { coverImages } from '../../assets/js/global_variable';
     export default {
         name: "new_catalogue",
         components: {
@@ -81,17 +80,7 @@
         },
         data() {
             return {
-                imageList : coverImages,
-                instance: "",
-                options: {
-                    url: 'https://httpbin.org/post',
-                    paramName: 'file',
-                    autoProcessQueue: false,
-                    maxFiles: {
-                        limit: 5,
-                        message: 'You can only upload a max of 5 files'
-                    }
-                },
+                imageList : [],
             }
         },
         mounted: function () {
@@ -101,13 +90,33 @@
                 this.$store.dispatch('initCatalogue');
             }
             this.$store.new_state = true;
+            this.getCovers();
         },
         methods: {
-            handleSlideClick(index) {
-                this.$store.state.catalogue.selectedImage = index;
+            getCovers() {
+                this.imageList = [];
+                let firstImage = {
+                    id: 0,
+                    cover_url: require('../../assets/img/covers/blank.jpg'),
+                }
+                this.imageList.push(firstImage);
+                let app = this;
+                axios.get('/api/getCovers').then(response => {
+                    if (response && response.data) {
+                        app.imageList = app.imageList.concat(response.data);
+                    }
+                });
             },
-            getImgUrl(index) {
-                return require('../../assets/img/covers/' + this.imageList[index]);
+            handleSlideClick(index) {
+                this.$store.state.catalogue.selectedImage = this.imageList[index]['id'];
+            },
+            getImgUrl() {
+                for (let i=0; i<this.imageList.length;i++) {
+                    if (this.imageList[i]['id'] == this.$store.state.catalogue.selectedImage) {
+                        return this.imageList[i]['cover_url'];
+                    }
+                }
+                return '';
             },
             onFileChange(e) {
                 let files = e.target.files || e.dataTransfer.files;
@@ -231,16 +240,19 @@
             max-width: 350px;
             margin-left: 25px;
             .VueCarousel-slide {
-                max-width: 70px;
+                width: 80px;
+                max-height: 95px;
                 padding: 0 2px;
+                border: 1px solid rgba(0, 0, 0, 0.1);
                 img {
-                    max-width: 64px;
-                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    max-width: 100%;
+                    max-height: 100%;
+                    display: block;
                     cursor: pointer;
                 }
-                .select-image {
-                    border: 2px solid rgba(0, 0, 0, 0.5);
-                }
+            }
+            .select-image {
+                border: 2px solid rgba(0, 0, 0, 0.5);
             }
             .VueCarousel-navigation {
                 .VueCarousel-navigation-prev, .VueCarousel-navigation-next {

@@ -16,8 +16,7 @@ const routes = [{
         meta: {
             title: "500",
         }
-    },
-    {
+    }, {
         path: '*',
         component: resolve => require(['pages/404'], resolve),
         meta: {

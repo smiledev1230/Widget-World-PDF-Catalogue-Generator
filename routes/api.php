@@ -10,6 +10,7 @@ Route::get('getSupplier', 'SupplierController@getSupplier');
 Route::get('getCategory', 'CategoryController@getCategory');
 Route::get('getRecentCatalogue', 'CatalogueController@getRecentCatalogue');
 Route::get('getDownloadPDF', 'CatalogueController@getDownloadPDF');
+Route::get('getCovers', 'CoverController@getCovers');
 
 Route::post('update', 'UserController@update');
 Route::post('register', 'UserController@register');
@@ -21,6 +22,9 @@ Route::post('deleteCatalogue', 'CatalogueController@deleteCatalogue');
 Route::post('sendPDF', 'CatalogueController@sendPDF');
 Route::post('updateNotificationView', 'NotificationsController@updateNotificationView');
 Route::post('updateNotificationDelete', 'NotificationsController@updateNotificationDelete');
+
+Route::post('addCover', 'CoverController@addCover');
+Route::post('deleteCover', 'CoverController@deleteCover');
 
 Route::group(['middleware' => 'auth:api'], function(){
 });

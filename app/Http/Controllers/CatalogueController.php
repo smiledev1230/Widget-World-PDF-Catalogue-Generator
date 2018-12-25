@@ -116,7 +116,7 @@ class CatalogueController extends Controller
         $params = $request->all();
         $fileName = $params['name'];
         $filePath = $this->_dir.uniqid().'_'.$fileName.'.pdf';
-        $brand_path = $params['brand_path'];
+        $brand_path = array_key_exists('brand_path', $params) ? $params['brand_path'] : '';
         $logo_path = array_key_exists('logo_path', $params) ? $params['logo_path'] : '';
         $productData = $params['productData'];
         $productData = json_decode($productData);

@@ -40,6 +40,13 @@ const layout = [{
         catalogue: true,
         props: true
     }
+}, {
+    path: '/front_cover',
+    component: resolve => require(['pages/front_cover'], resolve),
+    meta: {
+        title: "Front Cover Images",
+        catalogue: true
+    }
 }]
 
 export default layout

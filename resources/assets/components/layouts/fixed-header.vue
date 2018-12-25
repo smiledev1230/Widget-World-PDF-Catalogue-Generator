@@ -39,6 +39,11 @@
                                     <i class="fa fa-user-o"></i> Account
                                 </a>
                             </b-dropdown-item>
+                            <b-dropdown-item v-if="$store.state.user.role_id == 1" exact class="dropdown_content">
+                                <router-link to="/front_cover" class="drpodowtext">
+                                    <i class="fa fa-file-pdf-o"></i> Front Cover
+                                </router-link>
+                            </b-dropdown-item>
                             <b-dropdown-item exact class="dropdown_content">
                                 <a href="#" @click.prevent="logout" class="drpodowtext">
                                     <i class="fa fa-sign-out"></i> Logout

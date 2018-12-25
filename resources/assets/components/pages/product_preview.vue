@@ -53,7 +53,7 @@
                     <span class="pull-right pr-3">{{catalogue.name}}</span>
                 </div>
                 <div v-else class="preview">
-                    <img :src="coverPath" class="preview-background"/>
+                    <img :src="$store.state.catalogue.coverPath" class="preview-background"/>
                     <div class="preview-content">
                         <img :src="catalogue.file_upload_path ? catalogue.file_upload_path : catalogue.logo_url" v-if="catalogue.file_upload_path || catalogue.logo_url" class="upload-image"/>
                         <div v-if="catalogue.name" class="preview-title text-white">{{catalogue.name}}</div>
@@ -130,8 +130,6 @@
     </div>
 </template>
 <script>
-    import { coverImages } from '../../assets/js/global_variable';
-
     export default {
         name: "product_preview",
         components: {
@@ -143,8 +141,6 @@
                 pageClass: '',
                 pageRows: 3,
                 colClass: 'col-4',
-                imageList : coverImages,
-                coverPath: '',
             }
         },
         mounted: function () {
@@ -178,7 +174,16 @@
                 }
                 let coverIndex = this.catalogue.selectedImage ? this.catalogue.selectedImage : this.catalogue.cover_index;
                 if (!coverIndex) coverIndex = 0;
-                this.coverPath = require('../../assets/img/covers/' + this.imageList[coverIndex]);
+                if (coverIndex == 0) {
+                    this.$store.state.catalogue.coverPath = require('../../assets/img/covers/blank.jpg');
+                } else {
+                    let app = this;
+                    axios.get('/api/getCovers', {params: {id: coverIndex}}).then(response => {
+                        if (response && response.data) {
+                            app.$store.state.catalogue.coverPath = response.data;
+                        }
+                    });
+                }
             },
             prevPage() {
                 this.selectedPage -= 2;

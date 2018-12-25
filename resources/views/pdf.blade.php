@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="front-page">
-    <img src="{{ public_path('/images/'.$brand_path) }}" class="cover-image" />
+    <img src="{{ $brand_path }}" class="cover-image" />
     @if ($logo_path)
         <img src="{{ $logo_path }}" class="logo-image" />
     @endif
