@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div v-if="selectedPage > 1" class="page-footer">
-                    <span class="page-label">Page {{selectedPage - 1}}</span>
+                    <span class="page-label">Page {{selectedPage}}</span>
                     <span class="pull-right pr-3">{{catalogue.name}}</span>
                 </div>
                 <div v-else class="preview">
@@ -109,7 +109,7 @@
                 </div>
                 <div class="page-footer">
                     <span class="pl-3 right-label">{{catalogue.name}}</span>
-                    <span class="page-label pull-right">Page {{selectedPage}}</span>
+                    <span class="page-label pull-right">Page {{selectedPage + 1}}</span>
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@
                 <span :class="{active: getNavIndex() == 2}" @click="updatePageNav(2)" v-if="getPageNav(2)">{{getPageNav(2)}}</span>
                 <span :class="{active: getNavIndex() == 3}" @click="updatePageNav(3)" v-if="getPageNav(3)">{{getPageNav(3)}}</span>
             </label>
-            <label class="pull-right mr-2" :class="{active: selectedPage < totalPages}" @click="nextPage">
+            <label class="pull-right mr-2" :class="{active: selectedPage < (totalPages - 1)}" @click="nextPage">
                 Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </label>
         </div>
@@ -139,7 +139,7 @@
         props: ['catalogue', 'productData', 'totalPages'],
         data() {
             return {
-                selectedPage: 1,
+                selectedPage: 0,
                 pageClass: '',
                 pageRows: 3,
                 colClass: 'col-4',
@@ -157,7 +157,7 @@
         },
         methods: {
             pageInit() {
-                this.selectedPage = 1;
+                this.selectedPage = 0;
                 let cols = parseInt(this.catalogue.page_columns);
                 switch (cols) {
                     case 2:
@@ -182,21 +182,21 @@
             },
             prevPage() {
                 this.selectedPage -= 2;
-                if (this.selectedPage < 1) this.selectedPage = 1;
+                if (this.selectedPage < 0) this.selectedPage = 0;
             },
             getNavIndex() {
-                return (this.selectedPage - 1) / 2 % 4;
+                return this.selectedPage / 2 % 4;
             },
             updatePageNav(index) {
                 this.selectedPage += (index - this.getNavIndex()) * 2;
             },
             getPageNav(index) {
-                let firstPageNumber = this.selectedPage + (index - this.getNavIndex()) * 2;
+                let firstPageNumber = this.selectedPage + 1 + (index - this.getNavIndex()) * 2;
                 if (firstPageNumber > (this.totalPages + 1)) return;
                 return firstPageNumber + "-" + (firstPageNumber + 1);
             },
             nextPage() {
-                if (this.selectedPage >= this.totalPages) return;
+                if (this.selectedPage >= (this.totalPages - 1)) return;
                 this.selectedPage += 2;
             },
             getImgUrl(rowInd, colInd, backPage) {
@@ -213,7 +213,9 @@
                 return this.getProductInfo(rowInd, colInd, backPage, 'product_is_new')
             },
             getIndex(rowInd, colInd, backPage) {
-                let index = (this.selectedPage - 1 + backPage) * 3 * this.catalogue.page_columns;
+                let rows = 3;
+                if (this.catalogue.page_columns == 4) rows = 4;
+                let index = (this.selectedPage - 1 + backPage) * rows * this.catalogue.page_columns;
                 index += (rowInd - 1) * this.catalogue.page_columns + colInd - 1;
                 return index;
             },
@@ -395,7 +397,7 @@
                     }
                     .upload-image {
                         height: 85px;
-                        margin-top: -70px;
+                        margin-top: -85px;
                         max-height: 6vw;
                     }
                 }

@@ -15,7 +15,7 @@
     </div>
 </div>
 <?php
-    ini_set('max_execution_time', 300);
+    ini_set('max_execution_time', 500);
     $product_path = public_path().'/assets/img/products/';
     $pageRows = $page_columns == 4 ? 4 : 3;
     if ($page_columns == 4) {

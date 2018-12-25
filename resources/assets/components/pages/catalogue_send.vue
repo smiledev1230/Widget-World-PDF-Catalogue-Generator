@@ -131,6 +131,9 @@
 
                         formData.append('productData', JSON.stringify(storeData.productData));
                         let totalPages = Math.round(storeData.productData.length/3/storeData.catalogue.page_columns + 0.5);
+                        if (storeData.catalogue.page_columns == 4) {
+                            totalPages = Math.round(storeData.productData.length/16 + 0.5);
+                        }
                         formData.append('pages', totalPages);
                         app.$store.state.preloader = true;
 
