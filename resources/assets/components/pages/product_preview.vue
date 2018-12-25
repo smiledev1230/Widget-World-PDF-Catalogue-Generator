@@ -2,7 +2,7 @@
     <div class="product-list" :class="pageClass">
         <div class="row product-body">
             <div class="col-6 nopadding page-separator">
-                <div class="page-body">
+                <div v-if="selectedPage > 1" class="page-body">
                     <div v-for="rowInd in pageRows" class="row" v-bind:key="rowInd">
                         <div class="nopadding"
                              v-for="colInd in getCols()"
@@ -48,9 +48,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="page-footer">
-                    <span class="page-label">Page {{selectedPage}}</span>
+                <div v-if="selectedPage > 1" class="page-footer">
+                    <span class="page-label">Page {{selectedPage - 1}}</span>
                     <span class="pull-right pr-3">{{catalogue.name}}</span>
+                </div>
+                <div v-else class="preview">
+                    <img :src="coverPath" class="preview-background"/>
+                    <div class="preview-content">
+                        <img :src="catalogue.file_upload_path ? catalogue.file_upload_path : catalogue.logo_url" v-if="catalogue.file_upload_path || catalogue.logo_url" class="upload-image"/>
+                        <div v-if="catalogue.name" class="preview-title text-white">{{catalogue.name}}</div>
+                    </div>
                 </div>
             </div>
             <div class="col-6 nopadding">
@@ -102,7 +109,7 @@
                 </div>
                 <div class="page-footer">
                     <span class="pl-3 right-label">{{catalogue.name}}</span>
-                    <span class="page-label pull-right">Page {{selectedPage + 1}}</span>
+                    <span class="page-label pull-right">Page {{selectedPage}}</span>
                 </div>
             </div>
         </div>
@@ -116,13 +123,15 @@
                 <span :class="{active: getNavIndex() == 2}" @click="updatePageNav(2)" v-if="getPageNav(2)">{{getPageNav(2)}}</span>
                 <span :class="{active: getNavIndex() == 3}" @click="updatePageNav(3)" v-if="getPageNav(3)">{{getPageNav(3)}}</span>
             </label>
-            <label class="pull-right mr-2" :class="{active: selectedPage < totalPages-1}" @click="nextPage">
+            <label class="pull-right mr-2" :class="{active: selectedPage < totalPages}" @click="nextPage">
                 Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </label>
         </div>
     </div>
 </template>
 <script>
+    import { coverImages } from '../../assets/js/global_variable';
+
     export default {
         name: "product_preview",
         components: {
@@ -133,7 +142,9 @@
                 selectedPage: 1,
                 pageClass: '',
                 pageRows: 3,
-                colClass: 'col-4'
+                colClass: 'col-4',
+                imageList : coverImages,
+                coverPath: '',
             }
         },
         mounted: function () {
@@ -165,6 +176,9 @@
                         this.colClass = 'col-3';
                         break;
                 }
+                let coverIndex = this.catalogue.selectedImage ? this.catalogue.selectedImage : this.catalogue.cover_index;
+                if (!coverIndex) coverIndex = 0;
+                this.coverPath = require('../../assets/img/covers/' + this.imageList[coverIndex]);
             },
             prevPage() {
                 this.selectedPage -= 2;
@@ -178,11 +192,11 @@
             },
             getPageNav(index) {
                 let firstPageNumber = this.selectedPage + (index - this.getNavIndex()) * 2;
-                if (firstPageNumber > this.totalPages) return;
+                if (firstPageNumber > (this.totalPages + 1)) return;
                 return firstPageNumber + "-" + (firstPageNumber + 1);
             },
             nextPage() {
-                if (this.selectedPage >= (this.totalPages - 1)) return;
+                if (this.selectedPage >= this.totalPages) return;
                 this.selectedPage += 2;
             },
             getImgUrl(rowInd, colInd, backPage) {
@@ -236,6 +250,10 @@
                     cols.push(i);
                 }
                 return cols;
+            },
+            getCoverImage(index) {
+                console.log("aaa ", index)
+                return require('../../assets/img/covers/' + this.imageList[index]);
             },
         }
     }
@@ -353,6 +371,35 @@
                     display: inline-block;
                 }
             }
+            .preview {
+                margin: 10px;
+                display: block;
+                .preview-background {
+                    width: 100%;
+                    min-width: 200px;
+                    height: 740px;
+                }
+                .preview-content {
+                    min-width: 200px;
+                    max-width: 84.4%;
+                    margin-left: 6.2%;
+                    text-align: center;
+                    position: absolute;
+                    bottom: 88px;
+                    width: 100%;
+                    .preview-title {
+                        background: $red_color;
+                        padding: 8px 5px;
+                        min-height: 35px;
+                        font-size: 16px;
+                    }
+                    .upload-image {
+                        height: 85px;
+                        margin-top: -70px;
+                        max-height: 6vw;
+                    }
+                }
+            }
         }
         .product-footer {
             position: absolute;
@@ -383,7 +430,6 @@
     .page2 #pdfModal .modal-dialog .twoPages {
         min-height: 830px !important;
         .product-body {
-            min-height: 1020px;
             .page-body .product-image {
                 min-height: 232px;
             }
@@ -395,15 +441,27 @@
                     line-height: 20px;
                 }
             }
+            .preview .preview-background {
+                height: 760px;
+            }
         }
     }
     .twoPages {
         min-height: 865px !important;
+        .product-body .preview .preview-background {
+            height: 780px;
+        }
     }
     .fourPages {
         min-height: 1070px !important;
-        .product-body .page-body .product-image img {
-            max-height: 50%;
+        .product-body {
+            min-height: 1020px !important;
+            .page-body .product-image img {
+                max-height: 50%;
+            }
+        }
+        .product-body .preview .preview-background {
+            height: 995px;
         }
     }
 </style>
