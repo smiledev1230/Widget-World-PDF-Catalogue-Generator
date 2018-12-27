@@ -95,7 +95,7 @@
                     sendFormData.append('subject', this.sendForm.subject);
                     sendFormData.append('emails', this.sendForm.emails);
                     sendFormData.append('notes', this.sendForm.notes);
-                    sendFormData.append('limited', this.limited);
+                    if (this.limited) sendFormData.append('limited', this.limited);
 
                     if (this.catalogue.pdf_path) {
                         sendFormData.append('id', this.catalogue.id);
@@ -181,14 +181,14 @@
                     }
                 ).then(response => {
                     console.log('success!!', response.data);
-                    this.$store.state.preloader = false;
+                    app.$store.state.preloader = false;
                     app.showStatus = true;
                     if (response.data != 'error' && app.limited != -1) {
                         app.$emit('update:catalogues', response.data);
                     }
                 }).catch(function(){
                     console.log('FAILURE!!');
-                    this.$store.state.preloader = false;
+                    app.$store.state.preloader = false;
                 });
             }
         }

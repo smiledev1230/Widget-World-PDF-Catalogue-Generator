@@ -333,10 +333,8 @@
                     args.cancel = true;
                     return;
                 } else {
-                    let old_new = this.$store.state.category_new;
                     this.$store.state.drag_category_ids.push(dragNode.id);
                     this.$store.state.drag_category_ids.push(dropNode.id);
-                    this.$store.state.category_new = old_new;
                     this.$store.state.productData = this.getProductData(this.getCategoryList());
                 }
             },
@@ -349,10 +347,8 @@
                     args.cancel = true;
                     return;
                 } else {
-                    let old_new = this.$store.state.supplier_new;
-                    this.$store.state.drag_supplier_ids.push(dragNode.id);
                     this.$store.state.drag_supplier_ids.push(dropNode.id);
-                    this.$store.state.supplier_new = old_new;
+                    this.$store.state.drag_supplier_ids.push(dragNode.id);
                     this.$store.state.productData = this.getProductData(this.getSupplierList());
                 }
             },

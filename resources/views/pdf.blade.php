@@ -121,9 +121,9 @@
     }
     .front-page .cover-image {
         position: absolute;
-        max-width: 100%;
+        width: 100%;
         max-height: 100%;
-        margin-left: 3%;
+        height: auto;
     }
     .front-page .logo-image {
         position: absolute;
@@ -134,9 +134,9 @@
     .front-footer {
         position: absolute;
         bottom: 100px;
-        width: 81%;
+        width: 86.5%;
         height: 40px;
-        margin-left: 8.8%;
+        margin-left: 6%;
         padding: 0px 5px;
         text-align: center;
         background: #bb2026;
@@ -157,7 +157,7 @@
     .product-border {
         border: 1px solid #d7d9da;
     }
-    .brand-image {
+    .brand-image {.front-footer
         text-align: center;
     }
     .brand-image img {

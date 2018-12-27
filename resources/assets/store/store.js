@@ -71,16 +71,15 @@ const store = new Vuex.Store({
                 display_options: ['title', 'rrp', 'units'],
                 barcode_options: 0,
             }
-            this.state.sel_supplier_ids
-                = this.state.sel_category_ids
-                = this.state.productData
-                = this.state.supplier_block
-                = this.state.category_block
-                = this.state.supplier_new
-                = this.state.category_new
-                = this.state.drag_supplier_ids
-                = this.state.drag_category_ids
-                = [];
+            this.state.sel_supplier_ids = [];
+            this.state.sel_category_ids = [];
+            this.state.productData = [];
+            this.state.supplier_block = [];
+            this.state.category_block = [];
+            this.state.supplier_new = [];
+            this.state.category_new = [];
+            this.state.drag_supplier_ids = [];
+            this.state.drag_category_ids = [];
             for (let i=0;i<this.state.suppliers.length;i++) {
                 this.state.suppliers[i]['isChecked'] = false;
             }
