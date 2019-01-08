@@ -29,20 +29,15 @@
                             <tr>
                                 <td>Front Cover Template:</td>
                                 <td>
-                                    <carousel
-                                            :per-page="5"
-                                            :navigationEnabled="true"
-                                            :paginationEnabled="false" >
-                                        <slide v-for="(coverImage, index) in imageList"
-                                               :key="index"
-                                               :class="{'select-image': $store.state.catalogue.selectedImage == coverImage.id}"
-                                               @slideClick="handleSlideClick(index)">
-                                            <img
-                                                :src="coverImage.cover_url"
-                                                v-bind:alt="coverImage"
-                                                class="cover-image" />
-                                        </slide>
-                                    </carousel>
+                                    <div class="cover-content">
+                                        <ul class="cover-list">
+                                            <li v-for="(coverImage, index) in imageList"class="cover-item" :key="index">
+                                                <div class="cover-body" @click="handleSlideClick(index)" :class="{selectedCover: coverImage.id == $store.state.catalogue.selectedImage}">
+                                                    <img :src="coverImage.cover_url" class="cover-image" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -266,6 +261,53 @@
         hr {
             border-width: 2px;
             margin: 15px 0px;
+        }
+
+        .cover-content {
+            width: 100%;
+            height: 352px;
+            max-height: 352px;
+            overflow-y: scroll;
+            padding: 10px;
+            background: $white_color;
+            border: 2px solid $border_color;
+        }
+        .cover-list {
+            overflow: hidden;
+            display: flex;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            flex-wrap: wrap;
+            -webkit-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            list-style-image: none;
+            list-style-position: outside;
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 0px;
+            .cover-item {
+                float: left;
+                width: 77px;
+                height: 108px;
+                margin: 0 5px 5px 0;
+                cursor: pointer;
+                display: flex;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                .cover-body {
+                    position: relative;
+                    text-align: center;
+                    padding: 0;
+                    border: 1px solid $border_color;
+                    .cover-image {
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                }
+                .selectedCover {
+                    border: 2px solid #444444;
+                }
+            }
         }
     }
 </style>

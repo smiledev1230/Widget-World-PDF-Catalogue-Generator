@@ -1,14 +1,10 @@
 <template>
     <div class="catalogue-content mt-2">
         <div class="visual-options">
-            <div class="row d-block" @click="showCollapse = !showCollapse">
+            <div class="row d-block">
                 <label class="mb-0">Visual Options</label>
-                <i aria-controls="vOptions"
-                   :aria-expanded="showCollapse ? 'true' : 'false'"
-                   class="collapse-btn pull-right fa" :class="showCollapse ? 'fa-angle-down' : 'fa-angle-up'">
-                </i>
             </div>
-            <b-collapse id="vOptions" v-model="showCollapse" class="mt-2">
+            <div id="vOptions" v-model="showCollapse" class="mt-2">
                 <div class="row">
                     <div class="col-md-6 nopadding">
                         <div class="row">
@@ -33,7 +29,7 @@
                         </b-form-group>
                     </div>
                 </div>
-            </b-collapse>
+            </div>
         </div>
         <div class="content-main row mt-4">
             <div class="col-3 nopadding">
