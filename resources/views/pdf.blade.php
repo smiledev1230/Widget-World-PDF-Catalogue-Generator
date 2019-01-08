@@ -7,8 +7,8 @@
 <body>
 <div class="front-page">
     <img src="{{ $brand_path }}" class="cover-image" />
-    @if ($logo_path)
-        <img src="{{ $logo_path }}" class="logo-image" />
+    @if ($logo_url)
+        <img src="{{ $logo_url }}" class="logo-image" />
     @endif
     <div class="front-footer">
         {{ $fileName }}

@@ -36,7 +36,7 @@ class SupplierController extends Controller
             ->whereIn('p.supplier_id', $s_ids)
             ->WhereNotNull('pc.pcategory_id')
             ->orderBy('s.name')
-            ->orderBy('pc.pcategory_id')
+            ->orderBy('pp.name')
             ->orderBy('path')
             ->orderBy('p.name')
             ->get();

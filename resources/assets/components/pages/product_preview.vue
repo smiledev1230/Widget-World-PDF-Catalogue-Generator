@@ -381,19 +381,18 @@
             .preview {
                 margin: 10px;
                 display: block;
+                text-align: center;
                 .preview-background {
-                    width: 100%;
-                    min-width: 200px;
-                    height: 740px;
+                    width: 30vw;
+                    height: auto;
                 }
                 .preview-content {
-                    min-width: 200px;
-                    max-width: 84.4%;
-                    margin-left: 6.2%;
-                    text-align: center;
                     position: absolute;
-                    bottom: 88px;
-                    width: 100%;
+                    width: 26.3vw;
+                    min-width: 200px;
+                    text-align: center;
+                    margin-left: 5.2vw;
+                    bottom: 5vw;
                     .preview-title {
                         background: $red_color;
                         padding: 8px 5px;
@@ -409,10 +408,11 @@
             }
         }
         .product-footer {
-            position: absolute;
+            position: relative;
             width: 100%;
+            bottom: 0;
+            margin-top: 5px;
             text-align: center;
-            bottom: 10px;
             color: $grey_btn_color;
             label.ml-4, label:first-child, label:last-child {
                 cursor: pointer;

@@ -425,7 +425,7 @@
                 display: none;
             }
             .merchantModalContent {
-                margin: 0 20px;
+                margin: 0 40px;
             }
             .modal-title {
                 padding-top: 0;

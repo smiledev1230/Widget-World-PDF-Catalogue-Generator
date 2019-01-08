@@ -166,7 +166,7 @@
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
                 if (storeData.catalogue.selectedImage) formData.append('brand_path', storeData.catalogue.coverPath);
-                if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
                 formData.append('productData', JSON.stringify(storeData.productData));
                 formData.append('page_columns', storeData.catalogue.page_columns);
                 formData.append('display_options', storeData.catalogue.display_options);
@@ -242,7 +242,7 @@
                 let storeData = this.$store.state;
                 formData.append('name', storeData.catalogue.name);
                 if (storeData.catalogue.selectedImage) formData.append('brand_path', storeData.catalogue.coverPath);
-                if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
                 formData.append('productData', JSON.stringify(storeData.productData));
                 formData.append('page_columns', storeData.catalogue.page_columns);
                 formData.append('display_options', storeData.catalogue.display_options);
@@ -295,6 +295,9 @@
                 min-height: 45vw;
                 .product-body {
                     min-height: calc(45vw - 50px);
+                    .preview .preview-content {
+                        margin-left: 6.6vw;
+                    }
                 }
             }
         }

@@ -109,9 +109,9 @@
                         if (storeData.catalogue.id) formData.append('id', storeData.catalogue.id);
                         formData.append('user_id', storeData.user.id);
                         formData.append('name', storeData.catalogue.name);
-                        formData.append('brand_path', this.imageList[storeData.catalogue.selectedImage]);
+                        if (storeData.catalogue.selectedImage) formData.append('brand_path', storeData.catalogue.coverPath);
                         if (storeData.catalogue.file_name) formData.append('logo_name', storeData.catalogue.file_name);
-                        if (storeData.catalogue.file_upload_path) formData.append('logo_path', storeData.catalogue.file_upload_path);
+                        if (storeData.catalogue.file_upload_path) formData.append('logo_url', storeData.catalogue.file_upload_path);
                         formData.append('cover_index', storeData.catalogue.selectedImage);
                         formData.append('suppliers',storeData.sel_supplier_ids);
                         formData.append('categories', storeData.sel_category_ids);

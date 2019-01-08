@@ -23,7 +23,7 @@
             // this.getUser();
         },
         mounted: function () {
-            this.$store.state.page_text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.";
+            this.$store.state.page_text = "Create new catalogues to showcase product ranges or View, Resend, Delete or Duplicate and Edit existing catalogues from your recent creations.";
             console.log("init Catalogue");
             this.$store.dispatch('initCatalogue');
             if (this.$store.state.suppliers.length == 0 && this.$store.state.categories.length == 0) {

@@ -117,15 +117,15 @@ class CatalogueController extends Controller
         $fileName = $params['name'];
         $filePath = $this->_dir.uniqid().'_'.$fileName.'.pdf';
         $brand_path = array_key_exists('brand_path', $params) ? $params['brand_path'] : '';
-        $logo_path = array_key_exists('logo_path', $params) ? $params['logo_path'] : '';
+        $logo_url = array_key_exists('logo_url', $params) ? $params['logo_url'] : '';
         $productData = $params['productData'];
         $productData = json_decode($productData);
         $page_columns = $params['page_columns'];
         $display_options = $params['display_options'] ? explode(',', $params['display_options']) : '';
         $barcode_options = $params['barcode_options'] ? explode(',', $params['barcode_options']) : '';
         $pages = $params['pages'];
-//        return view('pdf', compact('fileName', 'brand_path', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
-        $pdf = PDF::loadView('pdf', compact('fileName', 'brand_path', 'logo_path', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
+//        return view('pdf', compact('fileName', 'brand_path', 'logo_url', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
+        $pdf = PDF::loadView('pdf', compact('fileName', 'brand_path', 'logo_url', 'productData','page_columns', 'display_options', 'barcode_options', 'pages'));
 //         $pdf->save($fileName.'.pdf');return 'ok';
         if (isset($params['download_pdf']) && !empty($params['download_pdf'])){
             return $pdf->output();
