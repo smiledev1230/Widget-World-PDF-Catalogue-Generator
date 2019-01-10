@@ -295,9 +295,6 @@
                 min-height: 45vw;
                 .product-body {
                     min-height: calc(45vw - 50px);
-                    .preview .preview-content {
-                        margin-left: 6.6vw;
-                    }
                 }
             }
         }

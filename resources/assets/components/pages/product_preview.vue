@@ -54,9 +54,11 @@
                 </div>
                 <div v-else class="preview">
                     <img :src="$store.state.catalogue.coverPath" class="preview-background"/>
-                    <div class="preview-content">
-                        <img :src="catalogue.file_upload_path ? catalogue.file_upload_path : catalogue.logo_url" v-if="catalogue.file_upload_path || catalogue.logo_url" class="upload-image"/>
-                        <div v-if="catalogue.name" class="preview-title text-white">{{catalogue.name}}</div>
+                    <div class="preview-bottom">
+                        <div class="preview-content">
+                            <img :src="catalogue.file_upload_path ? catalogue.file_upload_path : catalogue.logo_url" v-if="catalogue.file_upload_path || catalogue.logo_url" class="upload-image"/>
+                            <div v-if="catalogue.name" class="preview-title text-white">{{catalogue.name}}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,9 +176,8 @@
                 }
                 let coverIndex = this.catalogue.selectedImage ? this.catalogue.selectedImage : this.catalogue.cover_index;
                 if (!coverIndex) coverIndex = 0;
-                if (coverIndex == 0) {
-                    this.$store.state.catalogue.coverPath = require('../../assets/img/covers/blank.jpg');
-                } else {
+                this.$store.state.catalogue.coverPath = require('../../assets/img/covers/blank.jpg');
+                if (coverIndex) {
                     let app = this;
                     axios.get('/api/getCovers', {params: {id: coverIndex}}).then(response => {
                         if (response && response.data) {
@@ -384,15 +385,19 @@
                 text-align: center;
                 .preview-background {
                     width: 30vw;
+                    max-width: 100%;
                     height: auto;
                 }
-                .preview-content {
+                .preview-bottom {
                     position: absolute;
+                    width: calc(100% - 20px);
+                    bottom: 100px;
+                }
+                .preview-content {
                     width: 26.3vw;
+                    max-width: calc(100% - 80px);
                     min-width: 200px;
-                    text-align: center;
-                    margin-left: 5.2vw;
-                    bottom: 5vw;
+                    margin: 0 auto;
                     .preview-title {
                         background: $red_color;
                         padding: 8px 5px;

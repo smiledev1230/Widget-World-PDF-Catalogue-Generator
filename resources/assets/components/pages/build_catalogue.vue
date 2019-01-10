@@ -358,10 +358,10 @@
     @import "../../assets/css/ej2-buttons-material.css";
     .tree-view {
         .e-treeview {
-            height: 408px;
-            max-height: 420px;
+            height: 705px;
+            max-height: 710px;
             border: 1px solid $border_color;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
         .e-treeview > .e-list-parent.e-ul {
             padding-left: 0;

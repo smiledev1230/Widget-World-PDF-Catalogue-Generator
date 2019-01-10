@@ -483,7 +483,6 @@
             }
         }
         .product-footer {
-            position: absolute;
             width: 100%;
             text-align: center;
             bottom: 10px;

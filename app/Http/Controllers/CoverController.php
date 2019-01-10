@@ -15,7 +15,11 @@ class CoverController extends Controller
     public function getCovers(Request $request) {
         if ($request->id) {
             $cover = CatalogueCover::find($request->id);
-            return response()->json($cover->cover_url);
+            if ($cover) {
+                return response()->json($cover->cover_url);
+            } else {
+                return response('');
+            }
         } else {
             return response()->json(CatalogueCover::get());
         }

@@ -1,26 +1,39 @@
 <template>
-    <div class="front-cover">
-        <div class="cover-content">
-            <ul class="cover-list">
-                <li class="cover-item">
-                    <div class="cover-body">
-                        <label for="fileUpload" class="btn add-cover">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </label>
-                        <input id="fileUpload" type="file" @change="onFileChange" />
-                    </div>
-                </li>
-                <li v-for="(cover, i) in covers" class="cover-item" :key="i">
-                    <div class="cover-body">
-                        <img :src="cover.cover_url" class="cover-image" />
-                        <div class="minus-btn" @click="deleteCover(i)">
-                            <i class="fa fa-minus" aria-hidden="true"></i>
+    <div>
+        <div class="front-cover">
+            <div class="cover-content">
+                <ul class="cover-list">
+                    <li class="cover-item">
+                        <div class="cover-body">
+                            <label for="fileUpload" class="btn add-cover">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                            </label>
+                            <input id="fileUpload" type="file" @change="onFileChange" />
                         </div>
-                        <div class="cover-backdrop"></div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                    <li v-for="(cover, i) in covers" class="cover-item" :key="i">
+                        <div class="cover-body">
+                            <img :src="cover.cover_url" class="cover-image" />
+                            <div class="minus-btn" @click="openCoverModal(i)">
+                                <i class="fa fa-minus" aria-hidden="true"></i>
+                            </div>
+                            <div class="cover-backdrop"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
+        <b-modal id="deleteModal" title="Delete Cover" ref="deleteModal" v-model="deleteModal"
+                 class="catalogue-modal">
+            <div class="cover-modal-body">
+                <p>Are you sure to delete this cover?</p>
+                <img :src="getSelectedImage()"/>
+            </div>
+            <div slot="modal-footer" class="w-100">
+                <b-btn class="pl-3 pr-3" @click="deleteModal=false">NO</b-btn>
+                <b-btn class="float-right greenBgColor pl-3 pr-3" @click="deleteCover">YES</b-btn>
+            </div>
+        </b-modal>
     </div>
 </template>
 <script>
@@ -32,6 +45,8 @@
         data() {
             return {
                 covers: [],
+                deleteModal: false,
+                selectedCover: 0,
             }
         },
         mounted: function () {
@@ -48,11 +63,24 @@
                     }
                 });
             },
-            deleteCover(i) {
-                let selectedItem = this.covers[i];
+            getSelectedImage() {
+                if (this.covers[this.selectedCover]) {
+                    return this.covers[this.selectedCover]['cover_url'];
+                } else {
+                    return '';
+                }
+            },
+            openCoverModal(i) {
+                this.selectedCover = i;
+                this.deleteModal = true;
+                this.$refs.deleteModal.show();
+            },
+            deleteCover() {
+                this.deleteModal = false;
+                let selectedItem = this.covers[this.selectedCover];
                 axios.post('/api/deleteCover', {id: selectedItem['id']}).then(response => {
                     if (response.data && response.data.message == 'success') {
-                        this.covers.splice(i,1);
+                        this.covers.splice(this.selectedCover,1);
                     }
                 });
             },
@@ -183,6 +211,15 @@
                     }
                 }
             }
+        }
+    }
+    .cover-modal-body {
+        text-align: center !important;
+        margin-right: 40px;
+        img {
+            width: 100px;
+            height: auto;
+            border: 1px solid $border_color;
         }
     }
 </style>
