@@ -265,8 +265,7 @@
 
         .cover-content {
             width: 100%;
-            height: 352px;
-            max-height: 352px;
+            height: 27vw;
             overflow-y: scroll;
             padding: 10px;
             background: $white_color;
@@ -287,8 +286,8 @@
             margin-bottom: 0px;
             .cover-item {
                 float: left;
-                width: 77px;
-                height: 108px;
+                width: 6vw;
+                height: 8.6vw;
                 margin: 0 5px 5px 0;
                 cursor: pointer;
                 display: flex;
@@ -296,6 +295,7 @@
                 display: -ms-flexbox;
                 .cover-body {
                     position: relative;
+                    width: 100%;
                     text-align: center;
                     padding: 0;
                     border: 1px solid $border_color;

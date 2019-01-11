@@ -26,7 +26,7 @@
         <b-modal id="deleteModal" title="Delete Cover" ref="deleteModal" v-model="deleteModal"
                  class="catalogue-modal">
             <div class="cover-modal-body">
-                <p>Are you sure to delete this cover?</p>
+                <p>Are you sure you would like to delete this cover?</p>
                 <img :src="getSelectedImage()"/>
             </div>
             <div slot="modal-footer" class="w-100">
