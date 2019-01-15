@@ -41,6 +41,8 @@ const store = new Vuex.Store({
         productData: [],
         supplier_block: [],
         category_block: [],
+        supplier_delete: [],
+        category_delete: [],
         supplier_new: [],
         category_new: [],
         drag_supplier_ids: [],
@@ -76,6 +78,8 @@ const store = new Vuex.Store({
             this.state.productData = [];
             this.state.supplier_block = [];
             this.state.category_block = [];
+            this.state.supplier_delete = [];
+            this.state.category_delete = [];
             this.state.supplier_new = [];
             this.state.category_new = [];
             this.state.drag_supplier_ids = [];

@@ -9,8 +9,8 @@
                              v-bind:key="colInd"
                              :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
-                                <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)"><i class="fa fa-minus"
-                                                                                                    aria-hidden="true"></i>
+                                <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
                                 </div>
                                 <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block"/>
                             </div>
@@ -22,8 +22,9 @@
                                 <div class="ribbon" @click="updateNewState(rowInd, colInd, 0)"
                                      :class="{active: checkNewState(rowInd, colInd, 0)}">NEW
                                 </div>
-                                <div class="plus-btn" @click="addNewBlock(rowInd, colInd, 0)"><i class="fa fa-plus"
-                                                                                                 aria-hidden="true"></i>
+                                <div class="plus-btn">
+                                    <i class="fa fa-plus" aria-hidden="true" @click="addNewBlock(rowInd, colInd, 0)"></i><br/>
+                                    <i class="fa fa-minus" aria-hidden="true" @click="removeProduct(rowInd, colInd, 0)"></i>
                                 </div>
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
@@ -72,8 +73,9 @@
                              v-bind:key="rightCol"
                              :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1) == 'block'">
-                                <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)"><i
-                                        class="fa fa-minus" aria-hidden="true"></i></div>
+                                <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </div>
                                 <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block"/>
                             </div>
                             <div class="product-image product-logo"
@@ -84,8 +86,9 @@
                                 <div class="ribbon" @click="updateNewState(rightRow, rightCol, 1)"
                                      :class="{active: checkNewState(rightRow, rightCol, 1)}">NEW
                                 </div>
-                                <div class="plus-btn" @click="addNewBlock(rightRow, rightCol, 1)"><i class="fa fa-plus"
-                                                                                                     aria-hidden="true"></i>
+                                <div class="plus-btn">
+                                    <i class="fa fa-plus" aria-hidden="true" @click="addNewBlock(rightRow, rightCol, 1)"></i><br/>
+                                    <i class="fa fa-minus" aria-hidden="true" @click="removeProduct(rightRow, rightCol, 1)"></i>
                                 </div>
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
@@ -267,6 +270,16 @@
                 this.blockEditor = null;
                 this.editorIndex = this.getIndex(rowInd, colInd, backPage);
                 this.$refs.blockModal.show();
+            },
+            removeProduct(rowInd, colInd, backPage) {
+                let index = this.getIndex(rowInd, colInd, backPage);
+                let product = this.$store.state.productData[index];
+                if (this.$store.state.catalogue.display_type) {
+                    this.$store.state.supplier_delete.push(product['id']);
+                } else {
+                    this.$store.state.category_delete.push(product['id']);
+                }
+                this.$store.state.productData.splice(index, 1);
             },
             getIndex(rowInd, colInd, backPage) {
                 let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.page_columns;

@@ -97,15 +97,17 @@
                 let stateData = this.$store.state;
                 let productData = [];
                 let productIds = [];
-                let product_new, product_block, drag_ids;
+                let product_new, product_block, product_delete, drag_ids;
                 if (type) {
                     product_new = stateData.supplier_new;
                     product_block = stateData.supplier_block;
                     drag_ids = stateData.drag_supplier_ids;
+                    product_delete = stateData.supplier_delete;
                 } else {
                     product_new = stateData.category_new;
                     product_block = stateData.category_block;
                     drag_ids = stateData.drag_category_ids;
+                    product_delete = stateData.category_delete;
                 }
                 for (let i=0;i<allProduct.length;i++) {
                     if (stateData.catalogue.logos_options && allProduct[i]['hasChild'] && allProduct[i]['brandLogo']) {
@@ -120,6 +122,7 @@
                         productData.push(newBlock);
                     }
                     if (!allProduct[i]['hasChild']) {
+                        if (product_delete && product_delete.indexOf(allProduct[i]['id'])>=0) continue;
                         productIds.push(allProduct[i]['id']);
                         if (product_new && product_new.indexOf(allProduct[i]['id'])>=0) {
                             allProduct[i]['product_is_new'] = true;
@@ -217,6 +220,8 @@
                 if (storeData.category_block.length>0) formData.append('category_block', JSON.stringify(storeData.category_block));
                 if (storeData.supplier_new.length>0) formData.append('supplier_new', storeData.supplier_new);
                 if (storeData.category_new.length>0) formData.append('category_new', storeData.category_new);
+                if (storeData.supplier_delete.length>0) formData.append('supplier_delete', storeData.supplier_delete);
+                if (storeData.category_delete.length>0) formData.append('category_delete', storeData.category_delete);
 
                 let app = this;
                 axios.post( '/api/saveSelectProduct',

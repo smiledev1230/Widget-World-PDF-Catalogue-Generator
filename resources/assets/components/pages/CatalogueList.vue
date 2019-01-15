@@ -213,6 +213,8 @@
                 if (catalogue.category_new) this.$store.state.category_new = catalogue.category_new;
                 if (catalogue.supplier_block) this.$store.state.supplier_block = catalogue.supplier_block;
                 if (catalogue.category_block) this.$store.state.category_block = catalogue.category_block;
+                if (catalogue.supplier_delete) this.$store.state.supplier_delete = catalogue.supplier_delete;
+                if (catalogue.category_delete) this.$store.state.category_delete = catalogue.category_delete;
                 if (catalogue.drag_supplier_ids) this.$store.state.drag_supplier_ids = catalogue.drag_supplier_ids;
                 if (catalogue.drag_category_ids) this.$store.state.drag_category_ids = catalogue.drag_category_ids;
                 this.$store.state.suppliers_ids = this.getSupplierTreeIds(this.$store.state.sel_supplier_ids);
@@ -292,8 +294,15 @@
                 this.productData = [];
                 let productIds = [];
                 let product_block = [];
+                let product_delete;
+                if (this.old_catalogue.display_type) {
+                    product_delete = this.old_catalogue.supplier_delete;
+                } else {
+                    product_delete = this.old_catalogue.category_delete;
+                }
                 for (let i=0;i<allProduct.length;i++) {
                     if (checkedIds.indexOf(allProduct[i]['id']) >= 0 && !allProduct[i]['hasChild']) {
+                        if (product_delete && product_delete.indexOf(allProduct[i]['id'])>=0) continue;
                         if (this.old_catalogue.product_new && this.old_catalogue.product_new.indexOf(allProduct[i]['id'].toString())>=0) {
                             allProduct[i]['product_is_new'] = true;
                         }
