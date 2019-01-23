@@ -12,7 +12,9 @@
                                 <div class="plus-btn" @click="removeNewBlock(rowInd, colInd, 0)">
                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                 </div>
-                                <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block"/>
+                                <div class="new-block">
+                                    <div v-html="getProductTitle(rowInd, colInd, 0)"/>
+                                </div>
                             </div>
                             <div class="product-image product-logo"
                                  v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
@@ -24,7 +26,7 @@
                                 </div>
                                 <div class="plus-btn">
                                     <i class="fa fa-plus" aria-hidden="true" @click="addNewBlock(rowInd, colInd, 0)"></i><br/>
-                                    <i class="fa fa-minus" aria-hidden="true" @click="removeProduct(rowInd, colInd, 0)"></i>
+                                    <i class="fa fa-minus" aria-hidden="true" @click="openDeleteModal(rowInd, colInd, 0)"></i>
                                 </div>
                                 <img :src="getImgUrl(rowInd, colInd, 0)"/>
                                 <div class="product-box">
@@ -76,7 +78,9 @@
                                 <div class="plus-btn" @click="removeNewBlock(rightRow, rightCol, 1)">
                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                 </div>
-                                <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block"/>
+                                <div class="new-block">
+                                    <div v-html="getProductTitle(rightRow, rightCol, 1)"/>
+                                </div>
                             </div>
                             <div class="product-image product-logo"
                                  v-else-if="checkNewBlock(rightRow, rightCol, 1) == 'logo'">
@@ -88,7 +92,7 @@
                                 </div>
                                 <div class="plus-btn">
                                     <i class="fa fa-plus" aria-hidden="true" @click="addNewBlock(rightRow, rightCol, 1)"></i><br/>
-                                    <i class="fa fa-minus" aria-hidden="true" @click="removeProduct(rightRow, rightCol, 1)"></i>
+                                    <i class="fa fa-minus" aria-hidden="true" @click="openDeleteModal(rightRow, rightCol, 1)"></i>
                                 </div>
                                 <img :src="getImgUrl(rightRow, rightCol, 1)"/>
                                 <div class="product-box">
@@ -144,6 +148,13 @@
                 Next <i class="fa fa-chevron-right" aria-hidden="true"></i>
             </label>
         </div>
+        <b-modal id="deleteModal" title="Delete Product?" ref="deleteModal" v-model="deleteModal" class="catalogue-modal">
+            <p>Do you want to delete this product from the Catalogue?</p>
+            <div slot="modal-footer" class="w-100">
+                <b-btn class="pl-3 pr-3" @click="deleteModal=false">NO</b-btn>
+                <b-btn class="float-right greenBgColor pl-3 pr-3" @click="deleteProduct">YES</b-btn>
+            </div>
+        </b-modal>
         <b-modal id="blockModal" title="Add Block" ref="blockModal" v-model="showModal" class="catalogue-modal">
             <quill-editor :options="quilleditorOption" v-model="blockEditor" class="edi"></quill-editor>
             <div slot="modal-footer" class="w-100">
@@ -176,8 +187,10 @@
             return {
                 selectedPage: 1,
                 showModal: false,
+                deleteModal: false,
                 blockEditor: null,
                 editorIndex: 1,
+                selectedDeleteIndex: null,
                 quilleditorOption: {},
                 pageClass: '',
                 pageRows: 3,
@@ -271,15 +284,20 @@
                 this.editorIndex = this.getIndex(rowInd, colInd, backPage);
                 this.$refs.blockModal.show();
             },
-            removeProduct(rowInd, colInd, backPage) {
-                let index = this.getIndex(rowInd, colInd, backPage);
-                let product = this.$store.state.productData[index];
+            openDeleteModal(rowInd, colInd, backPage) {
+                this.deleteModal = true;
+                this.$refs.deleteModal.show();
+                this.selectedDeleteIndex = this.getIndex(rowInd, colInd, backPage);
+            },
+            deleteProduct() {
+                this.deleteModal = false;
+                let product = this.$store.state.productData[this.selectedDeleteIndex];
                 if (this.$store.state.catalogue.display_type) {
                     this.$store.state.supplier_delete.push(product['id']);
                 } else {
                     this.$store.state.category_delete.push(product['id']);
                 }
-                this.$store.state.productData.splice(index, 1);
+                this.$store.state.productData.splice(this.selectedDeleteIndex, 1);
             },
             getIndex(rowInd, colInd, backPage) {
                 let index = (this.selectedPage - 1 + backPage) * 3 * this.$store.state.catalogue.page_columns;

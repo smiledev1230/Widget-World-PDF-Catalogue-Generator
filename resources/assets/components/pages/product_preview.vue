@@ -9,7 +9,9 @@
                              v-bind:key="colInd"
                              :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rowInd, colInd, 0) == 'block'">
-                                <div v-html="getProductTitle(rowInd, colInd, 0)" class="new-block" />
+                                <div class="new-block">
+                                    <div v-html="getProductTitle(rowInd, colInd, 0)" />
+                                </div>
                             </div>
                             <div class="product-image product-logo" v-else-if="checkNewBlock(rowInd, colInd, 0) == 'logo'">
                                 <img :src="getImgUrl(rowInd, colInd, 0)" />
@@ -70,7 +72,9 @@
                              v-bind:key="rightCol"
                              :class="colClass">
                             <div class="product-image" v-if="checkNewBlock(rightRow, rightCol, 1) == 'block'">
-                                <div v-html="getProductTitle(rightRow, rightCol, 1)" class="new-block" />
+                                <div class="new-block">
+                                    <div v-html="getProductTitle(rightRow, rightCol, 1)" />
+                                </div>
                             </div>
                             <div class="product-image product-logo" v-else-if="checkNewBlock(rightRow, rightCol, 1) == 'logo'">
                                 <img :src="getImgUrl(rightRow, rightCol, 1)" />
@@ -340,6 +344,12 @@
                             position: absolute;
                             bottom: 42px;
                             width: 100%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: -webkit-box;
+                            line-height: 14px;
+                            -webkit-line-clamp: 3;
+                            -webkit-box-orient: vertical;
                         }
                         .product-detail {
                             max-width: 60%;
@@ -356,6 +366,9 @@
                             bottom: 5px;
                             right: 8px;
                             max-width: 40%;
+                            img {
+                                max-height: 50px;
+                            }
                         }
                         .product-rrp {
                             font-size: 12px;

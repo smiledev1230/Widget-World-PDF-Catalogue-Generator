@@ -50,6 +50,8 @@ class CatalogueController extends Controller
                 if ($row->category_new) $row->category_new = explode(',', $row->category_new);
                 if ($row->supplier_block) $row->supplier_block = json_decode($row->supplier_block);
                 if ($row->category_block) $row->category_block = json_decode($row->category_block);
+                if ($row->supplier_delete) $row->supplier_delete = explode(',', $row->supplier_delete);
+                if ($row->category_delete) $row->category_delete = explode(',', $row->category_delete);
                 if ($row->drag_supplier_ids) $row->drag_supplier_ids = explode(',', $row->drag_supplier_ids);
                 if ($row->drag_category_ids) $row->drag_category_ids = explode(',', $row->drag_category_ids);
                 return $row;

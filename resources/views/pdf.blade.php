@@ -41,7 +41,9 @@
                         <td class="product <?php if (!$logoState) echo 'product-border'; ?>">
                             @if (array_key_exists('type', $productData[$idx]) && $productData[$idx]->type == 'block')
                                 <div class="new-block">
-                                    <?php echo $productData[$idx]->name;?>
+                                    <div>
+                                        <?php echo $productData[$idx]->name;?>
+                                    </div>
                                 </div>
                             @elseif ($logoState)
                                 <div class="brand-image">
@@ -101,146 +103,154 @@
     @if ($p < $pages -1)
         <span class="front-page"></span>
     @endif
+    <style>
+        @font-face {
+            font-family: 'Deja';
+            font-style: normal;
+            font-weight: normal;
+            src: url('<?= $_SERVER['DOCUMENT_ROOT'] ?>/widget-world/vendors/dompdf/dompdf/lib/fonts/DejaVuSans.ttf') format('truetype');
+        }
+        body {
+            font-family: 'Deja', sans-serif;
+            margin: 0px;
+        }
+        .content-center {
+            text-align: center;
+        }
+        .front-page {
+            page-break-after: always;
+        }
+        .front-page .cover-image {
+            position: absolute;
+            width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+        .front-page .logo-image {
+            position: absolute;
+            bottom: 280px;
+            width: 240px;
+            margin-left: 240px;
+        }
+        .front-footer {
+            position: absolute;
+            bottom: 100px;
+            width: 86.5%;
+            height: 40px;
+            margin-left: 6%;
+            padding: 0px 5px;
+            text-align: center;
+            background: #bb2026;
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        .page-content {
+            margin: 0 auto;
+        }
+        .page-content .product {
+            padding: 5px 5px 0;
+            width: 200px;
+            height: 283px;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-border {
+            border: 1px solid #d7d9da;
+        }
+        .brand-image {
+            text-align: center;
+        }
+        .brand-image img {
+            max-width: 200px;
+            max-height: 283px;
+        }
+        .product-body .product-new {
+            text-align: center;
+            transform: rotate(45deg);
+            padding: 3px 0;
+            top: -5px;
+            right: -20px;
+            width: 75px;
+            color: #fff;
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1;
+            cursor: pointer;
+            background-color: #a30c11;
+        }
+        .product-body .product-new.product-new-2 {
+            top: 5px;
+        }
+        .product-body .product-image {
+            min-width: 120px;
+            min-height: 160px;
+            max-width: 160px;
+            max-height: 180px;
+        }
+        .barcode-image img {
+            height: 32px;
+        }
+        .product-title {
+            text-align: center;
+            font-weight: 500;
+            font-size: 10px;
+            height: 55px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 12px;
+            /*display: -webkit-box;*/
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .product-footer {
+            width: 100%;
+        }
+        .product-footer .product-detail {
+            min-height: 18px;
+            font-size: 12px;
+            line-height: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .product-footer .barcode-image .product-rrp,
+        .product-footer .redLabelColor {
+            font-size: 12px;
+            line-height: 16px;
+            color: #a30c11;
+        }
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            left: 0px;
+            padding: 2px 10px;
+            background: #8bc53f;
+            color: #fff;
+        }
+        .page-title {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .new-block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .cols-4.page-content .product {
+            width: 150px;
+            height: 160px;
+        }
+        .cols-4 .product-body .product-image {
+            min-width: 100px;
+            min-height: 100px;
+            max-width: 120px;
+            max-height: 120px;
+        }
+    </style>
 @endfor
-<style>
-    @font-face {
-        font-family: 'Deja';
-        font-style: normal;
-        font-weight: normal;
-        src: url('<?= $_SERVER['DOCUMENT_ROOT'] ?>/widget-world/vendors/dompdf/dompdf/lib/fonts/DejaVuSans.ttf') format('truetype');
-    }
-    body {
-        font-family: 'Deja', sans-serif;
-        margin: 0px;
-    }
-    .content-center {
-        text-align: center;
-    }
-    .front-page {
-        page-break-after: always;
-    }
-    .front-page .cover-image {
-        position: absolute;
-        width: 100%;
-        max-height: 100%;
-        height: auto;
-    }
-    .front-page .logo-image {
-        position: absolute;
-        bottom: 280px;
-        width: 240px;
-        margin-left: 240px;
-    }
-    .front-footer {
-        position: absolute;
-        bottom: 100px;
-        width: 86.5%;
-        height: 40px;
-        margin-left: 6%;
-        padding: 0px 5px;
-        text-align: center;
-        background: #bb2026;
-        color: #fff;
-        font-size: 18px;
-        line-height: 1.8;
-    }
-    .page-content {
-        margin: 0 auto;
-    }
-    .page-content .product {
-        padding: 5px 5px 0;
-        width: 200px;
-        height: 283px;
-        position: relative;
-        overflow: hidden;
-    }
-    .product-border {
-        border: 1px solid #d7d9da;
-    }
-    .brand-image {.front-footer
-        text-align: center;
-    }
-    .brand-image img {
-        max-width: 200px;
-        max-height: 283px;
-    }
-    .product-body .product-new {
-        text-align: center;
-        transform: rotate(45deg);
-        padding: 3px 0;
-        top: -5px;
-        right: -20px;
-        width: 75px;
-        color: #fff;
-        position: absolute;
-        font-size: 12px;
-        font-weight: bold;
-        z-index: 1;
-        cursor: pointer;
-        background-color: #a30c11;
-    }
-    .product-body .product-new.product-new-2 {
-        top: 5px;
-    }
-    .product-body .product-image {
-        min-width: 120px;
-        min-height: 160px;
-        max-width: 160px;
-        max-height: 180px;
-    }
-    .barcode-image img {
-        height: 55px;
-    }
-    .product-title {
-        text-align: center;
-        font-weight: 500;
-        height: 55px;
-    }
-    .product-footer {
-        width: 100%;
-    }
-    .product-footer .product-detail {
-        min-height: 18px;
-        font-size: 12px;
-        line-height: 18px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .product-footer .barcode-image .product-rrp {
-        font-size: 12px;
-        line-height: 16px;
-        color: #a30c11;
-    }
-    .page-number {
-        position: absolute;
-        bottom: 20px;
-        left: 0px;
-        padding: 2px 10px;
-        background: #8bc53f;
-        color: #fff;
-    }
-    .page-title {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-    }
-    .new-block {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-    .cols-4.page-content .product {
-        width: 150px;
-        height: 160px;
-    }
-    .cols-4 .product-body .product-image {
-        min-width: 100px;
-        min-height: 100px;
-        max-width: 120px;
-        max-height: 120px;
-    }
-</style>
 </body>
 </html>

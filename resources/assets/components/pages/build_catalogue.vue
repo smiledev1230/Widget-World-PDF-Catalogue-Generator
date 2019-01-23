@@ -192,7 +192,6 @@
                 for (let i=0;i<allProduct.length;i++) {
                     if (stateData.catalogue.logos_options && allProduct[i]['hasChild'] && allProduct[i]['brandLogo']) {
                         let logo_id = new Date().getTime();
-                        productIds.push(logo_id);
                         let newBlock = {
                             id: logo_id,
                             name: 'Supplier Brand',
@@ -200,6 +199,7 @@
                             type: 'logo'
                         }
                         productData.push(newBlock);
+                        productIds.push(logo_id);
                     }
                     if (!allProduct[i]['hasChild']) {
                         if (product_delete && product_delete.indexOf(allProduct[i]['id'])>=0) continue;
@@ -210,6 +210,7 @@
                         }
                         allProduct[i]['rrp'] = Number.parseFloat(allProduct[i]['rrp']).toFixed(2);
                         productData.push(allProduct[i]);
+                        productIds.push(allProduct[i]['id']);
                     }
                 }
                 if (product_block && product_block.length>0) {
