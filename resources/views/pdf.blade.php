@@ -7,11 +7,13 @@
 <body>
 <div class="front-page">
     <img src="{{ $brand_path }}" class="cover-image" />
-    @if ($logo_url)
-        <img src="{{ $logo_url }}" class="logo-image" />
-    @endif
     <div class="front-footer">
-        {{ $fileName }}
+        @if ($logo_url)
+            <img src="{{ $logo_url }}" class="logo-image" />
+        @endif
+        <div class="cover-title">
+            {{ $fileName }}
+        </div>
     </div>
 </div>
 <?php
@@ -103,6 +105,7 @@
     @if ($p < $pages -1)
         <span class="front-page"></span>
     @endif
+@endfor
     <style>
         @font-face {
             font-family: 'Deja';
@@ -127,23 +130,23 @@
             height: auto;
         }
         .front-page .logo-image {
-            position: absolute;
-            bottom: 280px;
-            width: 240px;
-            margin-left: 240px;
+            max-width: 240px;
+            max-height: 150px;
         }
         .front-footer {
             position: absolute;
             bottom: 100px;
             width: 86.5%;
-            height: 40px;
             margin-left: 6%;
             padding: 0px 5px;
             text-align: center;
-            background: #bb2026;
             color: #fff;
             font-size: 18px;
             line-height: 1.8;
+        }
+        .cover-title {
+            height: 40px;
+            background: #bb2026;
         }
         .page-content {
             margin: 0 auto;
@@ -164,6 +167,12 @@
         .brand-image img {
             max-width: 200px;
             max-height: 283px;
+        }
+        .page-content .product .product-body {
+            height: 283px;
+        }
+        .page-content .product .content-center {
+            height: 210px;
         }
         .product-body .product-new {
             text-align: center;
@@ -194,12 +203,12 @@
         }
         .product-title {
             text-align: center;
-            font-weight: 500;
-            font-size: 10px;
-            height: 55px;
+            height: 30px;
+            font-weight: bold;
+            font-size: 12px;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 12px;
+            line-height: 14px;
             /*display: -webkit-box;*/
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -240,9 +249,13 @@
             justify-content: center;
             text-align: center;
         }
-        .cols-4.page-content .product {
+        .cols-4.page-content .product,
+        .cols-4.page-content .product .product-body {
             width: 150px;
-            height: 160px;
+            height: 213px;
+        }
+        .cols-4.page-content .product .content-center {
+            height: 140px;
         }
         .cols-4 .product-body .product-image {
             min-width: 100px;
@@ -251,6 +264,5 @@
             max-height: 120px;
         }
     </style>
-@endfor
 </body>
 </html>
